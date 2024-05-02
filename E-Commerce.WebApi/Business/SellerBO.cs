@@ -1,6 +1,8 @@
 ﻿using E_Commerce.WebApi.Application.Sellers;
+using E_Commerce.WebApi.Business.Enums;
 using E_Commerce.WebApi.Business.Models;
 using E_Commerce.WebApi.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.WebApi.Business
 {
@@ -34,6 +36,7 @@ namespace E_Commerce.WebApi.Business
             await _sellerWriteRepository.SaveAsync();
             return SellerModel;
         }
+       
 
         public List<SellerModel> GetAll()
         {
@@ -121,5 +124,48 @@ namespace E_Commerce.WebApi.Business
             _sellerWriteRepository.Update(sellers);
             await _sellerWriteRepository.SaveAsync();
         }
+        #region RegisAndLogin
+        public async Task<SellerDto> Registration(SellerDto sellerDto)
+        {
+            var sellerExists = await _sellerReadRepository.GetWhere(x => x.Email == sellerDto.Email).FirstOrDefaultAsync();
+            if (sellerExists == null)
+            {
+                var seller = new Seller()
+                {
+                    FirstName = sellerDto.FirstName,
+                    LastName = sellerDto.LastName,
+                    Address = sellerDto.Address,
+                    Email = sellerDto.Email,
+                    Password = sellerDto.Password,
+                    PhoneNumber = sellerDto.PhoneNumber,
+                    CompanyType = sellerDto.CompanyType,
+                    TaxpayerIDNumber = sellerDto.TaxpayerIDNumber,
+                    Role = RoleType.Seller.ToString()
+                };
+                await _sellerWriteRepository.AddAsync(seller);
+                await _sellerWriteRepository.SaveAsync();
+
+            }
+            //Admin control 
+
+
+            return sellerDto;
+        }
+        public string Login(LoginModel loginModel)
+        {
+            var customer = _sellerReadRepository.GetWhere(x => x.Email == loginModel.Email).FirstOrDefault();
+            var customerPassword = _sellerReadRepository.GetWhere(x => x.Password == loginModel.Password).FirstOrDefault();
+            if (customer == null || customerPassword == null)
+            {
+                return "Invalid Email or Password";
+            }
+
+            else { return "okey"; }
+
+
+        }
+
+
+        #endregion
     }
 }

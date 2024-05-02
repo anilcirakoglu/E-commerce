@@ -137,9 +137,8 @@ namespace E_Commerce.WebApi.Data.Persistance.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<double>("PhoneNumber")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -233,9 +232,8 @@ namespace E_Commerce.WebApi.Data.Persistance.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<double>("PhoneNumber")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("Role")
                         .IsRequired()

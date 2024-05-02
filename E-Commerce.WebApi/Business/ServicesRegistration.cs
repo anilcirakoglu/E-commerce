@@ -14,6 +14,7 @@ using E_Commerce.WebApi.Data.Persistance.Repositories.Sellers;
 using E_Commerce.WebApi.Application.StockProducts;
 using E_Commerce.WebApi.Data.Persistance.Repositories.StockProducts;
 using Microsoft.Extensions.DependencyInjection;
+using E_Commerce.WebApi.Business.Mappings;
 
 namespace E_Commerce.WebApi.Business
 {
@@ -51,7 +52,7 @@ namespace E_Commerce.WebApi.Business
             services.AddScoped<IStockProductReadRepository, StockProductReadRepository>();
             services.AddScoped<IStockProductWriteRepository, StockProductWriteRepository>();
 
-
+            services.AddAutoMapper(typeof(AutoMapping));
 
         }
     }

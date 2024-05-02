@@ -52,7 +52,7 @@ namespace E_Commerce.WebApi.Data.Persistance.Migrations
                     FirstName = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
                     LastName = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
                     Address = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    PhoneNumber = table.Column<double>(type: "double precision", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false),
                     Role = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false)
@@ -71,7 +71,7 @@ namespace E_Commerce.WebApi.Data.Persistance.Migrations
                     FirstName = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
                     LastName = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
                     Address = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    PhoneNumber = table.Column<double>(type: "double precision", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false),
                     CompanyType = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),

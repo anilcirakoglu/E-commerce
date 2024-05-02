@@ -16,6 +16,19 @@ namespace E_Commerce.WebApi.Controllers
             _sellerBO = sellerBO;
         }
 
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(LoginModel loginModel)
+        {
+            var seller = _sellerBO.Login(loginModel);
+            return Ok(seller);
+        }
+        [HttpPost("Registration")]
+        public async Task<IActionResult> Register(SellerDto sellerDto)
+        {
+            var sellerReg = await _sellerBO.Registration(sellerDto);
+            return Ok(sellerReg);
+        }
+
         [HttpGet]
         public IActionResult GetAll()
         {

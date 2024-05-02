@@ -1,6 +1,8 @@
 ﻿using E_Commerce.WebApi.Application.Customers;
+using E_Commerce.WebApi.Business.Enums;
 using E_Commerce.WebApi.Business.Models;
 using E_Commerce.WebApi.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.WebApi.Business
 {
@@ -24,13 +26,13 @@ namespace E_Commerce.WebApi.Business
                 Email = customerModel.Email,
                 Password = customerModel.Password,
                 PhoneNumber = customerModel.PhoneNumber,
-                Role = customerModel.Role,
+                Role = RoleType.Customer.ToString(),
             };
             await _customerWriteRepository.AddAsync(customer);
             await _customerWriteRepository.SaveAsync();
             return customerModel;
         }
-
+       
         public List<CustomerModel> GetAll()
         {
             var customers = _customerReadRepository.GetAll().ToList();
@@ -46,7 +48,7 @@ namespace E_Commerce.WebApi.Business
                     Email = customer.Email,
                     Password = customer.Password,
                     PhoneNumber = customer.PhoneNumber,
-                    Role = customer.Role,
+                    Role = RoleType.Customer.ToString(),
                 };
                 customerList.Add(cstlist);
             }
@@ -82,7 +84,7 @@ namespace E_Commerce.WebApi.Business
                 Email = customer.Email,
                 Password= customer.Password,
                 PhoneNumber = customer.PhoneNumber,
-                Role = customer.Role,
+                Role = RoleType.Customer.ToString(),
             };
             await _customerWriteRepository.RemoveAsync(ID);
             await _customerWriteRepository.SaveAsync();
@@ -108,5 +110,42 @@ namespace E_Commerce.WebApi.Business
             _customerWriteRepository.Update(customers);
             await _customerWriteRepository.SaveAsync();
         }
+        #region RegisAndLogin
+        public async Task<CustomerDto> Registration(CustomerDto customerDto)
+        {
+            var customerExists = await _customerReadRepository.GetWhere(x => x.Email == customerDto.Email).FirstOrDefaultAsync();
+            if (customerExists == null)
+            {
+                var customer = new Customer()
+                {
+                    FirstName = customerDto.FirstName,
+                    LastName = customerDto.LastName,
+                    Address = customerDto.Address,
+                    Email = customerDto.Email,
+                    Password = customerDto.Password,
+                    PhoneNumber = customerDto.PhoneNumber,
+                    Role = RoleType.Customer.ToString()
+                };
+                await _customerWriteRepository.AddAsync(customer);
+                await _customerWriteRepository.SaveAsync();
+
+            }
+            return customerDto;
+        }
+
+        public string Login(LoginModel loginModel) 
+        {
+            var customer = _customerReadRepository.GetWhere(x=>x.Email == loginModel.Email).FirstOrDefault();
+            var customerPassword = _customerReadRepository.GetWhere(x=>x.Password == loginModel.Password).FirstOrDefault();
+            if (customer == null || customerPassword == null)
+            {
+                return "Invalid Email or Password";
+            }
+
+            else { return "okey"; }
+                
+            
+        }
+        #endregion
     }
 }

@@ -8,6 +8,8 @@ namespace E_Commerce.WebApi.Business
         Task<SellerModel> GetByID(int ID, bool tracking = true);
         Task<SellerModel> Create(SellerModel product);
 
+        string Login(LoginModel loginModel);
+        Task<SellerDto> Registration(SellerDto sellerDto);
         Task UpdateAsync(SellerModel seller);
         Task<int> SaveAsync();
         Task RemoveAsync(int ID);
