@@ -35,7 +35,7 @@ namespace E_Commerce.WebApi.Data.Persistance.Repositories
 
         }
 
-        public async Task<T>GetByIdAsync(int ID,bool tracking= true)
+        public async Task<T>GetByIDAsync(int ID,bool tracking= true)
         {
             var query = Table.AsQueryable();
             if(!tracking) 
@@ -57,9 +57,6 @@ namespace E_Commerce.WebApi.Data.Persistance.Repositories
             return query;
         }
 
-        public Task<T> GetByIDAsync(int id, bool tracking = true)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

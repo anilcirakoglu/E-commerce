@@ -3,7 +3,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace E_Commerce.WebApi.Migrations
+namespace E_Commerce.WebApi.Data.Persistance.Migrations
 {
     /// <inheritdoc />
     public partial class mig1 : Migration

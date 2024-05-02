@@ -8,10 +8,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace E_Commerce.WebApi.Migrations
+namespace E_Commerce.WebApi.Data.Persistance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240424133238_mig1")]
+    [Migration("20240501195750_mig1")]
     partial class mig1
     {
         /// <inheritdoc />

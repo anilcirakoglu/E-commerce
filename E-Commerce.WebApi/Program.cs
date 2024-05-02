@@ -1,3 +1,4 @@
+using E_Commerce.WebApi.Business;
 using E_Commerce.WebApi.Data.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,9 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL")));
-/*"ConnectionStrings": {
-    "PostgreSQL": "User ID=postgres;Password=asdqwe1997;Host=localhost;Port=5432;Database=Ecomm"
-  },*/
+builder.Services.AddPersistanceServices();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
