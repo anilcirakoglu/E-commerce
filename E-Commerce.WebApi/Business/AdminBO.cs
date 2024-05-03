@@ -1,6 +1,10 @@
 ﻿using E_Commerce.WebApi.Application.Admins;
+using E_Commerce.WebApi.Application.Customers;
+using E_Commerce.WebApi.Application.Sellers;
+using E_Commerce.WebApi.Business.Enums;
 using E_Commerce.WebApi.Business.Models;
 using E_Commerce.WebApi.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.WebApi.Business
 {
@@ -8,27 +12,61 @@ namespace E_Commerce.WebApi.Business
     {
         readonly private IAdminReadRepository _adminReadRepository;
         readonly private IAdminWriteRepository _adminWriteRepository;
-        public AdminBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository)
+
+        readonly private ICustomerReadRepository _customerReadRepository;
+        readonly private ICustomerWriteRepository _customerWriteRepository;
+
+        readonly private ISellerReadRepository _sellerReadRepository;
+        readonly private ISellerWriteRepository _sellerWriteRepository;
+
+        public AdminBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository)
         {
             _adminReadRepository = adminReadRepository;
             _adminWriteRepository = adminWriteRepository;
+            _customerReadRepository = customerReadRepository;
+            _customerWriteRepository = customerWriteRepository;
+            _sellerReadRepository = sellerReadRepository;
+            _sellerWriteRepository = sellerWriteRepository;
         }
-        public async Task<AdminModel> Create(AdminModel adminModel)
+
+        
+        public async Task<AdminDto> Registration(AdminDto adminDto)
         {
-            var admin = new Admin()
+            var adminExists = await _adminReadRepository.GetWhere(x => x.Email == adminDto.Email).FirstOrDefaultAsync();
+            var sellerExists = await _sellerReadRepository.GetWhere(x => x.Email == adminDto.Email).FirstOrDefaultAsync();
+            var customerExists = await _customerReadRepository.GetWhere(x => x.Email == adminDto.Email).FirstOrDefaultAsync();
+            if (sellerExists == null && customerExists == null&&adminExists==null)
             {
-                ID = adminModel.ID,
-                FirstName = adminModel.FirstName,
-                LastName = adminModel.LastName,
-                Address = adminModel.Address,
-                Email = adminModel.Email,
-                Password = adminModel.Password,
-                PhoneNumber = adminModel.PhoneNumber,
-                Role = adminModel.Role,
-            };
-            await _adminWriteRepository.AddAsync(admin);
-            await _adminWriteRepository.SaveAsync();
-            return adminModel;
+                var admin = new Admin()
+                {
+
+                    FirstName = adminDto.FirstName,
+                    LastName = adminDto.LastName,
+                    Address = adminDto.Address,
+                    Email = adminDto.Email,
+                    Password = adminDto.Password,
+                    PhoneNumber = adminDto.PhoneNumber,
+                    Role = RoleType.Admin.ToString()
+
+                };
+                await _adminWriteRepository.AddAsync(admin);
+                await _adminWriteRepository.SaveAsync();
+            }
+           
+            return adminDto;
+        }
+        public string Login(LoginModel loginModel)
+        {
+            var admin = _adminReadRepository.GetWhere(x => x.Email == loginModel.Email).FirstOrDefault();
+            var adminPassword = _adminReadRepository.GetWhere(x => x.Password == loginModel.Password).FirstOrDefault();
+            if (admin == null || adminPassword == null)
+            {
+                return "Invalid Email or Password";
+            }
+
+            else { return "okey"; }
+
+
         }
 
         public List<AdminModel> GetAll()
@@ -99,7 +137,7 @@ namespace E_Commerce.WebApi.Business
 
         public async Task UpdateAsync(AdminModel adminModel)
         {
-           var admins =_adminReadRepository.GetAll().FirstOrDefault(x=>x.ID == adminModel.ID);
+            var admins = _adminReadRepository.GetAll().FirstOrDefault(x => x.ID == adminModel.ID);
             admins.FirstName = adminModel.FirstName;
             admins.LastName = adminModel.LastName;
             admins.Address = adminModel.Address;

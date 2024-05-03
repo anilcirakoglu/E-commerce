@@ -22,11 +22,23 @@ namespace E_Commerce.WebApi.Controllers
             var customer = _adminBO.GetAll();
             return Ok(customer);
         }
-        [HttpPost("Create")]
-        public async Task<ActionResult<AdminModel>> Create(AdminModel adminModel)
+        //[HttpPost("Create")]
+        //public async Task<ActionResult<AdminModel>> Create(AdminModel adminModel)
+        //{
+        //    var customer = await _adminBO.Create(adminModel);
+        //    return Ok(customer);
+        //}
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(LoginModel loginModel)
         {
-            var customer = await _adminBO.Create(adminModel);
+            var customer = _adminBO.Login(loginModel);
             return Ok(customer);
+        }
+        [HttpPost("Registration")]
+        public async Task<IActionResult> Register(AdminDto adminDto)
+        {
+            var adminReg = await _adminBO.Registration(adminDto);
+            return Ok(adminReg);
         }
         [HttpGet("{ID}")]
         public async Task<IActionResult> GetByID(int ID)

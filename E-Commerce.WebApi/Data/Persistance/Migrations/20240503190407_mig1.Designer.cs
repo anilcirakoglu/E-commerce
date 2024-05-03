@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace E_Commerce.WebApi.Data.Persistance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240502153422_mig1")]
+    [Migration("20240503190407_mig1")]
     partial class mig1
     {
         /// <inheritdoc />
@@ -55,9 +55,8 @@ namespace E_Commerce.WebApi.Data.Persistance.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<double>("PhoneNumber")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("Role")
                         .IsRequired()

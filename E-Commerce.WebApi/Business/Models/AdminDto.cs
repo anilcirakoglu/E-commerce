@@ -1,8 +1,6 @@
-﻿using E_Commerce.WebApi.Data.Entities.Common;
-
-namespace E_Commerce.WebApi.Data.Entities
+﻿namespace E_Commerce.WebApi.Business.Models
 {
-    public class Admin:BaseEntitiy
+    public class AdminDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -10,6 +8,5 @@ namespace E_Commerce.WebApi.Data.Entities
         public double PhoneNumber { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string Role { get; set; }
     }
 }

@@ -6,8 +6,9 @@ namespace E_Commerce.WebApi.Business
     {
         List<AdminModel> GetAll();//customer and seller create
         Task<AdminModel> GetByID(int ID, bool tracking = true);
-        Task<AdminModel> Create(AdminModel admin);
-
+        //Task<AdminModel> Create(AdminModel admin);
+        string Login(LoginModel loginModel);
+        Task<AdminDto> Registration(AdminDto customerDto);
         Task UpdateAsync(AdminModel admin);
         Task<int> SaveAsync();
         Task RemoveAsync(int ID);

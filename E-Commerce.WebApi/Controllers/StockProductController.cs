@@ -2,6 +2,8 @@
 using E_Commerce.WebApi.Business;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using E_Commerce.WebApi.Business.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce.WebApi.Controllers
 {
@@ -15,7 +17,7 @@ namespace E_Commerce.WebApi.Controllers
         {
             _stockProductBO = stockProductBO;
         }
-
+       
         [HttpGet]
         public IActionResult GetAll()
         {

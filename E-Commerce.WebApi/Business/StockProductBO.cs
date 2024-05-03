@@ -1,37 +1,89 @@
-﻿using E_Commerce.WebApi.Business.Models;
+﻿using E_Commerce.WebApi.Application.StockProducts;
+using E_Commerce.WebApi.Business.Models;
+using E_Commerce.WebApi.Data.Entities;
 
 namespace E_Commerce.WebApi.Business
 {
     public class StockProductBO : IStockProductBO
     {
-        public Task<StockProductModel> Create(StockProductModel product)
+        readonly private IStockProductReadRepository _stockProductReadRepository;
+        readonly private IStockProductWriteRepository _stockProductWriteRepository;
+
+        public StockProductBO(IStockProductReadRepository stockProductReadRepository, IStockProductWriteRepository stockProductWriteRepository)
         {
-            throw new NotImplementedException();
+            _stockProductReadRepository = stockProductReadRepository;
+            _stockProductWriteRepository = stockProductWriteRepository;
+        }
+
+        public async Task<StockProductModel> Create(StockProductModel product)
+        {
+            var stckProduct = new StockProduct()
+            {
+                ID = product.ID,
+                ProductID = product.ID,
+                ProductQuantity = product.ProductQuantity,
+            };
+            await _stockProductWriteRepository.AddAsync(stckProduct);
+            await _stockProductWriteRepository.SaveAsync();
+            return product;
         }
 
         public List<StockProductModel> GetAll()
         {
-            throw new NotImplementedException();
+            var stckproducts = _stockProductReadRepository.GetAll().ToList();
+            var stockProductList = new List<StockProductModel>();
+            foreach (var stckProduct in stckproducts)
+            {
+                var stlist = new StockProductModel()
+                 {
+                     ID=stckProduct.ID,
+                     ProductID = stckProduct.ProductID,
+                     ProductQuantity = stckProduct.ProductQuantity
+                 };
+                stockProductList.Add(stlist);
+            }
+            return stockProductList;
         }
 
-        public Task<StockProductModel> GetByID(int ID, bool tracking = true)
+        public async Task<StockProductModel> GetByID(int ID, bool tracking = true)
         {
-            throw new NotImplementedException();
+            var stockproducts = await _stockProductReadRepository.GetByIDAsync(ID);
+            var stproduct = new StockProductModel()
+            {
+                ID = stockproducts.ID,
+                ProductID = stockproducts.ProductID,
+                ProductQuantity = stockproducts.ProductQuantity
+            };
+            return stproduct;
         }
 
-        public Task RemoveAsync(int ID)
+        public async Task RemoveAsync(int ID)
         {
-            throw new NotImplementedException();
+            var stproduct = await _stockProductReadRepository.GetByIDAsync(ID);
+            var stockRemove = new StockProductModel()
+            {
+                ID = stproduct.ID,
+                ProductID = stproduct.ProductID,
+                ProductQuantity = stproduct.ProductQuantity
+            };
+            await _stockProductWriteRepository.RemoveAsync(ID);
+            await _stockProductWriteRepository.SaveAsync();
         }
 
-        public Task<int> SaveAsync()
+        public async Task<int> SaveAsync()
         {
-            throw new NotImplementedException();
+            var stproduct = await _stockProductWriteRepository.SaveAsync();
+            return stproduct;
         }
 
-        public Task UpdateAsync(StockProductModel seller)
+        public async Task UpdateAsync(StockProductModel stockProduct)
         {
-            throw new NotImplementedException();
+            var products = _stockProductReadRepository.GetAll().FirstOrDefault(x=>x.ID == stockProduct.ID);
+
+            products.ProductQuantity = stockProduct.ProductQuantity;
+
+            _stockProductWriteRepository.Update(products);
+            await _stockProductWriteRepository.SaveAsync();
         }
     }
 }

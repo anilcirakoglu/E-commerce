@@ -1,4 +1,7 @@
-﻿using E_Commerce.WebApi.Application.Sellers;
+﻿using E_Commerce.WebApi.Application.Admins;
+using E_Commerce.WebApi.Application.Customers;
+using E_Commerce.WebApi.Application.Products;
+using E_Commerce.WebApi.Application.Sellers;
 using E_Commerce.WebApi.Business.Enums;
 using E_Commerce.WebApi.Business.Models;
 using E_Commerce.WebApi.Data.Entities;
@@ -8,10 +11,21 @@ namespace E_Commerce.WebApi.Business
 {
     public class SellerBO : ISellerBO
     {
+        readonly private IAdminReadRepository _adminReadRepository;
+        readonly private IAdminWriteRepository _adminWriteRepository;
+
+        readonly private ICustomerReadRepository _customerReadRepository;
+        readonly private ICustomerWriteRepository _customerWriteRepository;
+
         readonly private ISellerReadRepository _sellerReadRepository;
         readonly private ISellerWriteRepository _sellerWriteRepository;
-        public SellerBO(ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository)
+
+        public SellerBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository)
         {
+            _adminReadRepository = adminReadRepository;
+            _adminWriteRepository = adminWriteRepository;
+            _customerReadRepository = customerReadRepository;
+            _customerWriteRepository = customerWriteRepository;
             _sellerReadRepository = sellerReadRepository;
             _sellerWriteRepository = sellerWriteRepository;
         }
@@ -127,8 +141,10 @@ namespace E_Commerce.WebApi.Business
         #region RegisAndLogin
         public async Task<SellerDto> Registration(SellerDto sellerDto)
         {
+            var adminExists = await _adminReadRepository.GetWhere(x => x.Email == sellerDto.Email).FirstOrDefaultAsync();
             var sellerExists = await _sellerReadRepository.GetWhere(x => x.Email == sellerDto.Email).FirstOrDefaultAsync();
-            if (sellerExists == null)
+            var customerExists = await _customerReadRepository.GetWhere(x=>x.Email == sellerDto.Email).FirstOrDefaultAsync();
+            if (sellerExists == null&&customerExists ==null&&adminExists==null)
             {
                 var seller = new Seller()
                 {
