@@ -31,8 +31,12 @@ namespace E_Commerce.WebApi.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginModel loginModel)
         {
-            var customer = _adminBO.Login(loginModel);
-            return Ok(customer);
+            var token = _adminBO.Login(loginModel);
+            if (token == "")
+            {
+                return BadRequest();
+            }
+            return Ok(token);
         }
         [HttpPost("Registration")]
         public async Task<IActionResult> Register(AdminDto adminDto)
@@ -53,7 +57,7 @@ namespace E_Commerce.WebApi.Controllers
             return Ok(ID);
         }
         [HttpPut("Update")]
-        public async Task<IActionResult> UpdateAsync(AdminModel adminModel)
+        public async Task<IActionResult> UpdateAsync(AdminDto adminModel)
         {
             await _adminBO.UpdateAsync(adminModel);
             return Ok(adminModel);

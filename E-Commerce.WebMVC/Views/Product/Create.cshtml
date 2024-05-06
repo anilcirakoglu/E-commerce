@@ -1,0 +1,40 @@
+﻿@model ProductModel
+@{
+    Layout = "_Layout";
+}
+<form class="w-75 m-5 p-2 " asp-action="Create" asp-controller="Product" method="post">
+    <div class="mb-3">
+        <label for="@Model.ProductName" class="form-label">Product Name</label>
+        <span asp-validation-for="@Model.ProductName" class="text-black"></span>
+        <input type="text" class="form-control" asp-for="@Model.ProductName" />
+    </div>
+    <div class="mb-3">
+        <label for="@Model.ProductInformation" class="form-label">Product Information</label>
+        <span asp-validation-for="@Model.ProductName" class="text-black"></span>
+        <input type="text" class="form-control" asp-for="@Model.ProductName" />
+    </div>
+    <div class="mb-3">
+        <label for="@Model.ProductPrice" class="form-label">Product Price</label>
+        <span asp-validation-for="@Model.ProductPrice" class="text-black"></span>
+        <input type="text" class="form-control" asp-for="@Model.ProductPrice" />
+    </div>
+    <div class="mb-3">
+        <label for="@Model.ProductName" class="form-label">Product Name</label>
+        <span asp-validation-for="@Model.ProductName" class="text-black"></span>
+        <input type="text" class="form-control" asp-for="@Model.ProductName" />
+    </div>
+    <div class="mb-3">
+        <label for="@Model.ProductName" class="form-label">Product Name</label>
+        <span asp-validation-for="@Model.ProductName" class="text-black"></span>
+        <input type="text" class="form-control" asp-for="@Model.ProductName" />
+    </div>
+    <div class="mb-3">
+        <label for="@Model.CategoryID" class="form-label">Product Category</label>
+       <select class="form-select" asp-items="@Model.Categories" asp-for="CategoryID"></select>
+    </div>
+
+
+    <div class="mb-3">
+        <button class=" btn-primary w-100">Save</button>
+    </div>
+</form>

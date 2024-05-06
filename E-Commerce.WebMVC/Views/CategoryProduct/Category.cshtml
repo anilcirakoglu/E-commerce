@@ -1,0 +1,33 @@
+﻿@model List<CategoryProductModel>
+@{
+    Layout = "_Layout";
+}@{
+    if (Model != null )
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>ID </td>
+                    <td>Category</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var category in Model)
+                {
+                    <tr>
+                        <td>
+                            @category.ID
+                        </td>
+                        <td>@category.CategoryName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div>
+        bulunamadı
+        </div>
+    }
+}

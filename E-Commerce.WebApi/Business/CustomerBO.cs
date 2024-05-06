@@ -3,8 +3,15 @@ using E_Commerce.WebApi.Application.Customers;
 using E_Commerce.WebApi.Application.Sellers;
 using E_Commerce.WebApi.Business.Enums;
 using E_Commerce.WebApi.Business.Models;
+using E_Commerce.WebApi.Business.Token;
 using E_Commerce.WebApi.Data.Entities;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace E_Commerce.WebApi.Business
 {
@@ -19,7 +26,11 @@ namespace E_Commerce.WebApi.Business
         readonly private ISellerReadRepository _sellerReadRepository;
         readonly private ISellerWriteRepository _sellerWriteRepository;
 
-        public CustomerBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository)
+        readonly private IConfiguration _configuration;
+
+
+
+        public CustomerBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository,IConfiguration configuration)
         {
             _adminReadRepository = adminReadRepository;
             _adminWriteRepository = adminWriteRepository;
@@ -27,6 +38,7 @@ namespace E_Commerce.WebApi.Business
             _customerWriteRepository = customerWriteRepository;
             _sellerReadRepository = sellerReadRepository;
             _sellerWriteRepository = sellerWriteRepository;
+           _configuration = configuration;
         }
 
         public async Task<CustomerModel> Create(CustomerModel customerModel)
@@ -110,19 +122,23 @@ namespace E_Commerce.WebApi.Business
             return customer;
         }
 
-        public async Task UpdateAsync(CustomerModel customer)
+        public async Task UpdateAsync(CustomerDto customer)
         {
-           var customers =_customerReadRepository.GetAll().FirstOrDefault(x=>x.ID == customer.ID);
+          
+            var customers = _customerReadRepository.GetAll().FirstOrDefault(x => x.ID == customer.ID);
 
-            customers.FirstName= customer.FirstName;
-            customers.LastName= customer.LastName;
-            customers.Address= customer.Address;
-            customers.Email= customer.Email;
-            customers.Password= customer.Password;
-            customers.PhoneNumber= customer.PhoneNumber;
-            customers.Role= customer.Role;//kaldırılacak role kendi değiştiremez
+            customers.FirstName = customer.FirstName;
+            customers.LastName = customer.LastName;
+            customers.Address = customer.Address;
+            customers.Email = customer.Email;
+            customers.Password = customer.Password;
+            customers.PhoneNumber = customer.PhoneNumber;
+          
             _customerWriteRepository.Update(customers);
             await _customerWriteRepository.SaveAsync();
+          
+            
+
         }
         #region RegisAndLogin
         public async Task<CustomerDto> Registration(CustomerDto customerDto)
@@ -152,16 +168,48 @@ namespace E_Commerce.WebApi.Business
 
         public string Login(LoginModel loginModel) 
         {
-            var customer = _customerReadRepository.GetWhere(x=>x.Email == loginModel.Email).FirstOrDefault();
-            var customerPassword = _customerReadRepository.GetWhere(x=>x.Password == loginModel.Password).FirstOrDefault();
-            if (customer == null || customerPassword == null)
+           
+            var customer = _customerReadRepository.GetWhere(x=>x.Email == loginModel.Email &&x.Password == loginModel.Password).FirstOrDefault();
+           
+            if (customer == null )
             {
-                return "Invalid Email or Password";
-            }
+                return "";
 
-            else { return "okey"; }
+            }
+            var tokenclaims = new List<Claim>
+            {
+               new Claim(ClaimTypes.NameIdentifier,customer.ID.ToString()),
+               new Claim(ClaimTypes.Role,customer.Role,RoleType.Customer.ToString()),
+               new Claim(ClaimTypes.Name,customer.Email),
+               new Claim(ClaimTypes.Name,customer.Password),
+               new Claim(ClaimTypes.Name,customer.ID.ToString())
+           };
+
+            var token = GenerateTokens(tokenclaims);
+           
+            return token;
                 
             
+        }
+        public string GenerateTokens(IEnumerable<Claim> claims)
+        {
+            var autSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:KEY"]));
+            if (autSigningKey.KeySize < 128)
+            {
+                using var hmac = new HMACSHA256();
+                autSigningKey = new SymmetricSecurityKey(hmac.Key);
+            }
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Issuer = _configuration["Jwt:Issuer"],
+                Audience = _configuration["Jwt:Issuer"],
+                Expires = DateTime.UtcNow.AddHours(3),
+                SigningCredentials = new SigningCredentials(autSigningKey, SecurityAlgorithms.HmacSha256),
+                Subject = new ClaimsIdentity(claims),
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
         #endregion
     }

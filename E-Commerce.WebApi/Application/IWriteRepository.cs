@@ -9,7 +9,7 @@ namespace E_Commerce.WebApi.Application
         bool Remove(T model);
         bool RemoveRange(List<T> model);
         Task<bool> RemoveAsync(int id);
-        bool Update(T model);
+       bool Update(T model);
         Task<int> SaveAsync();
     }
 }

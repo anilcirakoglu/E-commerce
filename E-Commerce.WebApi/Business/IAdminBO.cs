@@ -9,7 +9,7 @@ namespace E_Commerce.WebApi.Business
         //Task<AdminModel> Create(AdminModel admin);
         string Login(LoginModel loginModel);
         Task<AdminDto> Registration(AdminDto customerDto);
-        Task UpdateAsync(AdminModel admin);
+        Task UpdateAsync(AdminDto admin);
         Task<int> SaveAsync();
         Task RemoveAsync(int ID);
     }

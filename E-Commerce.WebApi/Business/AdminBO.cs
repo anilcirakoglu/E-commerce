@@ -5,6 +5,11 @@ using E_Commerce.WebApi.Business.Enums;
 using E_Commerce.WebApi.Business.Models;
 using E_Commerce.WebApi.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace E_Commerce.WebApi.Business
 {
@@ -19,7 +24,9 @@ namespace E_Commerce.WebApi.Business
         readonly private ISellerReadRepository _sellerReadRepository;
         readonly private ISellerWriteRepository _sellerWriteRepository;
 
-        public AdminBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository)
+        readonly private IConfiguration _configuration;
+
+        public AdminBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository, IConfiguration configuration)
         {
             _adminReadRepository = adminReadRepository;
             _adminWriteRepository = adminWriteRepository;
@@ -27,9 +34,9 @@ namespace E_Commerce.WebApi.Business
             _customerWriteRepository = customerWriteRepository;
             _sellerReadRepository = sellerReadRepository;
             _sellerWriteRepository = sellerWriteRepository;
+            _configuration = configuration;
         }
 
-        
         public async Task<AdminDto> Registration(AdminDto adminDto)
         {
             var adminExists = await _adminReadRepository.GetWhere(x => x.Email == adminDto.Email).FirstOrDefaultAsync();
@@ -55,19 +62,7 @@ namespace E_Commerce.WebApi.Business
            
             return adminDto;
         }
-        public string Login(LoginModel loginModel)
-        {
-            var admin = _adminReadRepository.GetWhere(x => x.Email == loginModel.Email).FirstOrDefault();
-            var adminPassword = _adminReadRepository.GetWhere(x => x.Password == loginModel.Password).FirstOrDefault();
-            if (admin == null || adminPassword == null)
-            {
-                return "Invalid Email or Password";
-            }
-
-            else { return "okey"; }
-
-
-        }
+       
 
         public List<AdminModel> GetAll()
         {
@@ -135,7 +130,7 @@ namespace E_Commerce.WebApi.Business
             return admin;
         }
 
-        public async Task UpdateAsync(AdminModel adminModel)
+        public async Task UpdateAsync(AdminDto adminModel)
         {
             var admins = _adminReadRepository.GetAll().FirstOrDefault(x => x.ID == adminModel.ID);
             admins.FirstName = adminModel.FirstName;
@@ -144,10 +139,58 @@ namespace E_Commerce.WebApi.Business
             admins.Email = adminModel.Email;
             admins.Password = adminModel.Password;
             admins.PhoneNumber = adminModel.PhoneNumber;
-            admins.Role = adminModel.Role;//role degiştemeez
+           
 
             _adminWriteRepository.Update(admins);
             await _adminWriteRepository.SaveAsync();
         }
+        #region Login
+        public string Login(LoginModel loginModel)
+        {
+
+            var admin = _adminReadRepository.GetWhere(x => x.Email == loginModel.Email && x.Password == loginModel.Password).FirstOrDefault();
+
+            if (admin == null)
+            {
+                return "";
+
+            }
+            var tokenclaims = new List<Claim>
+            {
+               new Claim(ClaimTypes.NameIdentifier,admin.ID.ToString()),
+               new Claim(ClaimTypes.Role,admin.Role,RoleType.Customer.ToString()),
+               new Claim(ClaimTypes.Name,admin.Email),
+               new Claim(ClaimTypes.Name,admin.Password),
+               new Claim(ClaimTypes.Name,admin.ID.ToString())
+           };
+
+            var token = GenerateTokens(tokenclaims);
+
+            return token;
+
+
+        }
+        public string GenerateTokens(IEnumerable<Claim> claims)
+        {
+            var autSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:KEY"]));
+            if (autSigningKey.KeySize < 128)
+            {
+                using var hmac = new HMACSHA256();
+                autSigningKey = new SymmetricSecurityKey(hmac.Key);
+            }
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Issuer = _configuration["Jwt:Issuer"],
+                Audience = _configuration["Jwt:Issuer"],
+                Expires = DateTime.UtcNow.AddHours(3),
+                SigningCredentials = new SigningCredentials(autSigningKey, SecurityAlgorithms.HmacSha256),
+                Subject = new ClaimsIdentity(claims),
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
+        #endregion
     }
+
 }

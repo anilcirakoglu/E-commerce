@@ -3,9 +3,12 @@ using E_Commerce.WebApi.Business;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using E_Commerce.WebApi.Business.Enums;
 
 namespace E_Commerce.WebApi.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class CustomerController : ControllerBase
@@ -13,11 +16,12 @@ namespace E_Commerce.WebApi.Controllers
         private readonly ICustomerBO _customerBO;
         readonly private IMapper _mapper;
 
-        public CustomerController(ICustomerBO customerBO,IMapper mapper)
+        public CustomerController(ICustomerBO customerBO, IMapper mapper)
         {
             _customerBO = customerBO;
             _mapper = mapper;
         }
+      
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -31,6 +35,7 @@ namespace E_Commerce.WebApi.Controllers
             var customer = await _customerBO.Create(customerModel);
             return Ok(customer);
         }
+       
         [HttpGet("{ID}")]
         public async Task<IActionResult> GetByID(int ID)
         {
@@ -44,21 +49,28 @@ namespace E_Commerce.WebApi.Controllers
             return Ok(ID);
         }
         [HttpPut("Update")]
-        public async Task<IActionResult> UpdateAsync(CustomerModel customerModel)
+        public async Task<IActionResult> UpdateAsync(CustomerDto customerModel)
         {
             await _customerBO.UpdateAsync(customerModel);
             return Ok(customerModel);
         }
+        
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginModel loginModel)
         {
-            var customer = _customerBO.Login(loginModel);
-            return Ok(customer);
+            var token = _customerBO.Login(loginModel);
+            if(token == "") 
+            {
+                return BadRequest();
+            }
+            return Ok(token);
+
+
         }
         [HttpPost("Registration")]
-        public async Task<IActionResult>Register(CustomerDto customerDto)
+        public async Task<IActionResult> Register(CustomerDto customerDto)
         {
-            var cusReg =await _customerBO.Registration(customerDto);
+            var cusReg = await _customerBO.Registration(customerDto);
             return Ok(cusReg);
         }
     }

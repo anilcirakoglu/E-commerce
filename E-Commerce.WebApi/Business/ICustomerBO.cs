@@ -11,7 +11,7 @@ namespace E_Commerce.WebApi.Business
         string Login(LoginModel loginModel);
         Task<CustomerDto>Registration(CustomerDto customerDto);
 
-        Task UpdateAsync(CustomerModel product);
+        Task UpdateAsync(CustomerDto customer);
         Task<int> SaveAsync();
         Task RemoveAsync(int ID);
     }

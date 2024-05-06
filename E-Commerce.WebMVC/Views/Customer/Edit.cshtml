@@ -1,0 +1,54 @@
+﻿@using Newtonsoft.Json
+@model CustomerModel
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Edit Profile</title>
+</head>
+<body>
+
+    <div class="container">
+        <form class="w-75 m-5 p-2 " asp-action="Edit" asp-controller="Customer" method="post">
+            <input type="hidden"asp-for="@Model.ID" />
+            @{
+                
+            }
+            <div class="mb-3">
+                <label for="@Model.FirstName" class="form-label">First Name</label>
+                <span asp-validation-for="@Model.FirstName" class="text-black"></span>
+                <input type="text" class="form-control" asp-for="@Model.FirstName" />
+            </div>
+            <div class="mb-3">
+                <label for="@Model.LastName" class="form-label">LastName</label>
+                <span asp-validation-for="@Model.LastName" class="text-black"></span>
+                <input type="text" class="form-control" asp-for="@Model.LastName" />
+            </div>
+            <div class="mb-3">
+                <label for="@Model.Email" class="form-label">Email</label>
+                <span asp-validation-for="@Model.Email" class="text-black"></span>
+                <input type="text" class="form-control" asp-for="@Model.Email" />
+            </div>
+            <div class="mb-3">
+                <label for="@Model.Password" class="form-label">Password</label>
+                <span asp-validation-for="@Model.Password" class="text-black"></span>
+                <input type="password" class="form-control" asp-for="@Model.Password" />
+            </div>
+            <div class="mb-3">
+                <label for="@Model.Address" class="form-label">Address</label>
+                <span asp-validation-for="@Model.Address" class="text-black"></span>
+                <input type="text" class="form-control" asp-for="@Model.Address" />
+            </div>
+            <div class="mb-3">
+                <label for="@Model.PhoneNumber" class="form-label">Phone Number</label>
+                <span asp-validation-for="@Model.PhoneNumber" class="text-black"></span>
+                <input type="text" class="form-control" asp-for="@Model.PhoneNumber" />
+            </div>
+            <div class="mb-3">
+                <button asp-route="@Model.ID" class=" btn-primary w-100">Save</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
