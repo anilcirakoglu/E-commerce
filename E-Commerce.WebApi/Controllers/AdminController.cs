@@ -62,5 +62,11 @@ namespace E_Commerce.WebApi.Controllers
             await _adminBO.UpdateAsync(adminModel);
             return Ok(adminModel);
         }
+        [HttpPut("ApprovedSeller")]
+        public async Task<IActionResult> ApprovedSeller(int ID)
+        {
+            await _adminBO.ApprovedSeller(ID);
+            return Ok(ID);
+        }
     }
 }

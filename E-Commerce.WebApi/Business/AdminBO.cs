@@ -37,31 +37,7 @@ namespace E_Commerce.WebApi.Business
             _configuration = configuration;
         }
 
-        public async Task<AdminDto> Registration(AdminDto adminDto)
-        {
-            var adminExists = await _adminReadRepository.GetWhere(x => x.Email == adminDto.Email).FirstOrDefaultAsync();
-            var sellerExists = await _sellerReadRepository.GetWhere(x => x.Email == adminDto.Email).FirstOrDefaultAsync();
-            var customerExists = await _customerReadRepository.GetWhere(x => x.Email == adminDto.Email).FirstOrDefaultAsync();
-            if (sellerExists == null && customerExists == null&&adminExists==null)
-            {
-                var admin = new Admin()
-                {
-
-                    FirstName = adminDto.FirstName,
-                    LastName = adminDto.LastName,
-                    Address = adminDto.Address,
-                    Email = adminDto.Email,
-                    Password = adminDto.Password,
-                    PhoneNumber = adminDto.PhoneNumber,
-                    Role = RoleType.Admin.ToString()
-
-                };
-                await _adminWriteRepository.AddAsync(admin);
-                await _adminWriteRepository.SaveAsync();
-            }
-           
-            return adminDto;
-        }
+        
        
 
         public List<AdminModel> GetAll()
@@ -144,6 +120,31 @@ namespace E_Commerce.WebApi.Business
             _adminWriteRepository.Update(admins);
             await _adminWriteRepository.SaveAsync();
         }
+
+        #region AddSeller
+        
+        public async Task ApprovedSeller(int ID) 
+        {
+
+            var sellerApproved = await _sellerReadRepository.GetByIDAsync(ID);
+       
+            if (sellerApproved != null)
+            {
+                sellerApproved.IsApprove = true;
+                _sellerWriteRepository.Update(sellerApproved);
+                await _sellerWriteRepository.SaveAsync();
+            }
+                
+        }
+
+        #endregion
+        
+
+
+
+
+
+
         #region Login
         public string Login(LoginModel loginModel)
         {
@@ -158,10 +159,12 @@ namespace E_Commerce.WebApi.Business
             var tokenclaims = new List<Claim>
             {
                new Claim(ClaimTypes.NameIdentifier,admin.ID.ToString()),
-               new Claim(ClaimTypes.Role,admin.Role,RoleType.Customer.ToString()),
+               new Claim(ClaimTypes.Role,admin.Role,RoleType.Admin.ToString()),
                new Claim(ClaimTypes.Name,admin.Email),
                new Claim(ClaimTypes.Name,admin.Password),
-               new Claim(ClaimTypes.Name,admin.ID.ToString())
+               new Claim(ClaimTypes.Name,admin.ID.ToString()
+               )
+              
            };
 
             var token = GenerateTokens(tokenclaims);
@@ -169,6 +172,31 @@ namespace E_Commerce.WebApi.Business
             return token;
 
 
+        }
+        public async Task<AdminDto> Registration(AdminDto adminDto)
+        {
+            var adminExists = await _adminReadRepository.GetWhere(x => x.Email == adminDto.Email).FirstOrDefaultAsync();
+            var sellerExists = await _sellerReadRepository.GetWhere(x => x.Email == adminDto.Email).FirstOrDefaultAsync();
+            var customerExists = await _customerReadRepository.GetWhere(x => x.Email == adminDto.Email).FirstOrDefaultAsync();
+            if (sellerExists == null && customerExists == null && adminExists == null)
+            {
+                var admin = new Admin()
+                {
+
+                    FirstName = adminDto.FirstName,
+                    LastName = adminDto.LastName,
+                    Address = adminDto.Address,
+                    Email = adminDto.Email,
+                    Password = adminDto.Password,
+                    PhoneNumber = adminDto.PhoneNumber,
+                    Role = RoleType.Admin.ToString()
+
+                };
+                await _adminWriteRepository.AddAsync(admin);
+                await _adminWriteRepository.SaveAsync();
+            }
+
+            return adminDto;
         }
         public string GenerateTokens(IEnumerable<Claim> claims)
         {
@@ -190,6 +218,7 @@ namespace E_Commerce.WebApi.Business
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
+        
         #endregion
     }
 

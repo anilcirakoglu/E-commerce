@@ -12,5 +12,7 @@
         public string CompanyType { get; set; }
         public int TaxpayerIDNumber { get; set; }
         public string Role { get; set; }
+
+        public bool IsApprove { get; set; }=false;
     }
 }

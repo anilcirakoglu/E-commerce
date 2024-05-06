@@ -1,0 +1,50 @@
+﻿@model List<SellerModel>
+@{
+    Layout = "_Layout";
+}@{
+    if (Model != null)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>ID </td>
+                    <td>Name</td>
+                    <td>LastName</td>
+                    <td>Address</td>
+                    <td>PhoneNumber</td>
+                    <td>Email</td>
+                    <td>Password</td>
+                    <td>Company Type</td>
+                    <td>Tax Payer ID Number</td>
+                    <td>IsApproved</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var seller in Model)
+                {
+                    <tr>
+                        <td>
+                            @seller.ID
+                        </td>
+                        <td>@seller.FirstName</td>
+                        <td>@seller.LastName</td>
+                        <td>@seller.Address</td>
+                        <td>@seller.PhoneNumber</td>
+                        <td>@seller.Email</td>
+                        <td>@seller.Password</td>
+                        <td>@seller.CompanyType</td>
+                        <td>@seller.TaxpayerIDNumber</td>
+                        <td>@seller.IsApprove</td>
+                        <td><button>Click</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div>
+            bulunamadı
+        </div>
+    }
+}

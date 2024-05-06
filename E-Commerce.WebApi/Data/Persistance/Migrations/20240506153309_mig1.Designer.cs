@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace E_Commerce.WebApi.Data.Persistance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240503190407_mig1")]
+    [Migration("20240506153309_mig1")]
     partial class mig1
     {
         /// <inheritdoc />
@@ -163,6 +163,10 @@ namespace E_Commerce.WebApi.Data.Persistance.Migrations
                     b.Property<int>("CategoryID")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsProductActive")
                         .HasColumnType("boolean");
 
@@ -224,6 +228,9 @@ namespace E_Commerce.WebApi.Data.Persistance.Migrations
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("character varying(250)");
+
+                    b.Property<bool>("IsApprove")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
                         .IsRequired()

@@ -13,8 +13,11 @@ namespace E_Commerce.WebApi.Data.Entities
         public double previousPrice { get; set; }
         public double discountPercentage {  get; set; }
         public bool IsProductActive { get; set; }
+        public string Image { get; set; }
         public int CategoryID {  get; set; }
         public int SellerID { get; set; }
+
+       
 
 
         public CategoryProduct CategoryProduct { get; set; }

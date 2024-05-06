@@ -1,6 +1,6 @@
-﻿namespace E_Commerce.WebApi.Business.Models
+﻿namespace E_Commerce.WebMVC.Models
 {
-    public class SellerDto
+    public class SellerModel
     {
         public int ID { get; set; }
         public string FirstName { get; set; }
@@ -12,5 +12,6 @@
         public bool IsApprove { get; set; }=false;
         public string CompanyType { get; set; }
         public int TaxpayerIDNumber { get; set; }
+
     }
 }

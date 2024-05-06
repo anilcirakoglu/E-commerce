@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce.WebMVC.Controllers
 {
@@ -23,7 +24,15 @@ namespace E_Commerce.WebMVC.Controllers
         }
         public IActionResult Edit()
         {
-            return View(new CustomerModel());
+            return View(new AdminModel());
+        }
+        public IActionResult SignIn()
+        {
+            return View(new AdminModel());
+        }
+        public IActionResult ApprovedSeller()
+        {
+            return View();
         }
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel model)
@@ -93,12 +102,92 @@ namespace E_Commerce.WebMVC.Controllers
                         return RedirectToAction("Index", "Home");
                     }
                     ModelState.AddModelError("", "wrong Model");
+                }
+            }
+            return View(customer);
+        }
+        [HttpPost]
+        public async Task<IActionResult> SignIn(AdminModel admin)
+        {
+            if (ModelState.IsValid)
+            {
+                var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+
+
+                if (token != null)
+                {
+                    var client = _httpClientFactory.CreateClient();
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    var data = JsonConvert.SerializeObject(admin);
+                    var content = new StringContent(data, Encoding.UTF8, "application/json");
+
+                    var response = await client.PostAsync("http://localhost:5101/api/Admin/Registration", content);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    ModelState.AddModelError("", "wrong Model");
 
                 }
 
             }
-            return View(customer);
+            return View(admin);
+        }
+        [HttpGet]
+        public async Task<IActionResult> ListSeller()
+        {
+            List<SellerModel> categoryProducts = new List<SellerModel>();
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            if (token != null)
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                var response = await client.GetAsync("http://localhost:5101/api/Seller");
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var content = await response.Content.ReadAsStringAsync();
+                    categoryProducts = JsonConvert.DeserializeObject<List<SellerModel>>(content);
+                }
+                else
+                {
+
+                    // Örneğin, loglama, hata mesajı gösterme veya başka bir işlem
+                }
+            }
+            return View("ApprovedSeller",categoryProducts);
         }
 
+        
+        [HttpPost]
+        public async Task<IActionResult> ApprovedSeller(SellerModel seller)
+        {
+            List<SellerModel> categoryProducts = new List<SellerModel>();
+
+
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            if (token != null)
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                var response = await client.GetAsync("http://localhost:5101/api/Seller/ApprovedSeller");
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var content = await response.Content.ReadAsStringAsync();
+                    categoryProducts = JsonConvert.DeserializeObject<List<SellerModel>>(content);
+                }
+                else
+                {
+
+                    // Örneğin, loglama, hata mesajı gösterme veya başka bir işlem
+                }
+            }
+
+            return View(seller);
+
+
+        }
     }
 }

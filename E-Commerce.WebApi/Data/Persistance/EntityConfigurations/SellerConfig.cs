@@ -19,6 +19,7 @@ namespace E_Commerce.WebApi.Data.Persistance.EntityConfigurations
             builder.Property(p => p.CompanyType).IsRequired().HasMaxLength(250);
             builder.Property(p => p.TaxpayerIDNumber).IsRequired().HasMaxLength(250);
             builder.Property(p => p.Role).IsRequired().HasMaxLength(250);
+            builder.Property(p => p.IsApprove);
         }
     }
 }

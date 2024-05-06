@@ -18,6 +18,7 @@ namespace E_Commerce.WebApi.Data.Persistance.EntityConfigurations
             builder.Property(p => p.ProductPrice).IsRequired().HasMaxLength(250);
             builder.Property(p => p.previousPrice);
             builder.Property(p => p.discountPercentage);
+            builder.Property(p => p.Image);
            
             builder.HasOne(p=>p.CategoryProduct).WithMany().HasForeignKey(c=>c.CategoryID).IsRequired();
             // builder.HasOne(p => p.CategoryProduct).WithOne().HasForeignKey<Product>(p => p.CategoryID).IsRequired();

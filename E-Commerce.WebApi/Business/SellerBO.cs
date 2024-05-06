@@ -6,6 +6,11 @@ using E_Commerce.WebApi.Business.Enums;
 using E_Commerce.WebApi.Business.Models;
 using E_Commerce.WebApi.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace E_Commerce.WebApi.Business
 {
@@ -20,7 +25,9 @@ namespace E_Commerce.WebApi.Business
         readonly private ISellerReadRepository _sellerReadRepository;
         readonly private ISellerWriteRepository _sellerWriteRepository;
 
-        public SellerBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository)
+        readonly private IConfiguration _configuration;
+
+        public SellerBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository, IConfiguration configuration)
         {
             _adminReadRepository = adminReadRepository;
             _adminWriteRepository = adminWriteRepository;
@@ -28,20 +35,21 @@ namespace E_Commerce.WebApi.Business
             _customerWriteRepository = customerWriteRepository;
             _sellerReadRepository = sellerReadRepository;
             _sellerWriteRepository = sellerWriteRepository;
+            _configuration = configuration;
         }
 
-        public async Task<SellerModel> Create(SellerModel SellerModel)
+        public async Task<SellerDto> Create(SellerDto SellerModel)
         {
             var seller = new Seller()
             {
-                ID = SellerModel.ID,
+               
                 FirstName = SellerModel.FirstName,
                 LastName = SellerModel.LastName,
                 Address = SellerModel.Address,
                 PhoneNumber = SellerModel.PhoneNumber,
                 Email = SellerModel.Email,
                 Password = SellerModel.Password,
-                Role = SellerModel.Role,
+                IsApprove = SellerModel.IsApprove,
                 CompanyType = SellerModel.CompanyType,
                 TaxpayerIDNumber = SellerModel.TaxpayerIDNumber
 
@@ -121,7 +129,7 @@ namespace E_Commerce.WebApi.Business
             return seller;
         }
 
-        public async Task UpdateAsync(SellerModel seller)
+        public async Task UpdateAsync(SellerDto seller)
         {
             var sellers = _sellerReadRepository.GetAll().FirstOrDefault(x => x.ID == seller.ID);
 
@@ -131,7 +139,7 @@ namespace E_Commerce.WebApi.Business
             sellers.PhoneNumber = seller.PhoneNumber;
             sellers.Email = seller.Email;
             sellers.Password = seller.Password;
-            sellers.Role = seller.Role;
+           
             seller.CompanyType = seller.CompanyType;
             sellers.TaxpayerIDNumber = seller.TaxpayerIDNumber;
 
@@ -155,6 +163,7 @@ namespace E_Commerce.WebApi.Business
                     Password = sellerDto.Password,
                     PhoneNumber = sellerDto.PhoneNumber,
                     CompanyType = sellerDto.CompanyType,
+                    IsApprove = sellerDto.IsApprove,
                     TaxpayerIDNumber = sellerDto.TaxpayerIDNumber,
                     Role = RoleType.Seller.ToString()
                 };
@@ -169,18 +178,44 @@ namespace E_Commerce.WebApi.Business
         }
         public string Login(LoginModel loginModel)
         {
-            var customer = _sellerReadRepository.GetWhere(x => x.Email == loginModel.Email).FirstOrDefault();
-            var customerPassword = _sellerReadRepository.GetWhere(x => x.Password == loginModel.Password).FirstOrDefault();
-            if (customer == null || customerPassword == null)
+
+            var seller = _sellerReadRepository.GetWhere(x => x.Email == loginModel.Email && x.Password == loginModel.Password&&  x.IsApprove == true).FirstOrDefault();   
+            if (seller == null )
             {
-                return "Invalid Email or Password";
+                return "";
             }
-
-            else { return "okey"; }
-
-
+            var tokenclaims = new List<Claim>
+            {
+               new Claim(ClaimTypes.NameIdentifier,seller.ID.ToString()),
+               new Claim(ClaimTypes.Role,seller.Role,RoleType.Customer.ToString()),
+               new Claim(ClaimTypes.Name,seller.Email),
+               new Claim(ClaimTypes.Name,seller.Password),
+               new Claim(ClaimTypes.Name,seller.ID.ToString())
+           };
+            var token = GenerateTokens(tokenclaims);
+            return token;
         }
 
+        public string GenerateTokens(IEnumerable<Claim> claims)
+        {
+            var autSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:KEY"]));
+            if (autSigningKey.KeySize < 128)
+            {
+                using var hmac = new HMACSHA256();
+                autSigningKey = new SymmetricSecurityKey(hmac.Key);
+            }
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Issuer = _configuration["Jwt:Issuer"],
+                Audience = _configuration["Jwt:Issuer"],
+                Expires = DateTime.UtcNow.AddHours(3),
+                SigningCredentials = new SigningCredentials(autSigningKey, SecurityAlgorithms.HmacSha256),
+                Subject = new ClaimsIdentity(claims),
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
 
         #endregion
     }

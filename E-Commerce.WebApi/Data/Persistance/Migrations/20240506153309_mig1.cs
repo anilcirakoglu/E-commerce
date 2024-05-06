@@ -76,7 +76,8 @@ namespace E_Commerce.WebApi.Data.Persistance.Migrations
                     Password = table.Column<string>(type: "text", nullable: false),
                     CompanyType = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
                     TaxpayerIDNumber = table.Column<int>(type: "integer", maxLength: 250, nullable: false),
-                    Role = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false)
+                    Role = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
+                    IsApprove = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -95,6 +96,7 @@ namespace E_Commerce.WebApi.Data.Persistance.Migrations
                     previousPrice = table.Column<double>(type: "double precision", nullable: false),
                     discountPercentage = table.Column<double>(type: "double precision", nullable: false),
                     IsProductActive = table.Column<bool>(type: "boolean", nullable: false),
+                    Image = table.Column<string>(type: "text", nullable: false),
                     CategoryID = table.Column<int>(type: "integer", nullable: false),
                     SellerID = table.Column<int>(type: "integer", nullable: false)
                 },
