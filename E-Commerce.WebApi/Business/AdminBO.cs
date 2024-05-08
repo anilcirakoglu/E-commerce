@@ -40,13 +40,13 @@ namespace E_Commerce.WebApi.Business
         
        
 
-        public List<AdminModel> GetAll()
+        public List<AdminDto> GetAll()
         {
             var admins = _adminReadRepository.GetAll().ToList();
-            var adminList = new List<AdminModel>();
+            var adminList = new List<AdminDto>();
             foreach (var admin in admins)
             {
-                var adlist = new AdminModel()
+                var adlist = new AdminDto()
                 {
                     ID = admin.ID,
                     FirstName = admin.FirstName,
@@ -55,7 +55,6 @@ namespace E_Commerce.WebApi.Business
                     Email = admin.Email,
                     Password = admin.Password,
                     PhoneNumber = admin.PhoneNumber,
-                    Role = admin.Role,
 
                 };
                 adminList.Add(adlist);
@@ -63,10 +62,10 @@ namespace E_Commerce.WebApi.Business
             return adminList;
         }
 
-        public async Task<AdminModel> GetByID(int ID, bool tracking = true)
+        public async Task<AdminDto> GetByID(int ID, bool tracking = true)
         {
             var admins = await _adminReadRepository.GetByIDAsync(ID);
-            var admin = new AdminModel()
+            var admin = new AdminDto()
             {
                 ID = admins.ID,
                 FirstName = admins.FirstName,
@@ -75,7 +74,7 @@ namespace E_Commerce.WebApi.Business
                 Email = admins.Email,
                 Password = admins.Password,
                 PhoneNumber = admins.PhoneNumber,
-                Role = admins.Role,
+               
 
             };
             return admin;
@@ -121,31 +120,36 @@ namespace E_Commerce.WebApi.Business
             await _adminWriteRepository.SaveAsync();
         }
 
-        #region AddSeller
+        #region AddSellerandRejectSeller
         
         public async Task ApprovedSeller(int ID) 
         {
-
             var sellerApproved = await _sellerReadRepository.GetByIDAsync(ID);
-       
             if (sellerApproved != null)
             {
                 sellerApproved.IsApprove = true;
                 _sellerWriteRepository.Update(sellerApproved);
                 await _sellerWriteRepository.SaveAsync();
             }
-                
+        }
+
+        public async Task RejectSeller(int ID)
+        {
+            var sellerApproved = await _sellerReadRepository.GetByIDAsync(ID);
+            if (sellerApproved != null)
+            {
+                sellerApproved.IsApprove = false;
+                _sellerWriteRepository.Update(sellerApproved);
+                await _sellerWriteRepository.SaveAsync();
+            }
         }
 
         #endregion
-        
 
 
 
 
-
-
-        #region Login
+        #region LoginAndRegister
         public string Login(LoginModel loginModel)
         {
 
@@ -154,7 +158,6 @@ namespace E_Commerce.WebApi.Business
             if (admin == null)
             {
                 return "";
-
             }
             var tokenclaims = new List<Claim>
             {
@@ -164,15 +167,12 @@ namespace E_Commerce.WebApi.Business
                new Claim(ClaimTypes.Name,admin.Password),
                new Claim(ClaimTypes.Name,admin.ID.ToString()
                )
-              
            };
-
             var token = GenerateTokens(tokenclaims);
-
             return token;
-
-
         }
+
+
         public async Task<AdminDto> Registration(AdminDto adminDto)
         {
             var adminExists = await _adminReadRepository.GetWhere(x => x.Email == adminDto.Email).FirstOrDefaultAsync();
@@ -182,7 +182,6 @@ namespace E_Commerce.WebApi.Business
             {
                 var admin = new Admin()
                 {
-
                     FirstName = adminDto.FirstName,
                     LastName = adminDto.LastName,
                     Address = adminDto.Address,
@@ -190,14 +189,16 @@ namespace E_Commerce.WebApi.Business
                     Password = adminDto.Password,
                     PhoneNumber = adminDto.PhoneNumber,
                     Role = RoleType.Admin.ToString()
-
                 };
                 await _adminWriteRepository.AddAsync(admin);
                 await _adminWriteRepository.SaveAsync();
             }
-
             return adminDto;
         }
+        /// <summary>
+        /// Internetten baktım alıntıladığını yazmayı unutma!
+        /// </summary>
+       
         public string GenerateTokens(IEnumerable<Claim> claims)
         {
             var autSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:KEY"]));

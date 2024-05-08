@@ -4,11 +4,12 @@ namespace E_Commerce.WebApi.Business
 {
     public interface IAdminBO
     {
-        List<AdminModel> GetAll();//customer and seller create
-        Task<AdminModel> GetByID(int ID, bool tracking = true);
-        //Task<AdminModel> Create(AdminModel admin);
+        List<AdminDto> GetAll();//customer and seller create
+        Task<AdminDto> GetByID(int ID, bool tracking = true);
+        
         string Login(LoginModel loginModel);
         Task ApprovedSeller(int ID);
+        Task RejectSeller(int ID);
         Task<AdminDto> Registration(AdminDto customerDto);
         Task UpdateAsync(AdminDto admin);
        

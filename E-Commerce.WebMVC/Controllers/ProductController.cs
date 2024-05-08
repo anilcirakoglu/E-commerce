@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Text;
 
 namespace E_Commerce.WebMVC.Controllers
 {
@@ -18,43 +19,98 @@ namespace E_Commerce.WebMVC.Controllers
         {
             return View();
         }
+
         public async Task<IActionResult> Create()
         {
-            List<CategoryProductModel> categoryProducts = new List<CategoryProductModel>();
-            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
             var product = new ProductModel();
-           
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            
+
             if (token != null)
             {
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 var response = await client.GetAsync("http://localhost:5101/api/CategoryProduct");
+
                 if (response.IsSuccessStatusCode)
                 {
 
                     var content = await response.Content.ReadAsStringAsync();
-                   
-                    categoryProducts = JsonConvert.DeserializeObject<List<CategoryProductModel>>(content);
-                    product.Categories = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(categoryProducts,"ID", "CategoryName");
+
+                    var categoryProducts = JsonConvert.DeserializeObject<List<CategoryProductModel>>(content);
+                    product.Categories = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(categoryProducts, "ID", "CategoryName");
+
+                    return View(product);
                 }
                 else
                 {
 
-                    // Örneğin, loglama, hata mesajı gösterme veya başka bir işlem
+                    // hata mesajı gösterme 
                 }
             }
-            
 
-            return View(product);
+
+            return RedirectToAction("ListProduct");
         }
         [HttpPost]
-        public async Task<IActionResult> Create(ProductModel product) 
+        public async Task<IActionResult> Create(ProductModel productModel)
         {
-            if(ModelState.IsValid)
-            {
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+            int jwtID = int.Parse(jwtId);
+            productModel.SellerID = jwtID;
 
-            }
-            return View(product);
+
+           //modelstate is valid bak
+               
+                if (token != null)
+                {
+                 
+
+                    var client = _httpClientFactory.CreateClient();
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+
+                    var data = JsonConvert.SerializeObject(productModel);
+                    var content = new StringContent(data, Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync($"http://localhost:5101/api/Product/Create",content);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("ListProduct", "Product");
+                    }
+                    ModelState.AddModelError("", "wrong Model");
+                }
+            
+
+            return View(productModel);
         }
+        [HttpGet]
+        public async Task<IActionResult> ListProduct()
+        {
+            List<ProductModel> product = new List<ProductModel>();
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            if (token != null)
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                var response = await client.GetAsync("http://localhost:5101/api/Product/GetllAllProducts");
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var content = await response.Content.ReadAsStringAsync();
+                    product = JsonConvert.DeserializeObject<List<ProductModel>>(content);
+                }
+                else
+                {
+
+                    //  hata mesajı gösterme 
+                }
+            }
+            return View("ProductList", product);
+        }
+
+
+
+
     }
 }

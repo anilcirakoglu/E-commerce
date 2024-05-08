@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce.WebMVC.Controllers
 {
+
     public class AdminController : Controller
     {
         readonly private IHttpClientFactory _httpClientFactory;
@@ -30,10 +31,8 @@ namespace E_Commerce.WebMVC.Controllers
         {
             return View(new AdminModel());
         }
-        public IActionResult ApprovedSeller()
-        {
-            return View();
-        }
+        
+
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel model)
         {
@@ -73,7 +72,7 @@ namespace E_Commerce.WebMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(CustomerModel customer)
+        public async Task<IActionResult> Edit(AdminModel adminModel)
         {
             if (ModelState.IsValid)
             {
@@ -81,7 +80,7 @@ namespace E_Commerce.WebMVC.Controllers
 
                 var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
                 int jwtID = int.Parse(jwtId);
-                customer.ID = jwtID;//Düzenleyebilir miyim diye bak
+                adminModel.ID = jwtID;//Düzenleyebilir miyim diye bak
 
                 if (token != null)
                 {
@@ -89,11 +88,7 @@ namespace E_Commerce.WebMVC.Controllers
                     var client = _httpClientFactory.CreateClient();
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-
-                    var data = JsonConvert.SerializeObject(customer);
-
-
-
+                    var data = JsonConvert.SerializeObject(adminModel);
                     var content = new StringContent(data, Encoding.UTF8, "application/json");
 
                     var response = await client.PutAsync($"http://localhost:5101/api/Admin/Update", content);
@@ -104,8 +99,9 @@ namespace E_Commerce.WebMVC.Controllers
                     ModelState.AddModelError("", "wrong Model");
                 }
             }
-            return View(customer);
+            return View(adminModel);
         }
+
         [HttpPost]
         public async Task<IActionResult> SignIn(AdminModel admin)
         {
@@ -134,10 +130,11 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(admin);
         }
+
         [HttpGet]
         public async Task<IActionResult> ListSeller()
         {
-            List<SellerModel> categoryProducts = new List<SellerModel>();
+            List<SellerModel> sellers = new List<SellerModel>();
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
             if (token != null)
             {
@@ -148,22 +145,49 @@ namespace E_Commerce.WebMVC.Controllers
                 {
 
                     var content = await response.Content.ReadAsStringAsync();
-                    categoryProducts = JsonConvert.DeserializeObject<List<SellerModel>>(content);
+                    sellers = JsonConvert.DeserializeObject<List<SellerModel>>(content);
                 }
                 else
                 {
 
-                    // Örneğin, loglama, hata mesajı gösterme veya başka bir işlem
+                    //  hata mesajı gösterme 
                 }
             }
-            return View("ApprovedSeller",categoryProducts);
+            return View("ApprovedSeller", sellers);
         }
 
-        
-        [HttpPost]
-        public async Task<IActionResult> ApprovedSeller(SellerModel seller)
+        [HttpGet]
+        public async Task<IActionResult> ListCustomer()
         {
-            List<SellerModel> categoryProducts = new List<SellerModel>();
+            List<CustomerModel> customers = new List<CustomerModel>();
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            if (token != null)
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                var response = await client.GetAsync("http://localhost:5101/api/Customer");
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var content = await response.Content.ReadAsStringAsync();
+                    customers = JsonConvert.DeserializeObject<List<CustomerModel>>(content);
+                }
+                else
+                {
+
+                    //  hata mesajı gösterme 
+                }
+            }
+            return View("CustomerList", customers);
+
+        }
+
+
+
+        
+        public async Task<IActionResult> ApprovedSeller(int ID)
+        {
+            
 
 
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
@@ -171,12 +195,15 @@ namespace E_Commerce.WebMVC.Controllers
             {
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                var response = await client.GetAsync("http://localhost:5101/api/Seller/ApprovedSeller");
+
+                var data = JsonConvert.SerializeObject(ID);
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync($"http://localhost:5101/api/Admin/ApprovedSeller", content);
                 if (response.IsSuccessStatusCode)
                 {
 
-                    var content = await response.Content.ReadAsStringAsync();
-                    categoryProducts = JsonConvert.DeserializeObject<List<SellerModel>>(content);
+                    var contents = await response.Content.ReadAsStringAsync();
+                    ID = JsonConvert.DeserializeObject<int>(contents);
                 }
                 else
                 {
@@ -185,7 +212,39 @@ namespace E_Commerce.WebMVC.Controllers
                 }
             }
 
-            return View(seller);
+            return RedirectToAction("ListSeller");
+
+
+        }
+
+        public async Task<IActionResult> RejectSeller(int ID)
+        {
+
+
+
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            if (token != null)
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var data = JsonConvert.SerializeObject(ID);
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync($"http://localhost:5101/api/Admin/RejectSeller", content);
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var contents = await response.Content.ReadAsStringAsync();
+                    ID = JsonConvert.DeserializeObject<int>(contents);
+                }
+                else
+                {
+
+                    // Örneğin, loglama, hata mesajı gösterme veya başka bir işlem
+                }
+            }
+
+            return RedirectToAction("ListSeller");
 
 
         }

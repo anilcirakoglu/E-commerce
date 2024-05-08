@@ -1,0 +1,45 @@
+﻿@model List<CustomerModel>
+@{
+    Layout = "_Layout";
+}@{
+    if (Model != null)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>ID </td>
+                    <td>Name</td>
+                    <td>LastName</td>
+                    <td>Address</td>
+                    <td>PhoneNumber</td>
+                    <td>Email</td>
+                    <td>Password</td>
+                   
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var customer in Model)
+                {
+                    <tr>
+                        <td>
+                            @customer.ID
+                        </td>
+                        <td>@customer.FirstName</td>
+                        <td>@customer.LastName</td>
+                        <td>@customer.Address</td>
+                        <td>@customer.PhoneNumber</td>
+                        <td>@customer.Email</td>
+                        <td>@customer.Password</td>
+                     
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div>
+            bulunamadı
+        </div>
+    }
+}

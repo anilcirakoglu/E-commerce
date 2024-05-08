@@ -35,7 +35,14 @@
                         <td>@seller.CompanyType</td>
                         <td>@seller.TaxpayerIDNumber</td>
                         <td>@seller.IsApprove</td>
-                        <td><button>Click</button></td>
+                        <td>
+                            <a asp-action="ApprovedSeller" asp-controller="Admin" 
+                               asp-route-id="@seller.ID" class="btn btn-outline-success " >Approve</a>
+                        </td>
+                        <td>
+                            <a asp-action="RejectSeller" asp-controller="Admin"
+                               asp-route-id="@seller.ID" class="btn btn-danger ">Reject</a>
+                        </td>
                     </tr>
                 }
             </tbody>

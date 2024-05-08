@@ -60,13 +60,13 @@ namespace E_Commerce.WebApi.Business
         }
        
 
-        public List<SellerModel> GetAll()
+        public List<SellerDto> GetAll()
         {
             var sellers = _sellerReadRepository.GetAll().ToList();
-            var sellerList = new List<SellerModel>();
+            var sellerList = new List<SellerDto>();
             foreach (var seller in sellers)
             {
-                var srList = new SellerModel()
+                var srList = new SellerDto()
                 {
                     ID = seller.ID,
                     FirstName = seller.FirstName,
@@ -75,19 +75,19 @@ namespace E_Commerce.WebApi.Business
                     PhoneNumber = seller.PhoneNumber,
                     Email = seller.Email,
                     Password = seller.Password,
-                    Role = seller.Role,
                     CompanyType = seller.CompanyType,
-                    TaxpayerIDNumber = seller.TaxpayerIDNumber
+                    TaxpayerIDNumber = seller.TaxpayerIDNumber,
+                    IsApprove = seller.IsApprove,
                 };
                 sellerList.Add(srList);
             }
             return sellerList;
         }
 
-        public async Task<SellerModel> GetByID(int ID, bool tracking = true)
+        public async Task<SellerDto> GetByID(int ID, bool tracking = true)
         {
             var sellers = await _sellerReadRepository.GetByIDAsync(ID);
-            var seller = new SellerModel()
+            var seller = new SellerDto()
             {
                 ID = sellers.ID,
                 FirstName = sellers.FirstName,
@@ -96,7 +96,6 @@ namespace E_Commerce.WebApi.Business
                 PhoneNumber = sellers.PhoneNumber,
                 Email = sellers.Email,
                 Password = sellers.Password,
-                Role = sellers.Role,
                 CompanyType = sellers.CompanyType,
                 TaxpayerIDNumber = sellers.TaxpayerIDNumber
             };
@@ -171,7 +170,7 @@ namespace E_Commerce.WebApi.Business
                 await _sellerWriteRepository.SaveAsync();
 
             }
-            //Admin control 
+           
 
 
             return sellerDto;

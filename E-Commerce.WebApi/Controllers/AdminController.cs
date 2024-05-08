@@ -2,11 +2,14 @@
 using E_Commerce.WebApi.Business;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce.WebApi.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
+    
     public class AdminController : ControllerBase
     {
         private readonly IAdminBO _adminBO;
@@ -62,10 +65,17 @@ namespace E_Commerce.WebApi.Controllers
             await _adminBO.UpdateAsync(adminModel);
             return Ok(adminModel);
         }
-        [HttpPut("ApprovedSeller")]
-        public async Task<IActionResult> ApprovedSeller(int ID)
+       
+        [HttpPost("ApprovedSeller")]
+        public async Task<IActionResult> ApprovedSeller( [FromBody]int  ID)
         {
             await _adminBO.ApprovedSeller(ID);
+            return Ok(ID);
+        }
+        [HttpPost("RejectSeller")]
+        public async Task<IActionResult> RejectSeller([FromBody] int ID)
+        {
+            await _adminBO.RejectSeller(ID);
             return Ok(ID);
         }
     }

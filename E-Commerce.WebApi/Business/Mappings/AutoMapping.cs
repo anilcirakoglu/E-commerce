@@ -10,6 +10,7 @@ namespace E_Commerce.WebApi.Business.Mappings
             CreateMap<CustomerModel, CustomerDto>();
             CreateMap<SellerModel, SellerDto>();
             CreateMap<AdminModel,AdminDto>();
+            CreateMap<ProductModel, ProductDto>();
         }
     }
 }

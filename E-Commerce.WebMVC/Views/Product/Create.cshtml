@@ -10,8 +10,8 @@
     </div>
     <div class="mb-3">
         <label for="@Model.ProductInformation" class="form-label">Product Information</label>
-        <span asp-validation-for="@Model.ProductName" class="text-black"></span>
-        <input type="text" class="form-control" asp-for="@Model.ProductName" />
+        <span asp-validation-for="@Model.ProductInformation" class="text-black"></span>
+        <input type="text" class="form-control" asp-for="@Model.ProductInformation" />
     </div>
     <div class="mb-3">
         <label for="@Model.ProductPrice" class="form-label">Product Price</label>
@@ -19,15 +19,22 @@
         <input type="text" class="form-control" asp-for="@Model.ProductPrice" />
     </div>
     <div class="mb-3">
-        <label for="@Model.ProductName" class="form-label">Product Name</label>
-        <span asp-validation-for="@Model.ProductName" class="text-black"></span>
-        <input type="text" class="form-control" asp-for="@Model.ProductName" />
+        <label for="@Model.Image" class="form-label">Image</label>
+        <span asp-validation-for="@Model.Image" class="text-black"></span>
+        <input type="text" class="form-control" asp-for="@Model.Image" />
     </div>
     <div class="mb-3">
-        <label for="@Model.ProductName" class="form-label">Product Name</label>
-        <span asp-validation-for="@Model.ProductName" class="text-black"></span>
-        <input type="text" class="form-control" asp-for="@Model.ProductName" />
+        <label for="@Model.DiscountPercentage" class="form-label">Discount Percentage</label>
+        <span asp-validation-for="@Model.DiscountPercentage" class="text-black"></span>
+        <input type="text" class="form-control" asp-for="@Model.DiscountPercentage" />
     </div>
+  
+    <div class="mb-3">
+        <label for="@Model.ProductQuantity" class="form-label">Stock Quantity</label>
+        <span asp-validation-for="@Model.ProductQuantity" class="text-black"></span>
+        <input type="text" class="form-control" asp-for="@Model.ProductQuantity" />
+    </div>
+  
     <div class="mb-3">
         <label for="@Model.CategoryID" class="form-label">Product Category</label>
        <select class="form-select" asp-items="@Model.Categories" asp-for="CategoryID"></select>

@@ -20,6 +20,8 @@ namespace E_Commerce.WebApi.Data.Persistance.Repositories
             var query =Table.AsQueryable();
             if(!tracking)
                 query=query.AsNoTracking();
+
+            query =query.OrderBy(x=>x.ID);
             return query;
         }
         public static IQueryable<T> ApplyIncludes(IQueryable<T> query, params Expression<Func<T, object>>[] includes) {

@@ -22,14 +22,10 @@ namespace E_Commerce.WebApi.Business
         readonly private IStockProductReadRepository _stockProductReadRepository;
         readonly private IStockProductWriteRepository _stockProductWriteRepository;
 
-        //readonly private ICategoryProductReadRepository _categoryProductReadRepository;
-        //readonly private ICategoryProductWriteRepository categoryProductWriteRepository;
+        readonly private ICategoryProductReadRepository _categoryProductReadRepository;
+        readonly private ICategoryProductWriteRepository _categoryProductWriteRepository;
 
-
-        public ProductBO(IProductReadRepository productReadRepository,IProductWriteRepository productWriteRepository
-            ,ICartReadRepository cartReadRepository,ICartWriteRepository cartWriteRepository,ICustomerReadRepository customerReadRepository,ICustomerWriteRepository customerWriteRepository
-            ,ISellerReadRepository sellerReadRepository,ISellerWriteRepository sellerWriteRepository
-            ,IStockProductReadRepository stockProductReadRepository,IStockProductWriteRepository stockProductWriteRepository)
+        public ProductBO(IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository, ICartReadRepository cartReadRepository, ICartWriteRepository cartWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository, IStockProductReadRepository stockProductReadRepository, IStockProductWriteRepository stockProductWriteRepository, ICategoryProductReadRepository categoryProductReadRepository, ICategoryProductWriteRepository categoryProductWriteRepository)
         {
             _productReadRepository = productReadRepository;
             _productWriteRepository = productWriteRepository;
@@ -41,34 +37,87 @@ namespace E_Commerce.WebApi.Business
             _sellerWriteRepository = sellerWriteRepository;
             _stockProductReadRepository = stockProductReadRepository;
             _stockProductWriteRepository = stockProductWriteRepository;
+            _categoryProductReadRepository = categoryProductReadRepository;
+            _categoryProductWriteRepository = categoryProductWriteRepository;
         }
+
+
+
 
         #region add
 
-        public async Task<ProductModel> Create(ProductModel productModel)
+        public async Task<ProductDto> Create(ProductDto productModel)
         {
+            
             var product = new Product()
             {
-                ID = productModel.ID,
+                
                 ProductName = productModel.ProductName,
                 ProductInformation = productModel.ProductInformation,
                 ProductPrice = productModel.ProductPrice,
-                previousPrice = productModel.PreviousPrice,
+                Image = productModel.Image,
                 discountPercentage = productModel.DiscountPercentage,
                 IsProductActive = productModel.IsProductActive,
                 CategoryID = productModel.CategoryID,
+                IsApprovedProduct = productModel.IsApprovedProduct,
                 SellerID = productModel.SellerID,
+               
+             
+            }; await _productWriteRepository.AddAsync(product);
+            await _productWriteRepository.SaveAsync();
+
+            var stockProduct = new StockProduct()
+            {
+                ProductID=product.ID,
+                ProductQuantity =productModel.ProductQuantity
+
 
             };
-            await _productWriteRepository.AddAsync(product);
-            await _productWriteRepository.SaveAsync();
+            
+            
+
+            await _stockProductWriteRepository.AddAsync(stockProduct);
+            await _stockProductWriteRepository.SaveAsync();
+
+
             return productModel;
         }
         #endregion
 
+        public List<GetAllProducts> GetAllProducts() //linq
+        {
+            var product = _productReadRepository.GetAll();
+            var category = _categoryProductReadRepository.GetAll();
+            var stock = _stockProductReadRepository.GetAll();
+
+          
+
+            var list2 = (from products in product
+                         join categorys in category on products.CategoryID equals categorys.ID
+                         join stocks in stock on products.ID equals stocks.ProductID
+                         select new GetAllProducts
+                         {
+                             ProductName = products.ProductName,
+                             ProductInformation = products.ProductInformation,
+                             ProductPrice = products.ProductPrice,
+                             IsProductActive = products.IsProductActive,
+                             CategoryName = categorys.CategoryName,
+                             DiscountPercentage = products.discountPercentage,
+                             ProductQuantity = stocks.ProductQuantity
+
+                         }).ToList();
+            return list2;
+        }
+
+
         public List<ProductModel> GetAll()
         {
             var products =_productReadRepository.GetAll().ToList();
+            var Quantity = _stockProductReadRepository.GetAll().ToList();
+            var category = _categoryProductReadRepository.GetAll().ToList();
+
+        
+
             var productList = new List<ProductModel>();
             foreach (var product in products)
             {
@@ -82,6 +131,7 @@ namespace E_Commerce.WebApi.Business
                     IsProductActive = product.IsProductActive,
                     CategoryID = product.CategoryID,
                     SellerID = product.SellerID,
+                    ProductQuantity = Quantity.FirstOrDefault(x=>x.ProductID==product.ID).ProductQuantity// kontrol et
 
                 };
                 productList.Add(prlist);
@@ -104,7 +154,7 @@ namespace E_Commerce.WebApi.Business
                 PreviousPrice = products.previousPrice,
                 IsProductActive = products.IsProductActive,
                 CategoryID = products.CategoryID,
-                SellerID = products.SellerID,
+            
             };
             return product;
         }
@@ -138,15 +188,15 @@ namespace E_Commerce.WebApi.Business
         public async Task UpdateAsync(ProductModel product)//cust id ve seller id değişmeyeceği için dto olsuturduğunda modeli değiştir
         {
             var products = _productReadRepository.GetAll().FirstOrDefault(x=>x.ID== product.ID);
-
-            products.ProductName= product.ProductName;
-            products.ProductInformation= product.ProductInformation;
-            products.ProductPrice= product.ProductPrice;
-            products.previousPrice = product.PreviousPrice;
-            products.discountPercentage = product.DiscountPercentage;
-            products.IsProductActive = product.IsProductActive;
-
-
+            if(products != null) {
+                products.ProductName = product.ProductName;
+                products.ProductInformation = product.ProductInformation;
+                products.ProductPrice = product.ProductPrice;
+                products.previousPrice = product.PreviousPrice;
+                products.discountPercentage = product.DiscountPercentage;
+                products.IsProductActive = product.IsProductActive;
+            }
+            
             _productWriteRepository.Update(products);
             await _productWriteRepository.SaveAsync();
         }

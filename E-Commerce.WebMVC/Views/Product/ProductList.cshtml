@@ -1,0 +1,45 @@
+﻿@model List<ProductModel>
+@{
+    Layout = "_Layout";
+}@{
+    if (Model != null)
+    {
+        <div><a asp-action="Create" asp-asp-controller="Product">New Product</a></div>
+        <table class="table">
+            <thead>
+                <tr>
+                  
+                    <td>Product Name</td>
+                    <td>Information</td>
+                    <td>ProductPrice</td>
+                    <td>DiscountPercentage</td>
+                    <td>Stock Quantity</td>
+                    <td>IsProductActive</td>
+                    <td>Categories</td>
+                  
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td>@product.ProductName</td>
+                        <td>@product.ProductInformation</td>
+                        <td>@product.ProductPrice</td>
+                        <td>@product.DiscountPercentage</td>
+                        <td>@product.ProductQuantity</td>
+                        <td>@product.IsProductActive</td>
+                        <td>@product.CategoryName</td>
+                       
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div>
+            bulunamadı
+        </div>
+    }
+}

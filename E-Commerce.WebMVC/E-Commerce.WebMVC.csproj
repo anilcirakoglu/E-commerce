@@ -10,6 +10,7 @@
   <ItemGroup>
     <None Remove="Controllers\CustomerController.cs~RF3bb4f43.TMP" />
     <None Remove="Controllers\ooehu3nb.3cv~" />
+    <None Remove="Controllers\ProductController.cs~RF13efe0c.TMP" />
   </ItemGroup>
 
   <ItemGroup>

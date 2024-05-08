@@ -4,8 +4,8 @@ namespace E_Commerce.WebApi.Business
 {
     public interface ISellerBO
     {
-        List<SellerModel> GetAll();
-        Task<SellerModel> GetByID(int ID, bool tracking = true);
+        List<SellerDto> GetAll();
+        Task<SellerDto> GetByID(int ID, bool tracking = true);
         Task<SellerDto> Create(SellerDto product);
 
         string Login(LoginModel loginModel);

@@ -17,6 +17,8 @@ namespace E_Commerce.WebApi.Data.Entities
         public int CategoryID {  get; set; }
         public int SellerID { get; set; }
 
+        public bool IsApprovedProduct { get; set; }=false;
+
        
 
 

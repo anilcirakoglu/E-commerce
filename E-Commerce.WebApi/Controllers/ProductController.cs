@@ -14,6 +14,12 @@ namespace E_Commerce.WebApi.Controllers
         {
             _productBO = productBO;
         }
+        [HttpGet("GetllAllProducts")]
+        public  ActionResult<GetAllProducts> GetAllProducts()
+        {
+            var product = _productBO.GetAllProducts();
+            return Ok(product);
+        }
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -21,7 +27,7 @@ namespace E_Commerce.WebApi.Controllers
             return Ok(product);
         }
         [HttpPost("Create")]
-        public async Task<ActionResult<ProductModel>> Create(ProductModel product)
+        public async Task<ActionResult<ProductDto>> Create(ProductDto product)
         {
             var products = await _productBO.Create(product);
             return Ok(products);
