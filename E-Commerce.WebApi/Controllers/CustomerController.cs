@@ -73,5 +73,13 @@ namespace E_Commerce.WebApi.Controllers
             var cusReg = await _customerBO.Registration(customerDto);
             return Ok(cusReg);
         }
+
+        [HttpPost("AddProductCart")]
+        public async Task<IActionResult> AddProductCart(CartDto cart) 
+        {
+             await _customerBO.AddProductCart(cart);
+            return Ok(cart);
+        }
+
     }
 }

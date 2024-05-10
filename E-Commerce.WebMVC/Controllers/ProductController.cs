@@ -61,7 +61,7 @@ namespace E_Commerce.WebMVC.Controllers
             productModel.SellerID = jwtID;
 
 
-           //modelstate is valid bak
+           
                
                 if (token != null)
                 {
@@ -93,7 +93,7 @@ namespace E_Commerce.WebMVC.Controllers
             {
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                var response = await client.GetAsync("http://localhost:5101/api/Product/GetllAllProducts");
+                var response = await client.GetAsync("http://localhost:5101/api/Product/AdminGetAllProducts");
                 if (response.IsSuccessStatusCode)
                 {
 
@@ -107,6 +107,37 @@ namespace E_Commerce.WebMVC.Controllers
                 }
             }
             return View("ProductList", product);
+        }
+
+     
+        public async Task<IActionResult> SellerProductList()
+        {
+            List<ProductModel> product = new List<ProductModel>();
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+            int jwtID = int.Parse(jwtId);
+       
+            if (token != null)
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+              
+                
+                
+                var response = await client.GetAsync($"http://localhost:5101/api/Product/SellerProducts/{jwtID}");
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var content = await response.Content.ReadAsStringAsync();
+                    product = JsonConvert.DeserializeObject<List<ProductModel>>(content);
+                }
+                else
+                {
+
+                    //  hata mesajı gösterme 
+                }
+            }
+            return View("SellerProductList", product);
         }
 
 

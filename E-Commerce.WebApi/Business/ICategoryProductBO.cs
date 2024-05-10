@@ -8,7 +8,7 @@ namespace E_Commerce.WebApi.Business
         Task<CategoryProductModel> GetByID(int ID, bool tracking = true);
         Task<CategoryProductModel> Create(CategoryProductModel product);
 
-        Task UpdateAsync(CategoryProductModel cart);
+        Task UpdateAsync(CategoryProductModel categoryProduct);
         Task<int> SaveAsync();
         Task RemoveAsync(int ID);
     }

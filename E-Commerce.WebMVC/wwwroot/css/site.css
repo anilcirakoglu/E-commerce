@@ -2,7 +2,7 @@ html {
   font-size: 14px;
 }
 
-@media (min-width: 768px) {
+@media (min-width:960px) {
   html {
     font-size: 16px;
   }
@@ -14,9 +14,21 @@ html {
 
 html {
   position: relative;
-  min-height: 100%;
+  min-width: 980px;
+}
+header {
+    min-width:200px;
 }
 
 body {
-  margin-bottom: 60px;
+    
+   
+}
+
+footer {
+    width: 980%;
+    background-color: antiquewhite;
+    height: 120px;
+    bottom: 0;
+    position: relative;
 }

@@ -1,4 +1,5 @@
 ﻿using E_Commerce.WebApi.Application.Admins;
+using E_Commerce.WebApi.Application.Carts;
 using E_Commerce.WebApi.Application.Customers;
 using E_Commerce.WebApi.Application.Sellers;
 using E_Commerce.WebApi.Business.Enums;
@@ -26,11 +27,12 @@ namespace E_Commerce.WebApi.Business
         readonly private ISellerReadRepository _sellerReadRepository;
         readonly private ISellerWriteRepository _sellerWriteRepository;
 
+        readonly private ICartReadRepository _cartReadRepository;
+        readonly private ICartWriteRepository _cartWriteRepository;
+
         readonly private IConfiguration _configuration;
 
-
-
-        public CustomerBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository,IConfiguration configuration)
+        public CustomerBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository, ICartReadRepository cartReadRepository, ICartWriteRepository cartWriteRepository, IConfiguration configuration)
         {
             _adminReadRepository = adminReadRepository;
             _adminWriteRepository = adminWriteRepository;
@@ -38,7 +40,9 @@ namespace E_Commerce.WebApi.Business
             _customerWriteRepository = customerWriteRepository;
             _sellerReadRepository = sellerReadRepository;
             _sellerWriteRepository = sellerWriteRepository;
-           _configuration = configuration;
+            _cartReadRepository = cartReadRepository;
+            _cartWriteRepository = cartWriteRepository;
+            _configuration = configuration;
         }
 
         public async Task<CustomerModel> Create(CustomerModel customerModel)
@@ -212,5 +216,24 @@ namespace E_Commerce.WebApi.Business
             return tokenHandler.WriteToken(token);
         }
         #endregion
+
+        public async Task AddProductCart(CartDto cartDto) 
+        {
+            var cart = new Cart()
+            {
+                ProductID = cartDto.ProductID,
+                CustomerID = cartDto.CustomerID,
+            };
+            await _cartWriteRepository.AddAsync(cart);
+            await _cartWriteRepository.SaveAsync();
+        }
+
+
     }
+
+    
+
+
+
+
 }

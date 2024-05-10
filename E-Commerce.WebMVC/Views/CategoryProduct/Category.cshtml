@@ -4,12 +4,13 @@
 }@{
     if (Model != null )
     {
+        <div><a asp-action="Create" asp-controller="CategoryProduct" class="btn btn-success" >New Category</a></div>
         <table class="table">
             <thead>
                 <tr>
                     <td>ID </td>
                     <td>Category</td>
-                    <td></td>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -20,8 +21,10 @@
                             @category.ID
                         </td>
                         <td>@category.CategoryName</td>
-                        <td><a asp-action="Remove" asp-controller="CategotyProduct"
-                        asp-route-id="@category.ID" class="btn btn-danger ">Delete</a></td>
+                        <td>
+                            <a asp-action="Edit" asp-controller="CategoryProduct" asp-route-id="@category.ID" class="btn btn-outline-warning">Edit</a>
+                            <a asp-action="Remove" asp-controller="CategotyProduct" asp-route-id="@category.ID" class="btn btn-danger ">Delete</a>
+                        </td>
                     </tr>
                 }
             </tbody>

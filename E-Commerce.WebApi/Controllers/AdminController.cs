@@ -54,7 +54,7 @@ namespace E_Commerce.WebApi.Controllers
             return Ok(product);
         }
         [HttpDelete("Delete")]
-        public async Task<IActionResult> deleteByID(int ID)
+        public async Task<IActionResult> deleteByID([FromBody] int ID)
         {
             await _adminBO.RemoveAsync(ID);
             return Ok(ID);

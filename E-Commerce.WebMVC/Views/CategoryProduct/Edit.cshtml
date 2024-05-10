@@ -1,0 +1,17 @@
+﻿@model CategoryProductModel
+@{
+    Layout = "_Layout";
+}
+
+    <form class="w-75 m-5 p-2 " asp-action="Edit" asp-controller="CategoryProduct" method="post">
+        <input type="hidden" asp-for="@Model.ID" />
+        <div class="mb-3">
+            <label for="@Model.CategoryName" class="form-label">Category Name</label>
+            <span asp-validation-for="@Model.CategoryName" class="text-danger"></span>
+            <input type="text" class="form-control" asp-for="@Model.CategoryName" />
+        </div>
+
+        <div class="mb-3">
+            <button  class=" btn-primary w-100">Save</button>
+        </div>
+    </form>

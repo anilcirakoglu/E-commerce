@@ -13,6 +13,8 @@
         public int CategoryID { get; set; }
         public int ProductQuantity { get; set; }
 
+        public string CategoryName { get; set; }
+
         public bool IsApprovedProduct { get; set; } = false;
         public int SellerID { get; set; }
     }

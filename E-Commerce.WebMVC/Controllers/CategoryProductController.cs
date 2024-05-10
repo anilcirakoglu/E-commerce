@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Text;
 using System.Text.Json;
 
 namespace E_Commerce.WebMVC.Controllers
@@ -14,7 +15,12 @@ namespace E_Commerce.WebMVC.Controllers
         {
             _httpClientFactory = httpClientFactory;
         }
-        
+        public IActionResult Remove()
+        {
+            return View(new CategoryProductModel());
+        }
+
+
         public async Task<IActionResult> Category()
         {
             List<CategoryProductModel> categoryProducts = new List<CategoryProductModel>();
@@ -34,17 +40,93 @@ namespace E_Commerce.WebMVC.Controllers
                 }
                 else
                 {
-                   
+
                     // Örneğin, loglama, hata mesajı gösterme veya başka bir işlem
                 }
             }
-
-
-
-
-
             return View(categoryProducts);
+        }
+       
+        //httppost yazmadan oldu sor
+        public async Task<IActionResult> Edit(CategoryProductModel categoryProduct)
+        {
+            if (ModelState.IsValid)
+            {
+                var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+                var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+         
 
+
+
+                if (token != null)
+                {
+                    var client = _httpClientFactory.CreateClient();
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+
+                    var data = JsonConvert.SerializeObject(categoryProduct);
+                    var content = new StringContent(data, Encoding.UTF8, "application/json");
+                    var response = await client.PutAsync($"http://localhost:5101/api/CategoryProduct/Update", content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Category", "CategoryProduct");
+                    }
+                    ModelState.AddModelError("", "wrong Model");
+
+                }
+            }
+            return View(categoryProduct);
+        }
+       
+        public async Task<IActionResult> Create(CategoryProductModel categoryproductModel)
+        {
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+
+            if (token != null)
+            {
+
+
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+
+                var data = JsonConvert.SerializeObject(categoryproductModel);
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync($"http://localhost:5101/api/CategoryProduct/Create", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Category", "CategoryProduct");
+                }
+                ModelState.AddModelError("", "wrong Model");
+            }
+
+
+            return View(categoryproductModel);
+        }
+       
+        public async Task<IActionResult> Remove(int ID) 
+        {
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+         
+            if (token != null)
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var response = await client.DeleteAsync($"http://localhost:5101/api/CategoryProduct/{ID}");
+                
+
+            }
+
+            return RedirectToAction("Category", "CategoryProduct");
         }
     }
+
+
+
+
+
+
 }

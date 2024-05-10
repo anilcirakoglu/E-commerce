@@ -41,10 +41,10 @@ namespace E_Commerce.WebApi.Controllers
             return Ok(ID);
         }
         [HttpPut("Update")]
-        public async Task<IActionResult> UpdateAsync(CategoryProductModel categoryProductModel)
+        public async Task<IActionResult> UpdateAsync(CategoryProductModel categoryProduct)
         {
-            await _categoryProductBO.UpdateAsync(categoryProductModel);
-            return Ok(categoryProductModel);
+            await _categoryProductBO.UpdateAsync(categoryProduct);
+            return Ok(categoryProduct);
         }
     }
 }
