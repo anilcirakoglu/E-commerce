@@ -1,5 +1,6 @@
 ﻿using E_Commerce.WebApi.Application.Admins;
 using E_Commerce.WebApi.Application.Customers;
+using E_Commerce.WebApi.Application.Products;
 using E_Commerce.WebApi.Application.Sellers;
 using E_Commerce.WebApi.Business.Enums;
 using E_Commerce.WebApi.Business.Models;
@@ -24,9 +25,12 @@ namespace E_Commerce.WebApi.Business
         readonly private ISellerReadRepository _sellerReadRepository;
         readonly private ISellerWriteRepository _sellerWriteRepository;
 
+        readonly private IProductReadRepository _productReadRepository;
+        readonly private IProductWriteRepository _productWriteRepository;
+
         readonly private IConfiguration _configuration;
 
-        public AdminBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository, IConfiguration configuration)
+        public AdminBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository, IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository, IConfiguration configuration)
         {
             _adminReadRepository = adminReadRepository;
             _adminWriteRepository = adminWriteRepository;
@@ -34,11 +38,10 @@ namespace E_Commerce.WebApi.Business
             _customerWriteRepository = customerWriteRepository;
             _sellerReadRepository = sellerReadRepository;
             _sellerWriteRepository = sellerWriteRepository;
+            _productReadRepository = productReadRepository;
+            _productWriteRepository = productWriteRepository;
             _configuration = configuration;
         }
-
-        
-       
 
         public List<AdminDto> GetAll()
         {
@@ -105,7 +108,7 @@ namespace E_Commerce.WebApi.Business
             return admin;
         }
 
-        public async Task UpdateAsync(AdminDto adminModel)
+        public async   Task UpdateAsync(AdminDto adminModel)
         {
             var admins = _adminReadRepository.GetAll().FirstOrDefault(x => x.ID == adminModel.ID);
             admins.FirstName = adminModel.FirstName;
@@ -118,10 +121,34 @@ namespace E_Commerce.WebApi.Business
 
             _adminWriteRepository.Update(admins);
             await _adminWriteRepository.SaveAsync();
+
         }
+        #region ApproveProductAndRejectProduct
+
+        public async Task ApproveProduct(int ID) 
+        {
+            var productApprove = await _productReadRepository.GetByIDAsync(ID);
+            if(productApprove != null)
+            {
+                productApprove.IsApprovedProduct = true;
+                _productWriteRepository.Update(productApprove);
+                await _productWriteRepository.SaveAsync();
+            }
+        }
+        public async Task RejectProduct(int ID) 
+        {
+            var productApprove = await _productReadRepository.GetByIDAsync(ID);
+            if (productApprove != null)
+            {
+                productApprove.IsApprovedProduct = false;
+                _productWriteRepository.Update(productApprove);
+                await _productWriteRepository.SaveAsync();
+            }
+        }
+        #endregion
 
         #region AddSellerandRejectSeller
-        
+
         public async Task ApprovedSeller(int ID) 
         {
             var sellerApproved = await _sellerReadRepository.GetByIDAsync(ID);
@@ -131,6 +158,8 @@ namespace E_Commerce.WebApi.Business
                 _sellerWriteRepository.Update(sellerApproved);
                 await _sellerWriteRepository.SaveAsync();
             }
+            
+            
         }
 
         public async Task RejectSeller(int ID)

@@ -115,6 +115,10 @@ namespace E_Commerce.WebMVC.Controllers
             List<ProductModel> product = new List<ProductModel>();
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
             var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+            if (jwtId == null) //sellerlist içeri aldığında bunu bir kaldır!
+            {
+                return RedirectToAction("Login","Seller");
+            }
             int jwtID = int.Parse(jwtId);
        
             if (token != null)

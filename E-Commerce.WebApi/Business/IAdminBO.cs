@@ -10,6 +10,9 @@ namespace E_Commerce.WebApi.Business
         string Login(LoginModel loginModel);
         Task ApprovedSeller(int ID);
         Task RejectSeller(int ID);
+        Task ApproveProduct(int ID);
+        Task RejectProduct(int ID);
+
         Task<AdminDto> Registration(AdminDto customerDto);
         Task UpdateAsync(AdminDto admin);
        

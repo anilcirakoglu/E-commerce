@@ -28,7 +28,7 @@ namespace E_Commerce.WebMVC.Controllers
         }
 
         [HttpPost]//Düzenleme gerekli admin onayı için if şartını unutma
-        #region login
+        #region loginANDlogout
         public async Task<IActionResult> Login(LoginModel model)
         {
             if (ModelState.IsValid)
@@ -65,17 +65,24 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(model);
         }
+        public IActionResult Logout()// kontrol et html de 
+        {
+
+            Response.Cookies.Delete("Cookie");
+
+            return RedirectToAction("Index", "Home");
+        }
+
 
         #endregion
         [HttpPost]
         public async Task<IActionResult> SignIn(SellerModel seller)
         {
-            if (ModelState.IsValid)
-            {
+           
                 var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
 
 
-                if (token != null)
+                if (token == null)
                 {
                     var client = _httpClientFactory.CreateClient();
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
@@ -86,13 +93,13 @@ namespace E_Commerce.WebMVC.Controllers
                     var response = await client.PostAsync("http://localhost:5101/api/Seller/Registration", content);
                     if (response.IsSuccessStatusCode)
                     {
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Login", "Seller");
                     }
                     ModelState.AddModelError("", "wrong Model");
 
                 }
 
-            }
+            
             return View(seller);
         }
     }

@@ -248,5 +248,12 @@ namespace E_Commerce.WebMVC.Controllers
 
 
         }
+        public IActionResult Logout()
+        {
+
+            Response.Cookies.Delete("Cookie");
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

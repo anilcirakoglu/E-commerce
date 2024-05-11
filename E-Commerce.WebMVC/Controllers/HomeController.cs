@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Net.Http;
+using X.PagedList;
+
 
 namespace E_Commerce.WebMVC.Controllers
 {
@@ -16,7 +18,7 @@ namespace E_Commerce.WebMVC.Controllers
         }
 
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> DisplayIndex(int page = 1)
         {
 
             List<ProductModel> product = new List<ProductModel>();
@@ -31,6 +33,10 @@ namespace E_Commerce.WebMVC.Controllers
 
                     var content = await response.Content.ReadAsStringAsync();
                     product = JsonConvert.DeserializeObject<List<ProductModel>>(content);
+
+                    var pageList = product.ToPagedList(page, 9);
+
+                    return View(pageList);//kontrol et
                 }
                 else
                 {
@@ -50,6 +56,38 @@ namespace E_Commerce.WebMVC.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+
+
+        public async Task<IActionResult> Index(int page = 1)
+        {
+
+            List<ProductModel> product = new List<ProductModel>();
+
+            {
+                var client = _httpClientFactory.CreateClient();
+
+                var response = await client.GetAsync("http://localhost:5101/api/Product/AdminGetAllProducts");
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var content = await response.Content.ReadAsStringAsync();
+                    product = JsonConvert.DeserializeObject<List<ProductModel>>(content);
+
+                    var pageList = product.ToPagedList(page, 9);
+
+                    return View(pageList);//kontrol et
+                }
+                else
+                {
+
+                    //  hata mesajý gösterme 
+                }
+
+                return View(product);
+            }
+
         }
     }
 }

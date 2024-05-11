@@ -192,8 +192,8 @@ namespace E_Commerce.WebApi.Business
             var token = GenerateTokens(tokenclaims);
            
             return token;
-                
-            
+
+
         }
         public string GenerateTokens(IEnumerable<Claim> claims)
         {

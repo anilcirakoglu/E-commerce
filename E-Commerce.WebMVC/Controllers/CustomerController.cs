@@ -1,5 +1,6 @@
 ﻿using E_Commerce.WebMVC.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -11,6 +12,7 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace E_Commerce.WebMVC.Controllers
 {
@@ -50,7 +52,7 @@ namespace E_Commerce.WebMVC.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var data = await response.Content.ReadAsStringAsync();    
+                    var data = await response.Content.ReadAsStringAsync();
                     if (data != null)
                     {
                         JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
@@ -66,7 +68,7 @@ namespace E_Commerce.WebMVC.Controllers
 
 
                     }
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("DisplayIndex", "Home");
                 }
 
                 ModelState.AddModelError(string.Empty, "Email or Password Wrong");
@@ -75,6 +77,17 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(model);
         }
+        // başka bir yolu var mı diye düşünebİilirim
+        public IActionResult Logout()
+        {
+
+            Response.Cookies.Delete("Cookie");
+
+            return RedirectToAction("Index", "Home");
+        }
+
+
+
         #endregion
         [HttpPost]
         public async Task<IActionResult> SignIn(CustomerModel customer)
@@ -84,7 +97,7 @@ namespace E_Commerce.WebMVC.Controllers
                 var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
 
 
-                if (token != null)
+                if (token == null)
                 {
                     var client = _httpClientFactory.CreateClient();
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
@@ -106,7 +119,7 @@ namespace E_Commerce.WebMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(CustomerModel customer) 
+        public async Task<IActionResult> Edit(CustomerModel customer)
         {
             if (ModelState.IsValid)
             {
@@ -122,10 +135,10 @@ namespace E_Commerce.WebMVC.Controllers
                     var client = _httpClientFactory.CreateClient();
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                   
+
                     var data = JsonConvert.SerializeObject(customer);
-                    
-                    
+
+
 
                     var content = new StringContent(data, Encoding.UTF8, "application/json");
 
@@ -141,7 +154,7 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(customer);
         }
-      
+
         public async Task<IActionResult> AddProductCart(CartModel cart)
         {
             if (ModelState.IsValid)
@@ -149,8 +162,13 @@ namespace E_Commerce.WebMVC.Controllers
                 var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
 
                 var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+                if (jwtId == null)
+                {
+                    return RedirectToAction("Login", "Customer");
+                }
                 int jwtID = int.Parse(jwtId);
-               cart.CustomerID = jwtID;
+              
+                cart.CustomerID = jwtID;
 
                 if (token != null)
                 {
@@ -174,6 +192,11 @@ namespace E_Commerce.WebMVC.Controllers
 
                 }
 
+
+            }
+            else
+            {
+                return RedirectToAction("Login", "Customer");
             }
             return View(cart);
         }

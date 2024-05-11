@@ -78,5 +78,18 @@ namespace E_Commerce.WebApi.Controllers
             await _adminBO.RejectSeller(ID);
             return Ok(ID);
         }
+        [HttpPost("ApproveProduct")]
+        public async Task<IActionResult> ApproveProduct([FromBody] int ID)
+        {
+            await _adminBO.ApproveProduct(ID);
+            return Ok(ID);
+        }
+        [HttpPost("RejectProduct")]
+        public async Task<IActionResult> RejectProduct([FromBody] int ID)
+        {
+            await _adminBO.ApproveProduct(ID);
+            return Ok(ID);
+        }
+
     }
 }
