@@ -1,15 +1,10 @@
 ﻿@model LoginModel
 @{
+    Layout = "_Layout";
 }
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Login</title>
-</head>
-<body>
-
+<div><h4>Admin Login </h4></div>
     <div class="container">
-        <form class="w-100 m-5 p-5" asp-action="Login" asp-controller="Admin" method="post">
+        <form class="w-50 m-5 p-5" asp-action="Login" asp-controller="Admin" method="post">
             <div class="mb-5">
                 <label for="@Model.Email" class="form-label">Email:</label>
                 <input type="text" class="form-control" asp-for="@Model.Email" />
@@ -25,5 +20,3 @@
             </div>
         </form>
     </div>
-</body>
-</html>

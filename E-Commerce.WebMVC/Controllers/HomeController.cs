@@ -27,7 +27,7 @@ namespace E_Commerce.WebMVC.Controllers
             {
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                var response = await client.GetAsync("http://localhost:5101/api/Product/AdminGetAllProducts");
+                var response = await client.GetAsync("http://localhost:5101/api/Product/GetAllProductsForAdmin");
                 if (response.IsSuccessStatusCode)
                 {
 
@@ -68,7 +68,7 @@ namespace E_Commerce.WebMVC.Controllers
             {
                 var client = _httpClientFactory.CreateClient();
 
-                var response = await client.GetAsync("http://localhost:5101/api/Product/AdminGetAllProducts");
+                var response = await client.GetAsync("http://localhost:5101/api/Product/GetAllProductsForAdmin");
                 if (response.IsSuccessStatusCode)
                 {
 

@@ -68,10 +68,10 @@ namespace E_Commerce.WebMVC.Controllers
 
 
                     }
-                    return RedirectToAction("DisplayIndex", "Home");
+                    return RedirectToAction("Index", "Home");//index gönderince hata veriyordu düzeldi ama bir daha kontrol et
                 }
 
-                ModelState.AddModelError(string.Empty, "Email or Password Wrong");
+                else { ModelState.AddModelError("Password", "Your password is incorrect, Please enter again"); }
                 return View(model);
 
             }
@@ -147,7 +147,11 @@ namespace E_Commerce.WebMVC.Controllers
                     {
                         return RedirectToAction("Index", "Home");
                     }
-                    ModelState.AddModelError("", "wrong Model");
+                    else 
+                    {
+                        ModelState.AddModelError("", "wrong Model");
+                    }
+                   
 
                 }
 
@@ -160,14 +164,13 @@ namespace E_Commerce.WebMVC.Controllers
             if (ModelState.IsValid)
             {
                 var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
-
                 var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+
                 if (jwtId == null)
                 {
                     return RedirectToAction("Login", "Customer");
                 }
                 int jwtID = int.Parse(jwtId);
-              
                 cart.CustomerID = jwtID;
 
                 if (token != null)

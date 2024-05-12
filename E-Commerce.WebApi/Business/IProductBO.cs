@@ -5,7 +5,7 @@ namespace E_Commerce.WebApi.Business
     public interface IProductBO
     {
         List<ProductModel> GetAll();
-        List<AdminGetAllProducts> AdminGetAllProducts();
+        List<GetAllProductsForAdmin> GetAllProductsForAdmin();
         List<ProductDto> sellerProducts(int ID);
 
         Task<ProductModel> GetByID(int ID,bool tracking =true);

@@ -27,7 +27,7 @@ namespace E_Commerce.WebMVC.Controllers
             return View(new SellerModel());
         }
 
-        [HttpPost]//Düzenleme gerekli admin onayı için if şartını unutma
+        [HttpPost]
         #region loginANDlogout
         public async Task<IActionResult> Login(LoginModel model)
         {
@@ -58,8 +58,10 @@ namespace E_Commerce.WebMVC.Controllers
                     }
                     return RedirectToAction("Index", "Home");
                 }
+                else { ModelState.AddModelError("Password", "Your password is incorrect, Please enter again"); }
 
-                ModelState.AddModelError(string.Empty, "Email or Password Wrong");
+               
+               
                 return View(model);
 
             }

@@ -64,7 +64,7 @@ namespace E_Commerce.WebMVC.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                ModelState.AddModelError(string.Empty, "Email or Password Wrong");
+                else { ModelState.AddModelError("Password", "Your password is incorrect, Please enter again"); }
                 return View(model);
 
             }
@@ -181,13 +181,9 @@ namespace E_Commerce.WebMVC.Controllers
             return View("CustomerList", customers);
 
         }
-
-
-
-        
         public async Task<IActionResult> ApprovedSeller(int ID)
         {
-            
+
 
 
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
@@ -216,7 +212,6 @@ namespace E_Commerce.WebMVC.Controllers
 
 
         }
-
         public async Task<IActionResult> RejectSeller(int ID)
         {
 
@@ -248,6 +243,75 @@ namespace E_Commerce.WebMVC.Controllers
 
 
         }
+
+
+
+
+
+        public async Task<IActionResult> ApproveProduct(int ID)
+        {
+            
+
+
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            if (token != null)
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var data = JsonConvert.SerializeObject(ID);
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync($"http://localhost:5101/api/Admin/ApproveProduct", content);
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var contents = await response.Content.ReadAsStringAsync();
+                    ID = JsonConvert.DeserializeObject<int>(contents);
+                }
+                else
+                {
+
+                    // Örneğin, loglama, hata mesajı gösterme veya başka bir işlem
+                }
+            }
+
+            return RedirectToAction("ListProduct","Product");
+
+
+        }
+        public async Task<IActionResult> RejectProduct(int ID)
+        {
+
+
+
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            if (token != null)
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var data = JsonConvert.SerializeObject(ID);
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync($"http://localhost:5101/api/Admin/RejectProduct", content);
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var contents = await response.Content.ReadAsStringAsync();
+                    ID = JsonConvert.DeserializeObject<int>(contents);
+                }
+                else
+                {
+
+                    // Örneğin, loglama, hata mesajı gösterme veya başka bir işlem
+                }
+            }
+
+            return RedirectToAction("ListProduct", "Product");
+
+
+        }
+
+       
         public IActionResult Logout()
         {
 

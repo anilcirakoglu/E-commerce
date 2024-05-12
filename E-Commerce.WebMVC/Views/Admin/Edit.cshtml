@@ -1,13 +1,8 @@
 ﻿@using Newtonsoft.Json
 @model AdminModel
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Edit Profile</title>
-</head>
-<body>
+@{
+    Layout = "_Layout";
+}
 
     <div class="container">
         <form class="w-75 m-5 p-2 " asp-action="Edit" asp-controller="Admin" method="post">
@@ -50,5 +45,3 @@
             </div>
         </form>
     </div>
-</body>
-</html>

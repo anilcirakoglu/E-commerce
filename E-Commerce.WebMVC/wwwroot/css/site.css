@@ -1,5 +1,5 @@
 html {
-  font-size: 14px;
+  font-size: 15px;
 }
 
 @media (min-width:960px) {
@@ -17,12 +17,53 @@ html {
   min-width: 980px;
 }
 header {
-    min-width:200px;
+    min-width: 200px;
+    height: 150px;
+    text-decoration: none;
+}
+.header-right {
+    float: right;
+    padding-right: 200px;
+    padding-top: 15px;
+    font-family: 'Times New Roman', Times, serif;
+    color:black;
+    
+}
+    .header-right a {
+        text-decoration: none;
+        color: black;
+    }
+    .header-right a:hover {
+       
+        color: black;
+    }
+
+.logo {
+    margin-left: 500px;
+    font-size: 30px;
+    font-family: 'Times New Roman', Times, serif;
+    text-decoration: none;
+  
+   
+}
+.logo a {
+        text-decoration: none;
+        color:black;
+    }
+    .logo a:hover {
+    color:black;
+    }
+
+.nvmbartext {
+    font-family: 'Times New Roman', Times, serif;
 }
 
 body {
     
    
+}
+.navbar {
+   text-align:center;
 }
 
 footer {

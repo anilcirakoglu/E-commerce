@@ -84,13 +84,15 @@ namespace E_Commerce.WebApi.Business
         }
         #endregion
 
-        public List<AdminGetAllProducts> AdminGetAllProducts() //linq
+
+
+        public List<GetAllProductsForAdmin> GetAllProductsForAdmin() //linq
         {
             var product = _productReadRepository.GetAll();
             var category = _categoryProductReadRepository.GetAll();
             var stock = _stockProductReadRepository.GetAll();
             var seller = _sellerReadRepository.GetAll();
-
+           
             //var allProductlist = new List<GetAllProducts>();
             //foreach (var products in product)
             //{
@@ -108,11 +110,11 @@ namespace E_Commerce.WebApi.Business
             //    allProductlist.Add(productList);
             //}
 
-            var list2 = (from products in product
+            var list = (from products in product
                          join categorys in category on products.CategoryID equals categorys.ID
                          join stocks in stock on products.ID equals stocks.ProductID
                          join sellers in seller on products.SellerID equals sellers.ID
-                         select new AdminGetAllProducts
+                         select new GetAllProductsForAdmin
                          {
                              ID=products.ID,
                              ProductName = products.ProductName,
@@ -122,9 +124,14 @@ namespace E_Commerce.WebApi.Business
                              CategoryName = categorys.CategoryName,
                              DiscountPercentage = products.discountPercentage,
                              ProductQuantity = stocks.ProductQuantity,
-                             SellerName = sellers.FirstName
+                             SellerName = sellers.FirstName,
+                             IsApprovedProduct = products.IsApprovedProduct,
+                             
+                             
+
+                             
                          }).ToList();
-            return list2;
+            return list;
             //return allProductlist;
         }
         public List<ProductDto> sellerProducts(int ID) //linq
@@ -149,6 +156,7 @@ namespace E_Commerce.WebApi.Business
                              CategoryName = categorys.CategoryName,
                              DiscountPercentage = products.discountPercentage,
                              ProductQuantity = stocks.ProductQuantity,
+                             IsApprovedProduct = products.IsApprovedProduct,
                              
                          }).ToList();
             return list2;

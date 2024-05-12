@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Business\ProductBO.cs~RF15cbd1c6.TMP" />
     <None Remove="Business\ProductBO.cs~RF6930a85.TMP" />
   </ItemGroup>
 

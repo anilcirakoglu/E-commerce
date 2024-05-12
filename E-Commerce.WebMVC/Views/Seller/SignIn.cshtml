@@ -1,12 +1,9 @@
 ﻿@model SellerModel
 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Sign In</title>
-</head>
-<body>
+@{
+    Layout = "_Layout";
+}
 
     <div class="container">
         <form class="w-75 m-5 p-2 " asp-action="SignIn" asp-controller="Seller" method="post">
@@ -55,5 +52,3 @@
             </div>
         </form>
     </div>
-</body>
-</html>

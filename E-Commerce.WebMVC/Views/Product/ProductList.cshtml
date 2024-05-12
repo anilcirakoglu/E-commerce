@@ -17,7 +17,7 @@
                     <td>IsProductActive</td>
                     <td>Categories</td>
                     <td>Seller Name</td>
-                  
+                    <td>IsApprovedProduct</td>
                 </tr>
             </thead>
             <tbody>
@@ -32,7 +32,15 @@
                         <td>@product.IsProductActive</td>
                         <td>@product.CategoryName</td>
                         <td>@product.SellerName</td>
-                       
+                       <td>@product.IsApprovedProduct</td>
+                        <td>
+                            <a asp-action="ApproveProduct" asp-controller="Admin"
+                               asp-route-id="@product.ID" class="btn btn-outline-success ">Approve</a>
+                        </td>
+                        <td>
+                            <a asp-action="RejectProduct" asp-controller="Admin"
+                               asp-route-id="@product.ID" class="btn btn-danger ">Reject</a>
+                        </td>
                     </tr>
                 }
             </tbody>

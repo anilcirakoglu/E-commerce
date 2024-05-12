@@ -87,7 +87,7 @@ namespace E_Commerce.WebApi.Controllers
         [HttpPost("RejectProduct")]
         public async Task<IActionResult> RejectProduct([FromBody] int ID)
         {
-            await _adminBO.ApproveProduct(ID);
+            await _adminBO.RejectProduct(ID);
             return Ok(ID);
         }
 

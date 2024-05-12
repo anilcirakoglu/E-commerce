@@ -17,6 +17,8 @@ namespace E_Commerce.WebMVC.Models
         public string CategoryName { get; set; }
         public int SellerID { get; set; }
 
+        public bool IsApprovedProduct { get; set; } = false;
+
         public string SellerName { get; set; }
 
         public int ProductQuantity { get; set; }

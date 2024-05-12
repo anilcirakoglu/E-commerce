@@ -14,10 +14,10 @@ namespace E_Commerce.WebApi.Controllers
         {
             _productBO = productBO;
         }
-        [HttpGet("AdminGetAllProducts")]
-        public  ActionResult<AdminGetAllProducts> AdminGetAllProducts()
+        [HttpGet("GetAllProductsForAdmin")]
+        public  ActionResult<GetAllProductsForAdmin> GetAllProductsForAdmin()
         {
-            var product = _productBO.AdminGetAllProducts();
+            var product = _productBO.GetAllProductsForAdmin();
             return Ok(product);
         }
         [HttpGet("SellerProducts/{ID:int}")]
