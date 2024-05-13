@@ -34,7 +34,7 @@ namespace E_Commerce.WebApi.Controllers
             var product = await _categoryProductBO.GetByID(ID);
             return Ok(product);
         }
-        [HttpDelete("Delete")]
+        [HttpDelete("Delete/{ID}")]
         public async Task<IActionResult> deleteByID(int ID)
         {
             await _categoryProductBO.RemoveAsync(ID);

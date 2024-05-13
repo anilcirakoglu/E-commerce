@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace E_Commerce.WebMVC.Controllers
 {
@@ -312,12 +313,6 @@ namespace E_Commerce.WebMVC.Controllers
         }
 
        
-        public IActionResult Logout()
-        {
-
-            Response.Cookies.Delete("Cookie");
-
-            return RedirectToAction("Index", "Home");
-        }
+     
     }
 }

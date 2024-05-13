@@ -7,6 +7,7 @@ using System.Text.Json;
 
 namespace E_Commerce.WebMVC.Controllers
 {
+    [Authorize(Policy = "AdminPolicy")]
     public class CategoryProductController : Controller
     {
         readonly private IHttpClientFactory _httpClientFactory;
@@ -15,9 +16,10 @@ namespace E_Commerce.WebMVC.Controllers
         {
             _httpClientFactory = httpClientFactory;
         }
-        public IActionResult Remove()
-        {
-            return View(new CategoryProductModel());
+      
+        [AllowAnonymous]
+        public IActionResult AccessDenied() { 
+        return View();
         }
 
 
@@ -105,7 +107,7 @@ namespace E_Commerce.WebMVC.Controllers
 
             return View(categoryproductModel);
         }
-       
+        
         public async Task<IActionResult> Remove(int ID) 
         {
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
@@ -115,7 +117,7 @@ namespace E_Commerce.WebMVC.Controllers
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var response = await client.DeleteAsync($"http://localhost:5101/api/CategoryProduct/{ID}");
+                var response = await client.DeleteAsync($"http://localhost:5101/api/CategoryProduct/Delete/{ID}");
                 
 
             }

@@ -1,8 +1,9 @@
-﻿namespace E_Commerce.WebApi.Business.Models
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace E_Commerce.WebMVC.Models
 {
-    public class ProductDto
+    public class CreateProductModel
     {
-       
         public string ProductName { get; set; }
         public string ProductInformation { get; set; }
         public double ProductPrice { get; set; }
@@ -13,9 +14,13 @@
         public int CategoryID { get; set; }
         public int ProductQuantity { get; set; }
 
-        public string? CategoryName { get; set; }
+        public string CategoryName { get; set; }
 
         public bool IsApprovedProduct { get; set; } = false;
         public int SellerID { get; set; }
+
+
+
+
     }
 }

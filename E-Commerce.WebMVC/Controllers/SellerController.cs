@@ -67,13 +67,7 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(model);
         }
-        public IActionResult Logout()// kontrol et html de 
-        {
-
-            Response.Cookies.Delete("Cookie");
-
-            return RedirectToAction("Index", "Home");
-        }
+      
 
 
         #endregion

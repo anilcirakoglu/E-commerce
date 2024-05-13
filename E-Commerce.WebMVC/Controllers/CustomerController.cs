@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -77,14 +78,7 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(model);
         }
-        // başka bir yolu var mı diye düşünebİilirim
-        public IActionResult Logout()
-        {
-
-            Response.Cookies.Delete("Cookie");
-
-            return RedirectToAction("Index", "Home");
-        }
+      
 
 
 
@@ -158,7 +152,7 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(customer);
         }
-
+        [Authorize(Policy ="CustomerPolicy")]
         public async Task<IActionResult> AddProductCart(CartModel cart)
         {
             if (ModelState.IsValid)
@@ -166,10 +160,7 @@ namespace E_Commerce.WebMVC.Controllers
                 var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
                 var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
 
-                if (jwtId == null)
-                {
-                    return RedirectToAction("Login", "Customer");
-                }
+               
                 int jwtID = int.Parse(jwtId);
                 cart.CustomerID = jwtID;
 

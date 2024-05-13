@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using E_Commerce.WebMVC.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace E_Commerce.WebMVC.Controllers
 {
@@ -93,6 +94,14 @@ namespace E_Commerce.WebMVC.Controllers
 
             }
             return View(model);
+        }
+        public async Task<IActionResult> Logout()
+        {
+
+           
+
+            await HttpContext.SignOutAsync(JwtBearerDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
         }
     }
 }

@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,17 +8,54 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpClient();
+//builder.Services.AddAuthorization(opt =>
+//{
+//    opt.AddPolicy("AdminPolicy", policy => policy.RequireClaim("Role", "Admin"));
+//    opt.AddPolicy("Customer", policy => policy.RequireClaim("role", "Customer"));
+//    opt.AddPolicy("Seller", policy => policy.RequireClaim("role", "Seller"));
+//});
+
+
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddCookie
-     (JwtBearerDefaults.AuthenticationScheme,opt=>
+     (JwtBearerDefaults.AuthenticationScheme, opt =>
      {
-         opt.LoginPath = "/Customer/Login";
-         opt.AccessDeniedPath="/Customer/AccessDenied";
-         opt.AccessDeniedPath = "/CategoryProduct/AccessDenied";
+         opt.LoginPath = "/Login/Index";
+         opt.AccessDeniedPath = "/CategoryProduct/AccessDenied";//bak yerini deðiþtir
          opt.Cookie.SameSite = SameSiteMode.Strict;//cookie ilgili domain çalýsýr
          opt.Cookie.HttpOnly = true;
          opt.Cookie.Name = "Cookie";
-     });
 
+     });
+builder.Services.AddAuthorization(options =>
+{
+    
+    options.AddPolicy("AdminPolicy", policy =>
+    {
+        policy.AddAuthenticationSchemes(
+                  JwtBearerDefaults.AuthenticationScheme);
+        //policy.RequireAuthenticatedUser();
+        policy.RequireClaim("role", "Admin");
+       
+    });
+    options.AddPolicy("SellerPolicy", policy =>
+    {
+        policy.AddAuthenticationSchemes(
+                  JwtBearerDefaults.AuthenticationScheme);
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("role", "Seller");
+    });
+    options.AddPolicy("CustomerPolicy", policy =>
+    {
+        policy.AddAuthenticationSchemes(
+                  JwtBearerDefaults.AuthenticationScheme);
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("role", "Customer");
+    });
+
+    //ortak alanlar için policy eklemeyi unutma!
+}
+);
 
 var app = builder.Build();
 
@@ -24,7 +63,7 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-   
+
     app.UseHsts();
 }
 

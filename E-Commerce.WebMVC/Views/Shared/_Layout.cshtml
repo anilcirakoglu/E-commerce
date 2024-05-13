@@ -1,4 +1,4 @@
-﻿@model CategoryProductModel
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head class="header">
@@ -41,17 +41,26 @@
                       @*   <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="ListCustomer">Customer List</a>
                         </li> *@
-
-                       @*  <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="CategoryProduct" asp-action="Category">Category</a>
-                        </li> *@
+                            @{
+                                if (User.HasClaim("role","Admin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="CategoryProduct" asp-action="Category">Category</a>
+                                    </li>
+                                }
+                               
+                        }
+                           @*  <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="CategoryProduct" asp-action="Category">Category</a>
+                            </li> *@
+                       
                         @* <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="ListSeller">Seller List</a>
                         </li> *@
-                       @*  <li class="nav-item">
+                        <li class="nav-item">
 
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ListProduct">Product List</a>
-                        </li> *@
+                        </li>
                         <li class="nav-item">
 
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="SellerProductList">Seller Product List</a>
@@ -66,7 +75,7 @@
 
                         <li class="nav-item">
 
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Customer" asp-action="Logout">Logout</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
                         </li>
                        
 

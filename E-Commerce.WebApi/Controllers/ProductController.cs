@@ -33,7 +33,7 @@ namespace E_Commerce.WebApi.Controllers
             return Ok(product);
         }
         [HttpPost("Create")]
-        public async Task<ActionResult<ProductDto>> Create(ProductDto product)
+        public async Task<ActionResult<ProductDto>> Create([FromBody]ProductDto product)
         {
             var products = await _productBO.Create(product);
             return Ok(products);
