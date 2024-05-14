@@ -26,6 +26,11 @@ namespace E_Commerce.WebApi.Controllers
             var product = _productBO.sellerProducts(ID);
             return Ok(product);
         }
+        [HttpGet("Details/{ID}")]
+        public async Task<ActionResult<ProductDetailForCustomer>> DetailForCustomer(int ID) { 
+        var product =await _productBO.DetailForCustomer(ID);
+            return Ok(product);
+        }
         [HttpGet]
         public IActionResult GetAll()
         {

@@ -1,12 +1,11 @@
 ﻿using E_Commerce.WebApi.Application.Admins;
 using E_Commerce.WebApi.Application.Carts;
 using E_Commerce.WebApi.Application.Customers;
+using E_Commerce.WebApi.Application.Products;
 using E_Commerce.WebApi.Application.Sellers;
 using E_Commerce.WebApi.Business.Enums;
 using E_Commerce.WebApi.Business.Models;
-using E_Commerce.WebApi.Business.Token;
 using E_Commerce.WebApi.Data.Entities;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -30,9 +29,12 @@ namespace E_Commerce.WebApi.Business
         readonly private ICartReadRepository _cartReadRepository;
         readonly private ICartWriteRepository _cartWriteRepository;
 
+        readonly private IProductReadRepository _productReadRepository;
+        readonly private IProductWriteRepository _productWriteRepository;
+
         readonly private IConfiguration _configuration;
 
-        public CustomerBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository, ICartReadRepository cartReadRepository, ICartWriteRepository cartWriteRepository, IConfiguration configuration)
+        public CustomerBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository, ICartReadRepository cartReadRepository, ICartWriteRepository cartWriteRepository, IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository, IConfiguration configuration)
         {
             _adminReadRepository = adminReadRepository;
             _adminWriteRepository = adminWriteRepository;
@@ -42,6 +44,8 @@ namespace E_Commerce.WebApi.Business
             _sellerWriteRepository = sellerWriteRepository;
             _cartReadRepository = cartReadRepository;
             _cartWriteRepository = cartWriteRepository;
+            _productReadRepository = productReadRepository;
+            _productWriteRepository = productWriteRepository;
             _configuration = configuration;
         }
 
@@ -62,7 +66,7 @@ namespace E_Commerce.WebApi.Business
             await _customerWriteRepository.SaveAsync();
             return customerModel;
         }
-       
+
         public List<CustomerModel> GetAll()
         {
             var customers = _customerReadRepository.GetAll().ToList();
@@ -108,11 +112,11 @@ namespace E_Commerce.WebApi.Business
             var customerRemove = new CustomerModel()
             {
                 ID = customer.ID,
-                FirstName= customer.FirstName,
+                FirstName = customer.FirstName,
                 LastName = customer.LastName,
                 Address = customer.Address,
                 Email = customer.Email,
-                Password= customer.Password,
+                Password = customer.Password,
                 PhoneNumber = customer.PhoneNumber,
                 Role = RoleType.Customer.ToString(),
             };
@@ -128,7 +132,7 @@ namespace E_Commerce.WebApi.Business
 
         public async Task UpdateAsync(CustomerDto customer)
         {
-          
+
             var customers = _customerReadRepository.GetAll().FirstOrDefault(x => x.ID == customer.ID);
 
             customers.FirstName = customer.FirstName;
@@ -137,11 +141,11 @@ namespace E_Commerce.WebApi.Business
             customers.Email = customer.Email;
             customers.Password = customer.Password;
             customers.PhoneNumber = customer.PhoneNumber;
-          
+
             _customerWriteRepository.Update(customers);
             await _customerWriteRepository.SaveAsync();
-          
-            
+
+
 
         }
         #region RegisAndLogin
@@ -149,9 +153,9 @@ namespace E_Commerce.WebApi.Business
         {
             var adminExists = await _adminReadRepository.GetWhere(x => x.Email == customerDto.Email).FirstOrDefaultAsync();
             var customerExists = await _customerReadRepository.GetWhere(x => x.Email == customerDto.Email).FirstOrDefaultAsync();
-            var sellerExists = await _sellerReadRepository.GetWhere(x=>x.Email == customerDto.Email).FirstOrDefaultAsync();
+            var sellerExists = await _sellerReadRepository.GetWhere(x => x.Email == customerDto.Email).FirstOrDefaultAsync();
 
-            if (customerExists == null&&sellerExists==null && adminExists == null)
+            if (customerExists == null && sellerExists == null && adminExists == null)
             {
                 var customer = new Customer()
                 {
@@ -170,12 +174,12 @@ namespace E_Commerce.WebApi.Business
             return customerDto;
         }
 
-        public string Login(LoginModel loginModel) 
+        public string Login(LoginModel loginModel)
         {
-           
-            var customer = _customerReadRepository.GetWhere(x=>x.Email == loginModel.Email &&x.Password == loginModel.Password).FirstOrDefault();
-           
-            if (customer == null )
+
+            var customer = _customerReadRepository.GetWhere(x => x.Email == loginModel.Email && x.Password == loginModel.Password).FirstOrDefault();
+
+            if (customer == null)
             {
                 return "";
 
@@ -190,7 +194,7 @@ namespace E_Commerce.WebApi.Business
            };
 
             var token = GenerateTokens(tokenclaims);
-           
+
             return token;
 
 
@@ -217,7 +221,7 @@ namespace E_Commerce.WebApi.Business
         }
         #endregion
 
-        public async Task AddProductCart(CartDto cartDto) 
+        public async Task AddProductCart(CartDto cartDto)
         {
             var cart = new Cart()
             {
@@ -228,10 +232,30 @@ namespace E_Commerce.WebApi.Business
             await _cartWriteRepository.SaveAsync();
         }
 
+        public  List<CartListDto> CartList(int ID)
+        {
+            var customer = _customerReadRepository.GetAll();
+            var cart = _cartReadRepository.GetAll();
+            var product = _productReadRepository.GetAll();
+
+           
+            var list = (from products in product 
+                        join carts in cart on products.ID equals carts.ProductID 
+                        join customers in customer on carts.CustomerID equals customers.ID  where customers.ID ==ID 
+                        select new CartListDto { 
+                          ProductID=products.ID,
+                          ProductName =products.ProductName
+                        
+                        }).ToList();
+         
+            
+            return list;
+        }
+       
 
     }
 
-    
+
 
 
 

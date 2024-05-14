@@ -1,4 +1,5 @@
 ﻿using E_Commerce.WebApi.Application.Carts;
+using E_Commerce.WebApi.Application.Products;
 using E_Commerce.WebApi.Business.Models;
 using E_Commerce.WebApi.Data.Entities;
 
@@ -8,11 +9,18 @@ namespace E_Commerce.WebApi.Business
     {
         readonly private ICartReadRepository _cartReadRepository;
         readonly private ICartWriteRepository _cartWriteRepository;
-        public CartBO(ICartReadRepository cartReadRepository,ICartWriteRepository cartWriteRepository)
+
+        readonly private IProductReadRepository _productReadRepository;
+        readonly private IProductWriteRepository _productWriteRepository;
+
+        public CartBO(ICartReadRepository cartReadRepository, ICartWriteRepository cartWriteRepository, IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository)
         {
             _cartReadRepository = cartReadRepository;
             _cartWriteRepository = cartWriteRepository;
+            _productReadRepository = productReadRepository;
+            _productWriteRepository = productWriteRepository;
         }
+
         public async Task<CartModel> Create(CartModel cartModel)
         {
             var cart = new Cart()
@@ -42,6 +50,7 @@ namespace E_Commerce.WebApi.Business
             }
             return cartList;
         }
+      
 
         public async Task<CartModel> GetByID(int ID, bool tracking = true)
         {

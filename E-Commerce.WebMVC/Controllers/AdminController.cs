@@ -65,13 +65,17 @@ namespace E_Commerce.WebMVC.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                else { ModelState.AddModelError("Password", "Your password is incorrect, Please enter again"); }
+                else
+                {
+                    ModelState.AddModelError("Password", "Your password is incorrect, Please enter again");
+                    ModelState.AddModelError("Email", "Your Email is incorrect, Please enter again");
+                }
                 return View(model);
 
             }
             return View(model);
         }
-
+        [Authorize(Policy = "AdminPolicy")]
         [HttpPost]
         public async Task<IActionResult> Edit(AdminModel adminModel)
         {
@@ -131,7 +135,7 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(admin);
         }
-
+        [Authorize(Policy = "AdminPolicy")]
         [HttpGet]
         public async Task<IActionResult> ListSeller()
         {
@@ -156,7 +160,7 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View("ApprovedSeller", sellers);
         }
-
+        [Authorize(Policy = "AdminPolicy")]
         [HttpGet]
         public async Task<IActionResult> ListCustomer()
         {
@@ -182,6 +186,7 @@ namespace E_Commerce.WebMVC.Controllers
             return View("CustomerList", customers);
 
         }
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> ApprovedSeller(int ID)
         {
 
@@ -213,6 +218,7 @@ namespace E_Commerce.WebMVC.Controllers
 
 
         }
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> RejectSeller(int ID)
         {
 
@@ -248,7 +254,7 @@ namespace E_Commerce.WebMVC.Controllers
 
 
 
-
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> ApproveProduct(int ID)
         {
             
@@ -280,6 +286,7 @@ namespace E_Commerce.WebMVC.Controllers
 
 
         }
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> RejectProduct(int ID)
         {
 

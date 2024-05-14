@@ -1,0 +1,26 @@
+﻿@model List<CustomerCartListModel>
+@{
+    Layout = "_Layout";
+}
+@{
+    <div><h4>Your Cart </h4></div>
+    if (Model != null)
+    {
+
+
+        <div>
+            <table border="1">
+                @for (int i = 1; i < Model.Count; i++)
+                {
+                    <tr>
+                        <td>@i</td>
+                        <td>@Model[i].ProductName</td>
+
+                    </tr>
+                }
+                
+                
+            </table>
+        </div>
+    } 
+ }

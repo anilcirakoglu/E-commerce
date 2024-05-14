@@ -58,10 +58,14 @@ namespace E_Commerce.WebMVC.Controllers
                     }
                     return RedirectToAction("Index", "Home");
                 }
-                else { ModelState.AddModelError("Password", "Your password is incorrect, Please enter again"); }
+                else
+                {
+                    ModelState.AddModelError("Password", "Your password is incorrect, Please enter again");
+                    ModelState.AddModelError("Email", "Your Email is incorrect, Please enter again");
+                }
 
-               
-               
+
+
                 return View(model);
 
             }
@@ -96,6 +100,47 @@ namespace E_Commerce.WebMVC.Controllers
                 }
 
             
+            return View(seller);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(SellerModel seller) {
+
+            if (ModelState.IsValid)
+            {
+                var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+
+                var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+                int jwtID = int.Parse(jwtId);
+                seller.ID = jwtID;
+
+                if (token != null)
+                {
+
+                    var client = _httpClientFactory.CreateClient();
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+
+                    var data = JsonConvert.SerializeObject(seller);
+
+
+
+                    var content = new StringContent(data, Encoding.UTF8, "application/json");
+
+                    var response = await client.PutAsync($"http://localhost:5101/api/Seller/Update", content);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "wrong Model");
+                    }
+
+
+                }
+
+            }
             return View(seller);
         }
     }

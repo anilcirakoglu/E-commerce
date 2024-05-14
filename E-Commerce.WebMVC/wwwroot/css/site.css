@@ -58,6 +58,22 @@ header {
     font-family: 'Times New Roman', Times, serif;
 }
 
+.productDeatilsTable {
+       margin-left:350px;
+
+}
+.productDeatilsTable td {
+   padding:50px;
+}
+
+.cartLogo {
+  margin-left:1280px;
+ 
+
+  
+
+}
+
 body {
     
    

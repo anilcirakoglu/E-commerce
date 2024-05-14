@@ -87,34 +87,18 @@ namespace E_Commerce.WebApi.Business
 
 
 
-        public List<GetAllProductsForAdmin> GetAllProductsForAdmin() //linq
+        public List<GetAllProductsForAdmin> GetAllProductsForAdmin() 
         {
             var product = _productReadRepository.GetAll();
             var category = _categoryProductReadRepository.GetAll();
             var stock = _stockProductReadRepository.GetAll();
             var seller = _sellerReadRepository.GetAll();
            
-            //var allProductlist = new List<GetAllProducts>();
-            //foreach (var products in product)
-            //{
-            //    var productList = new GetAllProducts()
-            //    {
-            //        ID = products.ID,
-            //        ProductName = products.ProductName,
-            //        ProductInformation = products.ProductInformation,
-            //        ProductPrice = products.ProductPrice,
-            //        IsProductActive = products.IsProductActive,
-            //        CategoryName = category.FirstOrDefault(x => x.ID == products.CategoryID).CategoryName,
-            //        DiscountPercentage = products.discountPercentage,
-            //        ProductQuantity = stock.FirstOrDefault(x => x.ProductID == products.ID).ProductQuantity
-            //    };
-            //    allProductlist.Add(productList);
-            //}
 
             var list = (from products in product
                          join categorys in category on products.CategoryID equals categorys.ID
                          join stocks in stock on products.ID equals stocks.ProductID
-                         join sellers in seller on products.SellerID equals sellers.ID
+                         join sellers in seller on products.SellerID equals sellers.ID where products.IsApprovedProduct== true //indexde ki getall değiştirmen gerek unutma
                          select new GetAllProductsForAdmin
                          {
                              ID=products.ID,
@@ -192,6 +176,20 @@ namespace E_Commerce.WebApi.Business
                 productList.Add(prlist);
             }
             return productList;
+        }
+        public async Task<ProductDetailForCustomer> DetailForCustomer(int ID) {
+            var products = await _productReadRepository.GetByIDAsync(ID);
+            var stocks = _stockProductReadRepository.GetAll().Where(x => x.ProductID == products.ID);
+            var product = new ProductDetailForCustomer() {
+
+               ID = products.ID,
+                ProductName = products.ProductName,
+                ProductInformation = products.ProductInformation,
+                ProductPrice = products.ProductPrice,
+                ProductQuantity = stocks.FirstOrDefault(x => x.ProductID == products.ID).ProductQuantity,
+                Img =products.Image
+            };
+            return product;
         }
 
         public async Task<ProductModel> GetByID(int ID, bool tracking = true)

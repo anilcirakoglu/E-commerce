@@ -72,7 +72,11 @@ namespace E_Commerce.WebMVC.Controllers
                     return RedirectToAction("Index", "Home");//index gönderince hata veriyordu düzeldi ama bir daha kontrol et
                 }
 
-                else { ModelState.AddModelError("Password", "Your password is incorrect, Please enter again"); }
+                else { 
+                    ModelState.AddModelError("Password", "Your password is incorrect, Please enter again");
+                    ModelState.AddModelError("Email", "Your Email is incorrect, Please enter again");
+                }
+                
                 return View(model);
 
             }
@@ -152,6 +156,52 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(customer);
         }
+        [Authorize(Policy ="CustomerPolicy")]
+        
+
+        public async Task<IActionResult> CartList(int ID)
+        {
+            List<CustomerCartListModel> cartList = new List<CustomerCartListModel>();
+            if (ModelState.IsValid)
+            {
+                
+                var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+                var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+                int jwtID = int.Parse(jwtId);
+                
+                ID = jwtID;//Düzenleyebilir miyim diye bak
+
+                if (token != null)
+                {
+
+                    var client = _httpClientFactory.CreateClient();
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+
+                 
+
+                    var response = await client.GetAsync($"http://localhost:5101/api/Customer/CartList/{ID}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        cartList= JsonConvert.DeserializeObject<List<CustomerCartListModel>>(content);
+                        return View(cartList);
+                       
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "wrong Model");
+                    }
+
+                   
+                }
+                
+            }
+            return RedirectToAction("CartList", "Customer");
+        }
+
+
+
         [Authorize(Policy ="CustomerPolicy")]
         public async Task<IActionResult> AddProductCart(CartModel cart)
         {

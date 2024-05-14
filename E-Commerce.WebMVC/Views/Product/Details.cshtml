@@ -1,0 +1,17 @@
+﻿@model ProductDetailForCustomerModel
+@{
+    Layout = "_Layout";
+}
+
+
+<h1>Details</h1>
+<div>
+    <table border="1" class="productDeatilsTable">
+        <tr>
+            <td>@Model.Img</td>
+            <td><b>@Model.ProductName</b><br />@Model.ProductInformation<br />Price:@Model.ProductPrice Quantity:@Model.ProductQuantity</td>
+        </tr>
+        <td></td>
+        <td> <a class=" btn btn-outline-success" asp-controller="Customer" asp-action="AddProductCart" asp-route-ProductID="@Model.ID">Add Cart</a></td>
+    </table>
+</div>

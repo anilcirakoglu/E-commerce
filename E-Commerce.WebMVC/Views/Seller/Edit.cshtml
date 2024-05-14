@@ -1,12 +1,17 @@
-﻿@model SellerModel
+﻿@using Newtonsoft.Json
+@model SellerModel
 
 
 @{
     Layout = "_Layout";
 }
-<div><h4>Seller Sign In </h4></div>
+
 <div class="container">
     <form class="w-75 m-5 p-2 " asp-action="Edit" asp-controller="Seller" method="post">
+        <input type="hidden" asp-for="@Model.ID" />
+        @{
+
+        }
         <div class="mb-3">
             <label for="@Model.FirstName" class="form-label">First Name</label>
             <span asp-validation-for="@Model.FirstName" class="text-black"></span>
@@ -38,17 +43,17 @@
             <input type="text" class="form-control" asp-for="@Model.PhoneNumber" />
         </div>
         <div class="mb-3">
-            <label for="@Model.CompanyType" class="form-label">CompanyType</label>
-            <span asp-validation-for="@Model.CompanyType" class="text-black"></span>
-            <input type="text" class="form-control" asp-for="@Model.CompanyType" />
+            <label for="@Model.PhoneNumber" class="form-label">Phone Number</label>
+            <span asp-validation-for="@Model.PhoneNumber" class="text-black"></span>
+            <input type="text" class="form-control" asp-for="@Model.PhoneNumber" />
         </div>
         <div class="mb-3">
-            <label for="@Model.TaxpayerIDNumber" class="form-label">TaxpayerIDNumber</label>
-            <span asp-validation-for="@Model.TaxpayerIDNumber" class="text-black"></span>
-            <input type="text" class="form-control" asp-for="@Model.TaxpayerIDNumber" />
+            <label for="@Model.PhoneNumber" class="form-label">Phone Number</label>
+            <span asp-validation-for="@Model.PhoneNumber" class="text-black"></span>
+            <input type="text" class="form-control" asp-for="@Model.PhoneNumber" />
         </div>
         <div class="mb-3">
-            <button type="submit" class=" btn-primary w-100">Sign In</button>
+            <button asp-route="@Model.ID" class=" btn-primary w-100">Save</button>
         </div>
     </form>
 </div>

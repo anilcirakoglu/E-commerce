@@ -7,7 +7,7 @@ namespace E_Commerce.WebApi.Business
         List<CartModel> GetAll();
         Task<CartModel> GetByID(int ID, bool tracking = true);
         Task<CartModel> Create(CartModel cart);
-        
+      
 
         Task UpdateAsync(CartModel cart);
         Task<int> SaveAsync();

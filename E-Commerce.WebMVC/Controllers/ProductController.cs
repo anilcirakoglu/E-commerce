@@ -145,6 +145,35 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View("SellerProductList", product);
         }
+        [HttpGet]
+        public async Task<IActionResult> Details(int ID)
+        {
+           
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+            if(jwtId==null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            var product = new ProductDetailForCustomerModel();
+            if (token != null)
+            {
+                
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                var response = await client.GetAsync($"http://localhost:5101/api/Product/Details/{ID}");
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var content = await response.Content.ReadAsStringAsync();
+                    product = JsonConvert.DeserializeObject<ProductDetailForCustomerModel>(content);
+                    return View(product);
+                  
+                }
+
+            }
+            return RedirectToAction("Details", "Product");
+        }
 
 
 

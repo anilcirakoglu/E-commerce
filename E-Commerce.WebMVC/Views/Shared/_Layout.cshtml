@@ -17,7 +17,8 @@
     </div>
     <br />
     <br />
-    <div class ="logo"><a asp-area="" asp-controller="Home" asp-action="Index">E_Commerce</a></div>
+    <div class="logo" ><a asp-area="" asp-controller="Home" asp-action="Index">E_Commerce</a></div>
+    <div class="cartLogo"><a asp-action="CartList" asp-controller="Customer" ><img src="~/image/cart.svg" /></a></div>
     
     <header>
        
@@ -50,21 +51,36 @@
                                 }
                                
                         }
+                            @{
+                                if (User.HasClaim("role", "Admin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="ListSeller">Seller List</a>
+                                    </li>
+                                }
+                            }
                            @*  <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="CategoryProduct" asp-action="Category">Category</a>
                             </li> *@
-                       
-                        @* <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="ListSeller">Seller List</a>
-                        </li> *@
+                         @{
+                                if (User.HasClaim("role", "Admin"))
+                                {
                         <li class="nav-item">
 
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ListProduct">Product List</a>
                         </li>
-                        <li class="nav-item">
-
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="SellerProductList">Seller Product List</a>
-                        </li>
+                           
+                                }
+                            }
+                            @{
+                                if (User.HasClaim("role", "Seller"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="SellerProductList">Product List</a>
+                                    </li>
+                                }
+                            }
+                       
 
 
                         <li class="nav-item">

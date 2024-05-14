@@ -80,6 +80,11 @@ namespace E_Commerce.WebApi.Controllers
              await _customerBO.AddProductCart(cart);
             return Ok(cart);
         }
+        [HttpGet("CartList/{ID}")]
+       public  IActionResult CartList(int ID) {
 
+            var cart = _customerBO.CartList(ID);
+            return Ok(cart);
+        }
     }
 }
