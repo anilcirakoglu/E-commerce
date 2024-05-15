@@ -239,11 +239,7 @@ namespace E_Commerce.WebMVC.Controllers
                     var contents = await response.Content.ReadAsStringAsync();
                     ID = JsonConvert.DeserializeObject<int>(contents);
                 }
-                else
-                {
-
-                    // Örneğin, loglama, hata mesajı gösterme veya başka bir işlem
-                }
+               
             }
 
             return RedirectToAction("ListSeller");

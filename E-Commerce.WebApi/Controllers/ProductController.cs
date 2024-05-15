@@ -15,9 +15,16 @@ namespace E_Commerce.WebApi.Controllers
             _productBO = productBO;
         }
         [HttpGet("GetAllProductsForAdmin")]
-        public  ActionResult<GetAllProductsForAdmin> GetAllProductsForAdmin()
+        public ActionResult<AllProducts> GetAllProductsForAdmin()
         {
             var product = _productBO.GetAllProductsForAdmin();
+            return Ok(product);
+        }
+
+        [HttpGet("GetAllProducts")]
+        public  ActionResult<AllProducts> GetAllProducts()
+        {
+            var product = _productBO.GetAllProducts();
             return Ok(product);
         }
         [HttpGet("SellerProducts/{ID:int}")]

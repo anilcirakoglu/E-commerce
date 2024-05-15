@@ -1,6 +1,6 @@
 ﻿namespace E_Commerce.WebApi.Business.Models
 {
-    public class GetAllProductsForAdmin
+    public class AllProducts
     {
 
         //Product Name	Information	ProductPrice	DiscountPercentage	Stock Quantity	IsProductActive	Categories

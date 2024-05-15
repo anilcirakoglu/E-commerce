@@ -104,11 +104,7 @@ namespace E_Commerce.WebMVC.Controllers
                     var content = await response.Content.ReadAsStringAsync();
                     product = JsonConvert.DeserializeObject<List<ProductModel>>(content);
                 }
-                else
-                {
-
-                    //  hata mesajı gösterme 
-                }
+               
             }
             return View("ProductList", product);
         }

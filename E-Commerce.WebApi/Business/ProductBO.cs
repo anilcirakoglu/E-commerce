@@ -84,10 +84,42 @@ namespace E_Commerce.WebApi.Business
             return productModel;
         }
         #endregion
+        public List<AllProducts> GetAllProductsForAdmin()
+        {
+            var product = _productReadRepository.GetAll();
+            var category = _categoryProductReadRepository.GetAll();
+            var stock = _stockProductReadRepository.GetAll();
+            var seller = _sellerReadRepository.GetAll();
+
+
+            var list = (from products in product
+                        join categorys in category on products.CategoryID equals categorys.ID
+                        join stocks in stock on products.ID equals stocks.ProductID
+                        join sellers in seller on products.SellerID equals sellers.ID
+            
+                        select new AllProducts
+                        {
+                            ID = products.ID,
+                            ProductName = products.ProductName,
+                            ProductInformation = products.ProductInformation,
+                            ProductPrice = products.ProductPrice,
+                            IsProductActive = products.IsProductActive,
+                            CategoryName = categorys.CategoryName,
+                            DiscountPercentage = products.discountPercentage,
+                            ProductQuantity = stocks.ProductQuantity,
+                            SellerName = sellers.FirstName,
+                            IsApprovedProduct = products.IsApprovedProduct,
 
 
 
-        public List<GetAllProductsForAdmin> GetAllProductsForAdmin() 
+
+                        }).ToList();
+            return list;
+            
+        }
+
+
+        public List<AllProducts> GetAllProducts() 
         {
             var product = _productReadRepository.GetAll();
             var category = _categoryProductReadRepository.GetAll();
@@ -98,8 +130,8 @@ namespace E_Commerce.WebApi.Business
             var list = (from products in product
                          join categorys in category on products.CategoryID equals categorys.ID
                          join stocks in stock on products.ID equals stocks.ProductID
-                         join sellers in seller on products.SellerID equals sellers.ID where products.IsApprovedProduct== true //indexde ki getall değiştirmen gerek unutma
-                         select new GetAllProductsForAdmin
+                         join sellers in seller on products.SellerID equals sellers.ID where products.IsApprovedProduct== true 
+                         select new AllProducts
                          {
                              ID=products.ID,
                              ProductName = products.ProductName,
