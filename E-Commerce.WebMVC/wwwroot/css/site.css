@@ -68,12 +68,29 @@ header {
 
 .cartLogo {
   margin-left:1280px;
- 
-
-  
 
 }
+.pympg {
+text-align:center;
+}
+.form-group {
+     font-family:'Times New Roman', Times, serif;
+    margin-bottom: 10px;
+}
 
+.form-group label {
+  
+    display: block;
+    margin-bottom: 5px;
+}
+
+    .form-group input {
+        width: 350px;
+        padding: 5px;
+       
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
 body {
     
    

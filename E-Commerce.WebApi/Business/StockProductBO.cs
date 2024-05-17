@@ -1,4 +1,5 @@
-﻿using E_Commerce.WebApi.Application.StockProducts;
+﻿using E_Commerce.WebApi.Application.Carts;
+using E_Commerce.WebApi.Application.StockProducts;
 using E_Commerce.WebApi.Business.Models;
 using E_Commerce.WebApi.Data.Entities;
 
@@ -9,10 +10,15 @@ namespace E_Commerce.WebApi.Business
         readonly private IStockProductReadRepository _stockProductReadRepository;
         readonly private IStockProductWriteRepository _stockProductWriteRepository;
 
-        public StockProductBO(IStockProductReadRepository stockProductReadRepository, IStockProductWriteRepository stockProductWriteRepository)
+        readonly private ICartReadRepository _cartReadRepository;
+        readonly private ICartWriteRepository _cartWriteRepository;
+
+        public StockProductBO(IStockProductReadRepository stockProductReadRepository, IStockProductWriteRepository stockProductWriteRepository, ICartReadRepository cartReadRepository, ICartWriteRepository cartWriteRepository)
         {
             _stockProductReadRepository = stockProductReadRepository;
             _stockProductWriteRepository = stockProductWriteRepository;
+            _cartReadRepository = cartReadRepository;
+            _cartWriteRepository = cartWriteRepository;
         }
 
         public async Task<StockProductModel> Create(StockProductModel product)
@@ -84,6 +90,16 @@ namespace E_Commerce.WebApi.Business
 
             _stockProductWriteRepository.Update(products);
             await _stockProductWriteRepository.SaveAsync();
+        }
+        public async Task DecreaseStock(StockProductModel stockProduct) {
+            var stockProductQuantity = _stockProductReadRepository.GetWhere(x => x.ProductID == stockProduct.ProductID);
+            var cart = _cartReadRepository.GetWhere(x=>x.ProductID == stockProduct.ProductID);
+            if (stockProductQuantity != null&&stockProduct.ProductQuantity>0) {
+
+                stockProduct.ProductQuantity = stockProduct.ProductQuantity - cart.FirstOrDefault().Quantity;
+                cart.FirstOrDefault().Status = Data.Entities.Enums.CartStatus.Purchased;
+
+            }
         }
     }
 }

@@ -15,6 +15,7 @@ namespace E_Commerce.WebApi.Business
         Task<int> SaveAsync();
         Task RemoveAsync(int ID);
         Task AddProductCart(CartDto cartDto);
+        Task DecreaseProductCart(int ID);
         List<CartListDto> CartList(int ID);
     }
 }

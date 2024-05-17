@@ -1,8 +1,10 @@
 ﻿using E_Commerce.WebMVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using System.Text;
+using X.PagedList;
 
 namespace E_Commerce.WebMVC.Controllers
 {
@@ -103,6 +105,8 @@ namespace E_Commerce.WebMVC.Controllers
 
                     var content = await response.Content.ReadAsStringAsync();
                     product = JsonConvert.DeserializeObject<List<ProductModel>>(content);
+
+                 
                 }
                
             }

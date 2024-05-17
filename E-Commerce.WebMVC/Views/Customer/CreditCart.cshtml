@@ -1,0 +1,31 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+
+
+<div>
+    <h1 class="pympg">Payment Page</h1>
+    <form method="post" ><div class="form-group">
+        <label for="cardName" >Credit Cartholder Name</label>
+        <input type="text" name="cardholderName" />
+            <br />
+        </div>
+        <div class="form-group">
+        <label for="cardNumber">Cart Number</label>
+        <input type="text" maxlength="16" name="cardNumber" />
+        <br />
+        </div>
+        <div class="form-group">
+        <label for="expiryDate">Expiry Date</label>
+        <input type="month" name="expiryDate" placeholder="MM/YY" />
+        <br />
+        </div>
+        <div class="form-group">
+        <label for="cvv">CVV</label>
+        <input type="text" name="cvv" maxlength="3" size="3" placeholder="CVV" />
+        <br />
+        </div>
+        <button type="submit" class="btn-dark" asp-action="DecreaseStock" asp-controller="Customer">Complete Payment</button>
+    </form>
+</div>

@@ -8,7 +8,7 @@ using E_Commerce.WebApi.Business.Enums;
 
 namespace E_Commerce.WebApi.Controllers
 {
-    
+
     [Route("api/[controller]")]
     [ApiController]
     public class CustomerController : ControllerBase
@@ -21,7 +21,7 @@ namespace E_Commerce.WebApi.Controllers
             _customerBO = customerBO;
             _mapper = mapper;
         }
-      
+
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -35,7 +35,7 @@ namespace E_Commerce.WebApi.Controllers
             var customer = await _customerBO.Create(customerModel);
             return Ok(customer);
         }
-       
+
         [HttpGet("{ID}")]
         public async Task<IActionResult> GetByID(int ID)
         {
@@ -54,12 +54,12 @@ namespace E_Commerce.WebApi.Controllers
             await _customerBO.UpdateAsync(customerModel);
             return Ok(customerModel);
         }
-        
+
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginModel loginModel)
         {
             var token = _customerBO.Login(loginModel);
-            if(token == "") 
+            if (token == "")
             {
                 return BadRequest();
             }
@@ -75,16 +75,24 @@ namespace E_Commerce.WebApi.Controllers
         }
 
         [HttpPost("AddProductCart")]
-        public async Task<IActionResult> AddProductCart(CartDto cart) 
+        public async Task<IActionResult> AddProductCart(CartDto cart)
         {
-             await _customerBO.AddProductCart(cart);
+            await _customerBO.AddProductCart(cart);
             return Ok(cart);
         }
         [HttpGet("CartList/{ID}")]
-       public  IActionResult CartList(int ID) {
+        public IActionResult CartList(int ID)
+        {
 
             var cart = _customerBO.CartList(ID);
             return Ok(cart);
+        }
+        [HttpPost("DecreaseProductList/{ID}")]
+        public IActionResult DecreaseProductList(int ID)
+        {
+            var decCart = _customerBO.DecreaseProductCart(ID);
+            return Ok(decCart);
+
         }
     }
 }

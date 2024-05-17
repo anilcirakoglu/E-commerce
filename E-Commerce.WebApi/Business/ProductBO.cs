@@ -93,7 +93,7 @@ namespace E_Commerce.WebApi.Business
 
 
             var list = (from products in product
-                        join categorys in category on products.CategoryID equals categorys.ID
+                        join categories in category on products.CategoryID equals categories.ID
                         join stocks in stock on products.ID equals stocks.ProductID
                         join sellers in seller on products.SellerID equals sellers.ID
             
@@ -104,7 +104,7 @@ namespace E_Commerce.WebApi.Business
                             ProductInformation = products.ProductInformation,
                             ProductPrice = products.ProductPrice,
                             IsProductActive = products.IsProductActive,
-                            CategoryName = categorys.CategoryName,
+                            CategoryName = categories.CategoryName,
                             DiscountPercentage = products.discountPercentage,
                             ProductQuantity = stocks.ProductQuantity,
                             SellerName = sellers.FirstName,
@@ -128,7 +128,7 @@ namespace E_Commerce.WebApi.Business
            
 
             var list = (from products in product
-                         join categorys in category on products.CategoryID equals categorys.ID
+                         join categories in category on products.CategoryID equals categories.ID
                          join stocks in stock on products.ID equals stocks.ProductID
                          join sellers in seller on products.SellerID equals sellers.ID where products.IsApprovedProduct== true 
                          select new AllProducts
@@ -138,7 +138,7 @@ namespace E_Commerce.WebApi.Business
                              ProductInformation = products.ProductInformation,
                              ProductPrice = products.ProductPrice,
                              IsProductActive = products.IsProductActive,
-                             CategoryName = categorys.CategoryName,
+                             CategoryName = categories.CategoryName,
                              DiscountPercentage = products.discountPercentage,
                              ProductQuantity = stocks.ProductQuantity,
                              SellerName = sellers.FirstName,
@@ -151,7 +151,7 @@ namespace E_Commerce.WebApi.Business
             return list;
             //return allProductlist;
         }
-        public List<ProductDto> sellerProducts(int ID) //linq
+        public List<ProductDto> sellerProducts(int ID) 
         {
             var product = _productReadRepository.GetAll();
             var category = _categoryProductReadRepository.GetAll();
@@ -161,7 +161,7 @@ namespace E_Commerce.WebApi.Business
          
 
             var list2 = (from products in product
-                         join categorys in category on products.CategoryID equals categorys.ID
+                         join categories in category on products.CategoryID equals categories.ID
                          join stocks in stock on products.ID equals stocks.ProductID
                          join sellers in seller on products.SellerID equals sellers.ID where products.SellerID == ID
                          select new ProductDto
@@ -170,14 +170,14 @@ namespace E_Commerce.WebApi.Business
                              ProductInformation = products.ProductInformation,
                              ProductPrice = products.ProductPrice,
                              IsProductActive = products.IsProductActive,
-                             CategoryName = categorys.CategoryName,
+                             CategoryName = categories.CategoryName,
                              DiscountPercentage = products.discountPercentage,
                              ProductQuantity = stocks.ProductQuantity,
                              IsApprovedProduct = products.IsApprovedProduct,
                              
                          }).ToList();
             return list2;
-            //return allProductlist;
+          
         }
 
 

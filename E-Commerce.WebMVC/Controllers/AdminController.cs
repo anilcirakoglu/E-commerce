@@ -221,9 +221,6 @@ namespace E_Commerce.WebMVC.Controllers
         [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> RejectSeller(int ID)
         {
-
-
-
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
             if (token != null)
             {

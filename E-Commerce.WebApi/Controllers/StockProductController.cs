@@ -48,5 +48,11 @@ namespace E_Commerce.WebApi.Controllers
             await _stockProductBO.UpdateAsync(stockProductModel);
             return Ok(stockProductModel);
         }
+        [HttpPost("DecreaseStock")]
+        public async Task<IActionResult> DecreaseStock(StockProductModel stockProduct) 
+        {
+            var stock = _stockProductBO.DecreaseStock(stockProduct);
+            return Ok(stock);
+        }
     }
 }

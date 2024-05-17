@@ -38,6 +38,10 @@ namespace E_Commerce.WebMVC.Controllers
         {
             return View(new CustomerModel());
         }
+        public IActionResult CreditCart()
+        {
+            return View();
+        }
 
 
         [HttpPost]
@@ -157,8 +161,49 @@ namespace E_Commerce.WebMVC.Controllers
             return View(customer);
         }
         [Authorize(Policy ="CustomerPolicy")]
-        
+        public async Task<IActionResult> DecreaseCartList(int ID)
+        {
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            if (token != null)
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
+                var data = JsonConvert.SerializeObject(ID);
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync($"http://localhost:5101/api/Customer/DecreaseProductList/{ID}", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    var contents = await response.Content.ReadAsStringAsync();
+                    ID = JsonConvert.DeserializeObject<int>(contents);
+                }
+            }
+                return RedirectToAction("CartList", "Customer");
+        }
+        [Authorize(Policy ="CustomerPolicy")]
+        [HttpPost]
+        public async Task<IActionResult> DecreaseStock(StockProductModel stockProduct)
+        {
+
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            if (token != null)
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var data = JsonConvert.SerializeObject(stockProduct);
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync($"http://localhost:5101/api/StockProduct/DecreaseStock", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    var contents = await response.Content.ReadAsStringAsync();
+                    stockProduct = JsonConvert.DeserializeObject<StockProductModel>(contents);
+                }
+            }
+                return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize(Policy ="CustomerPolicy")]
         public async Task<IActionResult> CartList(int ID)
         {
             List<CustomerCartListModel> cartList = new List<CustomerCartListModel>();
@@ -169,7 +214,7 @@ namespace E_Commerce.WebMVC.Controllers
                 var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
                 int jwtID = int.Parse(jwtId);
                 
-                ID = jwtID;//Düzenleyebilir miyim diye bak
+                ID = jwtID;
 
                 if (token != null)
                 {

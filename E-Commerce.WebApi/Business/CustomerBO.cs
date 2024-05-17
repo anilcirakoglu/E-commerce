@@ -6,6 +6,7 @@ using E_Commerce.WebApi.Application.Sellers;
 using E_Commerce.WebApi.Business.Enums;
 using E_Commerce.WebApi.Business.Models;
 using E_Commerce.WebApi.Data.Entities;
+using E_Commerce.WebApi.Data.Entities.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -223,13 +224,46 @@ namespace E_Commerce.WebApi.Business
 
         public async Task AddProductCart(CartDto cartDto)
         {
-            var cart = new Cart()
+            
+
+            var CartProduct = await _cartReadRepository.GetAll().Where(x=>x.CustomerID == cartDto.CustomerID && x.ProductID==cartDto.ProductID && x.Status==CartStatus.Active).FirstOrDefaultAsync();
+            if (CartProduct == null)
             {
-                ProductID = cartDto.ProductID,
-                CustomerID = cartDto.CustomerID,
-            };
-            await _cartWriteRepository.AddAsync(cart);
+                var cart = new Cart()
+                {
+                    ProductID = cartDto.ProductID,
+                    CustomerID = cartDto.CustomerID,
+                    Status =CartStatus.Active,
+                    Quantity =1
+                };
+                await _cartWriteRepository.AddAsync(cart);
+            }
+            else
+            {
+                CartProduct.Quantity += 1;
+                _cartWriteRepository.Update(CartProduct);
+            }
+           
             await _cartWriteRepository.SaveAsync();
+        }
+        
+        
+        public async Task DecreaseProductCart(int ID) 
+        {
+            var cartProduct = await _cartReadRepository.GetByIDAsync(ID);
+            if (cartProduct == null)
+            {
+            }
+            else if (cartProduct.Quantity == 1)
+            {
+                await _cartWriteRepository.RemoveAsync(ID);
+            }
+            else 
+            { 
+                cartProduct.Quantity -= 1;
+                _cartWriteRepository.Update(cartProduct);
+            }
+          await _cartWriteRepository.SaveAsync();
         }
 
         public  List<CartListDto> CartList(int ID)
@@ -238,15 +272,15 @@ namespace E_Commerce.WebApi.Business
             var cart = _cartReadRepository.GetAll();
             var product = _productReadRepository.GetAll();
 
-           
-            var list = (from products in product 
-                        join carts in cart on products.ID equals carts.ProductID 
-                        join customers in customer on carts.CustomerID equals customers.ID  where customers.ID ==ID 
-                        select new CartListDto { 
-                          ProductID=products.ID,
-                          ProductName =products.ProductName
-                        
-                        }).ToList();
+
+            var list = (from products in product
+                        join carts in cart on products.ID equals carts.ProductID
+                        join customers in customer on carts.CustomerID equals customers.ID where customers.ID == ID
+                        select new CartListDto {
+                            ProductID = products.ID,
+                            ProductName = products.ProductName,
+                            Quantity = carts.Quantity
+                        }).Distinct().ToList();
          
             
             return list;

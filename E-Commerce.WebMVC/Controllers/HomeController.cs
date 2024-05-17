@@ -76,13 +76,9 @@ namespace E_Commerce.WebMVC.Controllers
 
                     var pageList = product.ToPagedList(page, 9);
 
-                    return View(pageList);//kontrol et
+                    return View(pageList);
                 }
-                else
-                {
-
-                    //  hata mesajý gösterme 
-                }
+                
 
                 return View(product);
             }
