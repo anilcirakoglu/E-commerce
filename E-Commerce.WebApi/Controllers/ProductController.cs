@@ -68,5 +68,11 @@ namespace E_Commerce.WebApi.Controllers
             await _productBO.UpdateAsync(productModel);
             return Ok(productModel);
         }
+        [HttpGet("Search/{name}")]
+        public async Task<IActionResult> Search(string name) 
+        {
+            var product = _productBO.Search(name);
+            return Ok(product);
+        }
     }
 }

@@ -46,5 +46,11 @@ namespace E_Commerce.WebApi.Controllers
             await _cartBO.UpdateAsync(cartModel);
             return Ok(cartModel);
         }
+        [HttpPost("DecreaseCartProduct")]
+        public async Task<IActionResult> DecreaseCartProduct([FromBody]int ProductID)
+        {
+            var cart = _cartBO.DecreaseCartProduct(ProductID);
+            return Ok(cart);
+        }
     }
 }

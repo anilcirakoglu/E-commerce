@@ -17,8 +17,13 @@
     </div>
     <br />
     <br />
-    <div class="logo" ><a asp-area="" asp-controller="Home" asp-action="Index">E_Commerce</a></div>
-    <div class="cartLogo"><a asp-action="CartList" asp-controller="Customer" ><img src="~/image/cart.svg" /></a></div>
+    <div class="logo"><a asp-area="" asp-controller="Home" asp-action="Index">E_Commerce</a></div>
+
+    <form method="get" asp-action="Search" asp-controller="Product">
+        <div><input class="searchbar" type="text" placeholder="Search.." name="name" > </div>
+    </form>
+    
+    <div class="cartLogo"><img src="~/image/person-circle.svg" />&nbsp;&nbsp;&nbsp;<a asp-action="CartList" asp-controller="Customer"><img src="~/image/cart.svg" /></a></div>
     
     <header>
        

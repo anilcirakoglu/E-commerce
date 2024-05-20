@@ -117,6 +117,35 @@ namespace E_Commerce.WebApi.Business
             return list;
             
         }
+        public List<AllProducts> Search(string name) 
+        {
+            var product = _productReadRepository.GetAll();
+            var category = _categoryProductReadRepository.GetAll();
+            var stock = _stockProductReadRepository.GetAll();
+            var seller = _sellerReadRepository.GetAll();
+            var list = (from products in product
+                        join categories in category on products.CategoryID equals categories.ID
+                        join stocks in stock on products.ID equals stocks.ProductID
+                        join sellers in seller on products.SellerID equals sellers.ID
+                        where products.ProductName.ToLower() == name.ToLower() || categories.CategoryName.ToLower() == name.ToLower() && products.IsApprovedProduct== true 
+                        select new AllProducts
+                        {
+
+                            ID = products.ID,
+                            ProductName = products.ProductName,
+                            ProductInformation = products.ProductInformation,
+                            ProductPrice = products.ProductPrice,
+                            IsProductActive = products.IsProductActive,
+                            CategoryName = categories.CategoryName,
+                            DiscountPercentage = products.discountPercentage,
+                            ProductQuantity = stocks.ProductQuantity,
+                            SellerName = sellers.FirstName,
+                            IsApprovedProduct = products.IsApprovedProduct,
+
+                        }
+                        ).ToList();
+            return list;
+        }
 
 
         public List<AllProducts> GetAllProducts() 

@@ -91,7 +91,7 @@ namespace E_Commerce.WebMVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListProduct()
+        public async Task<IActionResult> ListProduct()//admin ile seller ayrıldı mı kontrol et
         {
             List<ProductModel> product = new List<ProductModel>();
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
@@ -145,6 +145,31 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View("SellerProductList", product);
         }
+        [HttpGet]
+        public async Task<IActionResult> Search(string name, int page=1) //yoksa ürün boş sayfa geliyor düzelt
+        {
+            List<ProductModel> product = new List<ProductModel>();
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            if (token != null)
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                var response = await client.GetAsync($"http://localhost:5101/api/Product/Search/{name}");
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var content = await response.Content.ReadAsStringAsync();
+                    product = JsonConvert.DeserializeObject<List<ProductModel>>(content);
+
+                    var pageList = product.ToPagedList(page, 9);
+                    return View(pageList);
+                }
+               
+            }
+            return View(product);
+        }
+
+
         [HttpGet]
         public async Task<IActionResult> Details(int ID)
         {

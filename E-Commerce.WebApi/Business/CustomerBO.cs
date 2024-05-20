@@ -3,6 +3,7 @@ using E_Commerce.WebApi.Application.Carts;
 using E_Commerce.WebApi.Application.Customers;
 using E_Commerce.WebApi.Application.Products;
 using E_Commerce.WebApi.Application.Sellers;
+using E_Commerce.WebApi.Application.StockProducts;
 using E_Commerce.WebApi.Business.Enums;
 using E_Commerce.WebApi.Business.Models;
 using E_Commerce.WebApi.Data.Entities;
@@ -33,9 +34,13 @@ namespace E_Commerce.WebApi.Business
         readonly private IProductReadRepository _productReadRepository;
         readonly private IProductWriteRepository _productWriteRepository;
 
+        readonly private IStockProductReadRepository _stockProductReadRepository;
+        readonly private IStockProductWriteRepository _stockProductWriteRepository;
+
+
         readonly private IConfiguration _configuration;
 
-        public CustomerBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository, ICartReadRepository cartReadRepository, ICartWriteRepository cartWriteRepository, IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository, IConfiguration configuration)
+        public CustomerBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository, ICartReadRepository cartReadRepository, ICartWriteRepository cartWriteRepository, IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository, IConfiguration configuration, IStockProductReadRepository stockProductReadRepository, IStockProductWriteRepository stockProductWriteRepository)
         {
             _adminReadRepository = adminReadRepository;
             _adminWriteRepository = adminWriteRepository;
@@ -48,6 +53,8 @@ namespace E_Commerce.WebApi.Business
             _productReadRepository = productReadRepository;
             _productWriteRepository = productWriteRepository;
             _configuration = configuration;
+            _stockProductReadRepository = stockProductReadRepository;
+            _stockProductWriteRepository = stockProductWriteRepository;
         }
 
         public async Task<CustomerModel> Create(CustomerModel customerModel)
@@ -224,17 +231,17 @@ namespace E_Commerce.WebApi.Business
 
         public async Task AddProductCart(CartDto cartDto)
         {
-            
 
-            var CartProduct = await _cartReadRepository.GetAll().Where(x=>x.CustomerID == cartDto.CustomerID && x.ProductID==cartDto.ProductID && x.Status==CartStatus.Active).FirstOrDefaultAsync();
+
+            var CartProduct = await _cartReadRepository.GetAll().Where(x => x.CustomerID == cartDto.CustomerID && x.ProductID == cartDto.ProductID && x.Status == CartStatus.Active).FirstOrDefaultAsync();
             if (CartProduct == null)
             {
                 var cart = new Cart()
                 {
                     ProductID = cartDto.ProductID,
                     CustomerID = cartDto.CustomerID,
-                    Status =CartStatus.Active,
-                    Quantity =1
+                    Status = CartStatus.Active,
+                    Quantity = 1
                 };
                 await _cartWriteRepository.AddAsync(cart);
             }
@@ -243,12 +250,12 @@ namespace E_Commerce.WebApi.Business
                 CartProduct.Quantity += 1;
                 _cartWriteRepository.Update(CartProduct);
             }
-           
+
             await _cartWriteRepository.SaveAsync();
         }
-        
-        
-        public async Task DecreaseProductCart(int ID) 
+
+
+        public async Task DecreaseProductCart(int ID)
         {
             var cartProduct = await _cartReadRepository.GetByIDAsync(ID);
             if (cartProduct == null)
@@ -258,15 +265,15 @@ namespace E_Commerce.WebApi.Business
             {
                 await _cartWriteRepository.RemoveAsync(ID);
             }
-            else 
-            { 
+            else
+            {
                 cartProduct.Quantity -= 1;
                 _cartWriteRepository.Update(cartProduct);
             }
-          await _cartWriteRepository.SaveAsync();
+            await _cartWriteRepository.SaveAsync();
         }
 
-        public  List<CartListDto> CartList(int ID)
+        public List<CartListDto> CartList(int ID)
         {
             var customer = _customerReadRepository.GetAll();
             var cart = _cartReadRepository.GetAll();
@@ -275,17 +282,46 @@ namespace E_Commerce.WebApi.Business
 
             var list = (from products in product
                         join carts in cart on products.ID equals carts.ProductID
-                        join customers in customer on carts.CustomerID equals customers.ID where customers.ID == ID
-                        select new CartListDto {
+                        join customers in customer on carts.CustomerID equals customers.ID
+                        where customers.ID == ID && carts.Status==CartStatus.Active
+                        select new CartListDto
+                        {
                             ProductID = products.ID,
                             ProductName = products.ProductName,
                             Quantity = carts.Quantity
                         }).Distinct().ToList();
-         
-            
+
+
             return list;
         }
-       
+        public async Task Purchase(int CustomerID)
+        {
+            //stoktan düşücez ikinici satın alındı diye işaretlicez
+            
+            var carts = _cartReadRepository.GetWhere(x => x.CustomerID == CustomerID && x.Status == CartStatus.Active).ToList();
+            foreach(var cart in carts)
+            {
+                var stockproduct = await _stockProductReadRepository.GetWhere(x => x.ProductID == cart.ProductID).FirstOrDefaultAsync();
+                if (stockproduct.ProductQuantity < cart.Quantity) {
+
+                    throw new Exception("Stock Error");
+                }
+            }
+            foreach (var cart in carts)
+            {
+
+                var stockproduct = await _stockProductReadRepository.GetWhere(x => x.ProductID == cart.ProductID).FirstOrDefaultAsync();
+               
+                stockproduct.ProductQuantity -= cart.Quantity;
+                _stockProductWriteRepository.Update(stockproduct);
+                await _stockProductWriteRepository.SaveAsync();
+                cart.Status = CartStatus.Purchased;
+                _cartWriteRepository.Update(cart);
+               await _cartWriteRepository.SaveAsync();
+            }
+
+        }
+
 
     }
 

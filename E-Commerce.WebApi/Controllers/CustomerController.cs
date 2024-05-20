@@ -94,5 +94,18 @@ namespace E_Commerce.WebApi.Controllers
             return Ok(decCart);
 
         }
+
+        [HttpPost("Purchase")]
+        public async Task<IActionResult> Purchase([FromBody]int CustomerID)
+        {
+            try
+            {
+                await _customerBO.Purchase(CustomerID);
+                return Ok(true);
+            } catch(Exception ex) {
+                return BadRequest(ex.Message);
+            }
+            
+        }
     }
 }

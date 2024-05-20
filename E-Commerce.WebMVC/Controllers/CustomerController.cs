@@ -160,29 +160,44 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(customer);
         }
+       
         [Authorize(Policy ="CustomerPolicy")]
-        public async Task<IActionResult> DecreaseCartList(int ID)
+        [HttpPost]
+        public async Task<IActionResult> Purchase()
         {
+            
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
             if (token != null)
             {
+                var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+                int jwtID = int.Parse(jwtId);
+
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var data = JsonConvert.SerializeObject(ID);
+                var data = JsonConvert.SerializeObject(jwtID);
                 var content = new StringContent(data, Encoding.UTF8, "application/json");
-                var response = await client.PostAsync($"http://localhost:5101/api/Customer/DecreaseProductList/{ID}", content);
+                var response = await client.PostAsync($"http://localhost:5101/api/Customer/Purchase", content);
                 if (response.IsSuccessStatusCode)
                 {
                     var contents = await response.Content.ReadAsStringAsync();
-                    ID = JsonConvert.DeserializeObject<int>(contents);
+                    var result = JsonConvert.DeserializeObject<bool>(contents);
                 }
-            }
-                return RedirectToAction("CartList", "Customer");
+                else
+                {
+                    var contents = await response.Content.ReadAsStringAsync();
+                    return View("ErrorPage",contents);
+                }
+            }    
+            return RedirectToAction("Index", "Home");
         }
+
+
+
+
         [Authorize(Policy ="CustomerPolicy")]
         [HttpPost]
-        public async Task<IActionResult> DecreaseStock(StockProductModel stockProduct)
+        public async Task<IActionResult> DecreaseCart(StockProductModel stockProduct)
         {
 
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
@@ -191,17 +206,20 @@ namespace E_Commerce.WebMVC.Controllers
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var data = JsonConvert.SerializeObject(stockProduct);
+                var data = JsonConvert.SerializeObject(stockProduct.ProductID);
                 var content = new StringContent(data, Encoding.UTF8, "application/json");
-                var response = await client.PostAsync($"http://localhost:5101/api/StockProduct/DecreaseStock", content);
+                var response = await client.PostAsync($"http://localhost:5101/api/Cart/DecreaseCartProduct", content);
                 if (response.IsSuccessStatusCode)
                 {
                     var contents = await response.Content.ReadAsStringAsync();
                     stockProduct = JsonConvert.DeserializeObject<StockProductModel>(contents);
                 }
             }
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("CartList", "Customer");
         }
+
+
+
 
         [Authorize(Policy ="CustomerPolicy")]
         public async Task<IActionResult> CartList(int ID)
@@ -232,10 +250,6 @@ namespace E_Commerce.WebMVC.Controllers
                         cartList= JsonConvert.DeserializeObject<List<CustomerCartListModel>>(content);
                         return View(cartList);
                        
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "wrong Model");
                     }
 
                    
@@ -277,7 +291,7 @@ namespace E_Commerce.WebMVC.Controllers
                     {
                         return RedirectToAction("Index", "Home");
                     }
-                    ModelState.AddModelError("", "wrong Model");
+                   
 
                 }
 

@@ -4,7 +4,7 @@
 }
 @{
     <div><h4>Your Cart </h4></div>
-    if (Model != null)
+    if (Model != null&&Model.Count>0)
     {
 
 
@@ -14,16 +14,30 @@
                     <td>Product Name</td>
                     <td>Quantity</td>
                 </tr>
+               
                 @foreach(var cart in Model)
                 {
+                    <form method="post" asp-action="DecreaseCart" asp-controller="Customer">
+
                     <tr>
                         <td>@cart.ProductName</td>
                         <td>@cart.Quantity</td>
-                        <td>+</td><td><a class="btn btn-danger"asp-route-id="@cart.ProductID" asp-action="DecreaseCartList" asp-controller="Customer">-</a></td>
+                        <td>+</td>   
+                        <td> <input value="-"  class="btn btn-danger" type="submit"  /></td>
+                        <input type="hidden" name="ProductID" value="@cart.ProductID" />
+                        
                     </tr>
-                }
+                    </form>
+                    } 
+                   
             </table>
         </div>
         <div><a class="btn btn-dark" asp-action="CreditCart" asp-controller="Customer">Buy</a></div>
+
+
+    }
+    else
+    {
+       <p>Your Cart is empty</p>    
     }
 }

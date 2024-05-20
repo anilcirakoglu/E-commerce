@@ -34,7 +34,7 @@ namespace E_Commerce.WebMVC.Controllers
                     var content = await response.Content.ReadAsStringAsync();
                     product = JsonConvert.DeserializeObject<List<ProductModel>>(content);
 
-                    var pageList = product.ToPagedList(page, 9);
+                    var pageList = product.ToPagedList(page, 3);
 
                     return View(pageList);//kontrol et
                 }

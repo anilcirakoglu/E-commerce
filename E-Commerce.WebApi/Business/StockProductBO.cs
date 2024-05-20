@@ -91,15 +91,6 @@ namespace E_Commerce.WebApi.Business
             _stockProductWriteRepository.Update(products);
             await _stockProductWriteRepository.SaveAsync();
         }
-        public async Task DecreaseStock(StockProductModel stockProduct) {
-            var stockProductQuantity = _stockProductReadRepository.GetWhere(x => x.ProductID == stockProduct.ProductID);
-            var cart = _cartReadRepository.GetWhere(x=>x.ProductID == stockProduct.ProductID);
-            if (stockProductQuantity != null&&stockProduct.ProductQuantity>0) {
-
-                stockProduct.ProductQuantity = stockProduct.ProductQuantity - cart.FirstOrDefault().Quantity;
-                cart.FirstOrDefault().Status = Data.Entities.Enums.CartStatus.Purchased;
-
-            }
-        }
+       
     }
 }

@@ -88,5 +88,29 @@ namespace E_Commerce.WebApi.Business
         {
             throw new NotImplementedException();
         }
+
+        public  Cart DecreaseCartProduct(int ProductID) 
+        {
+            var cart =  _cartReadRepository.GetWhere(x=>x.ProductID==ProductID).FirstOrDefault();
+            if(cart != null) 
+            {
+                if (cart.Quantity > 1)
+                {
+                    cart.Quantity -= 1;
+                    _cartWriteRepository.Update(cart);
+                }
+                else {
+                    _cartWriteRepository.Remove(cart);
+                }
+               
+                _cartWriteRepository.SaveAsync();
+            }
+            return cart;
+        }
+
+        
+
+
+
     }
 }
