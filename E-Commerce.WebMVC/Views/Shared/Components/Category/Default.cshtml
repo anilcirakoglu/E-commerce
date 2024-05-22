@@ -1,0 +1,13 @@
+﻿
+@model List<CategoryProductModel>
+
+
+@{
+    <ul>
+        @foreach (var category in Model)
+        {
+            <li>@category.CategoryName</li>
+        }
+    </ul>
+
+}

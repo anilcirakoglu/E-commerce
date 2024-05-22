@@ -127,7 +127,7 @@ namespace E_Commerce.WebApi.Business
                         join categories in category on products.CategoryID equals categories.ID
                         join stocks in stock on products.ID equals stocks.ProductID
                         join sellers in seller on products.SellerID equals sellers.ID
-                        where products.ProductName.ToLower() == name.ToLower() || categories.CategoryName.ToLower() == name.ToLower() && products.IsApprovedProduct== true 
+                        where products.ProductName.ToLower() == name.ToLower() || categories.CategoryName.ToLower() == name.ToLower() && products.IsApprovedProduct== true && products.IsProductActive==true
                         select new AllProducts
                         {
 
@@ -159,8 +159,8 @@ namespace E_Commerce.WebApi.Business
             var list = (from products in product
                          join categories in category on products.CategoryID equals categories.ID
                          join stocks in stock on products.ID equals stocks.ProductID
-                         join sellers in seller on products.SellerID equals sellers.ID where products.IsApprovedProduct== true 
-                         select new AllProducts
+                         join sellers in seller on products.SellerID equals sellers.ID where products.IsApprovedProduct== true && products.IsProductActive == true
+                        select new AllProducts
                          {
                              ID=products.ID,
                              ProductName = products.ProductName,
@@ -195,6 +195,7 @@ namespace E_Commerce.WebApi.Business
                          join sellers in seller on products.SellerID equals sellers.ID where products.SellerID == ID
                          select new ProductDto
                          {
+                             ID = products.ID,
                              ProductName = products.ProductName,
                              ProductInformation = products.ProductInformation,
                              ProductPrice = products.ProductPrice,

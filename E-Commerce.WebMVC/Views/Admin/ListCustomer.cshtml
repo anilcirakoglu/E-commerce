@@ -1,4 +1,6 @@
-﻿@model List<CustomerModel>
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<CustomerModel>
 @{
     Layout = "_Layout";
 }@{
@@ -43,3 +45,4 @@
         </div>
     }
 }
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("ListCustomer", "Admin", new { page }))

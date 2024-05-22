@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace E_Commerce.WebMVC.Models
 {
@@ -11,7 +13,7 @@ namespace E_Commerce.WebMVC.Models
         public double PreviousPrice { get; set; }
         public double DiscountPercentage { get; set; }
         public bool IsProductActive { get; set; }
-        public string Image {  get; set; }
+        public IFormFile? Image {  get; set; }
         public int CategoryID { get; set; }
         public SelectList Categories { get; set; }
         public string CategoryName { get; set; }

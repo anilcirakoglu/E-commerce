@@ -8,7 +8,8 @@
 <div>
     <table border="1" class="productDeatilsTable">
         <tr>
-            <td>@Model.Img</td>
+            <td><img alt="resim" src="data:png;base64,@Model.Img" /></td>
+        
             <td><b>@Model.ProductName</b><br />@Model.ProductInformation<br />Price:@Model.ProductPrice Quantity:@Model.ProductQuantity</td>
         </tr>
         <td></td>

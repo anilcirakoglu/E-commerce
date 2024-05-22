@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce.WebMVC.Controllers
 {
@@ -23,6 +24,10 @@ namespace E_Commerce.WebMVC.Controllers
             return View(new LoginModel());
         }
         public IActionResult SignIn()
+        {
+            return View(new SellerModel());
+        }
+        public IActionResult Edit()
         {
             return View(new SellerModel());
         }
@@ -71,40 +76,41 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(model);
         }
-      
+
 
 
         #endregion
         [HttpPost]
         public async Task<IActionResult> SignIn(SellerModel seller)
         {
-           
-                var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
 
 
-                if (token == null)
+            if (token == null)
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var data = JsonConvert.SerializeObject(seller);
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+
+                var response = await client.PostAsync("http://localhost:5101/api/Seller/Registration", content);
+                if (response.IsSuccessStatusCode)
                 {
-                    var client = _httpClientFactory.CreateClient();
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-                    var data = JsonConvert.SerializeObject(seller);
-                    var content = new StringContent(data, Encoding.UTF8, "application/json");
-
-                    var response = await client.PostAsync("http://localhost:5101/api/Seller/Registration", content);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return RedirectToAction("Login", "Seller");
-                    }
-                    ModelState.AddModelError("", "wrong Model");
-
+                    return RedirectToAction("Login", "Seller");
                 }
+                ModelState.AddModelError("", "wrong Model");
 
-            
+            }
+
+
             return View(seller);
         }
-
+        [Authorize(Policy = ("SellerPolicy"))]
         [HttpPost]
-        public async Task<IActionResult> Edit(SellerModel seller) {
+        public async Task<IActionResult> Edit(SellerModel seller)
+        {
 
             if (ModelState.IsValid)
             {
@@ -143,5 +149,60 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(seller);
         }
+        [Authorize(Policy = "SellerPolicy")]
+        public async Task<IActionResult> ActiveProduct(int ID)
+        {
+
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            if (token != null)
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var data = JsonConvert.SerializeObject(ID);
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync($"http://localhost:5101/api/Seller/ActiveProduct", content);
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var contents = await response.Content.ReadAsStringAsync();
+                    ID = JsonConvert.DeserializeObject<int>(contents);
+                }
+
+            }
+
+            return RedirectToAction("SellerProductList", "Product");
+        }
+        public async Task<IActionResult> PassiveProduct(int ID)
+        {
+
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            if (token != null)
+            {
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var data = JsonConvert.SerializeObject(ID);
+                var content = new StringContent(data, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync($"http://localhost:5101/api/Seller/PassiveProduct", content);
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var contents = await response.Content.ReadAsStringAsync();
+                    ID = JsonConvert.DeserializeObject<int>(contents);
+                }
+
+            }
+
+            return RedirectToAction("SellerProductList", "Product");
+        }
+
+
+
     }
+
+
+
 }
+
+

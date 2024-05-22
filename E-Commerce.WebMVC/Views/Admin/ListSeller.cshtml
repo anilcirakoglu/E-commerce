@@ -1,4 +1,7 @@
-﻿@model List<SellerModel>
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<SellerModel>
+
 @{
     Layout = "_Layout";
 }@{
@@ -55,3 +58,4 @@
         </div>
     }
 }
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("ListSeller", "Admin", new { page }))

@@ -8,6 +8,8 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using X.PagedList;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace E_Commerce.WebMVC.Controllers
 {
@@ -137,7 +139,7 @@ namespace E_Commerce.WebMVC.Controllers
         }
         [Authorize(Policy = "AdminPolicy")]
         [HttpGet]
-        public async Task<IActionResult> ListSeller()
+        public async Task<IActionResult> ListSeller(int page=1)
         {
             List<SellerModel> sellers = new List<SellerModel>();
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
@@ -151,18 +153,16 @@ namespace E_Commerce.WebMVC.Controllers
 
                     var content = await response.Content.ReadAsStringAsync();
                     sellers = JsonConvert.DeserializeObject<List<SellerModel>>(content);
+                    var pageList = sellers.ToPagedList(page, 5);
+                    return View(pageList);
                 }
-                else
-                {
-
-                    //  hata mesajı gösterme 
-                }
+               
             }
-            return View("ApprovedSeller", sellers);
+            return View("ListSeller", sellers);
         }
         [Authorize(Policy = "AdminPolicy")]
         [HttpGet]
-        public async Task<IActionResult> ListCustomer()
+        public async Task<IActionResult> ListCustomer(int page=1)
         {
             List<CustomerModel> customers = new List<CustomerModel>();
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
@@ -176,14 +176,12 @@ namespace E_Commerce.WebMVC.Controllers
 
                     var content = await response.Content.ReadAsStringAsync();
                     customers = JsonConvert.DeserializeObject<List<CustomerModel>>(content);
+                    var pageList = customers.ToPagedList(page, 5);
+                    return View(pageList);
                 }
-                else
-                {
-
-                    //  hata mesajı gösterme 
-                }
+               
             }
-            return View("CustomerList", customers);
+            return View(customers);
 
         }
         [Authorize(Policy = "AdminPolicy")]
@@ -206,12 +204,10 @@ namespace E_Commerce.WebMVC.Controllers
 
                     var contents = await response.Content.ReadAsStringAsync();
                     ID = JsonConvert.DeserializeObject<int>(contents);
-                }
-                else
-                {
 
-                    // Örneğin, loglama, hata mesajı gösterme veya başka bir işlem
+                   
                 }
+               
             }
 
             return RedirectToAction("ListSeller");

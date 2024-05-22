@@ -17,20 +17,25 @@
                
                 @foreach(var cart in Model)
                 {
-                    <form method="post" asp-action="DecreaseCart" asp-controller="Customer">
+                   
 
                     <tr>
                         <td>@cart.ProductName</td>
                         <td>@cart.Quantity</td>
-                        <td>+</td>   
+                         <form method="post" asp-action="IncreaseCart" asp-controller="Customer">
+                        <td> <input value="+" class="btn btn-success" type="submit" /></td>
+                        <input type="hidden" name="ProductID" value="@cart.ProductID" />
+                        </form>
+                         <form method="post" asp-action="DecreaseCart" asp-controller="Customer">
                         <td> <input value="-"  class="btn btn-danger" type="submit"  /></td>
                         <input type="hidden" name="ProductID" value="@cart.ProductID" />
-                        
+                        </form>
                     </tr>
-                    </form>
+                   
                     } 
                    
             </table>
+
         </div>
         <div><a class="btn btn-dark" asp-action="CreditCart" asp-controller="Customer">Buy</a></div>
 

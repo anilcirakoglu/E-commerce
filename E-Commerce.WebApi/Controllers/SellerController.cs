@@ -63,5 +63,19 @@ namespace E_Commerce.WebApi.Controllers
             await _sellerBO.UpdateAsync(sellerModel);
             return Ok(sellerModel);
         }
+        [HttpPost("ActiveProduct")]
+        public async Task<IActionResult> ActiveProduct([FromBody] int ID)
+        {
+            await _sellerBO.ActiveProduct(ID); //var product = _sellerBO.ActiveProduct(ID);
+            return Ok(ID);
+
+        }
+        [HttpPost("PassiveProduct")]
+        public async Task<IActionResult> PassiveProduct([FromBody] int ID) 
+        {
+            await _sellerBO.PassiveProduct(ID);
+            return Ok(ID);
+        }
+
     }
 }

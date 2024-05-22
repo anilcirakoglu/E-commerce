@@ -25,9 +25,12 @@ namespace E_Commerce.WebApi.Business
         readonly private ISellerReadRepository _sellerReadRepository;
         readonly private ISellerWriteRepository _sellerWriteRepository;
 
+        readonly private IProductReadRepository _productReadRepository;
+        readonly private IProductWriteRepository _productWriteRepository;
+
         readonly private IConfiguration _configuration;
 
-        public SellerBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository, IConfiguration configuration)
+        public SellerBO(IAdminReadRepository adminReadRepository, IAdminWriteRepository adminWriteRepository, ICustomerReadRepository customerReadRepository, ICustomerWriteRepository customerWriteRepository, ISellerReadRepository sellerReadRepository, ISellerWriteRepository sellerWriteRepository, IConfiguration configuration, IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository)
         {
             _adminReadRepository = adminReadRepository;
             _adminWriteRepository = adminWriteRepository;
@@ -36,6 +39,8 @@ namespace E_Commerce.WebApi.Business
             _sellerReadRepository = sellerReadRepository;
             _sellerWriteRepository = sellerWriteRepository;
             _configuration = configuration;
+            _productReadRepository = productReadRepository;
+            _productWriteRepository = productWriteRepository;
         }
 
         public async Task<SellerDto> Create(SellerDto SellerModel)
@@ -217,5 +222,27 @@ namespace E_Commerce.WebApi.Business
         }
 
         #endregion
+
+
+        public async Task ActiveProduct(int ID) 
+        {
+            var activeProduct = await _productReadRepository.GetByIDAsync(ID);
+            if (activeProduct != null)
+            {
+                activeProduct.IsProductActive = true;
+                _productWriteRepository.Update(activeProduct);
+                await _productWriteRepository.SaveAsync();
+            }
+        }
+        public async Task PassiveProduct(int ID) 
+        {
+            var passiveProduct = await _productReadRepository.GetByIDAsync(ID);
+            if (passiveProduct != null)
+            {
+                passiveProduct.IsProductActive = false;
+                _productWriteRepository.Update(passiveProduct);
+                await _productWriteRepository.SaveAsync();
+            }
+        }
     }
 }

@@ -87,7 +87,13 @@ namespace E_Commerce.WebApi.Controllers
             var cart = _customerBO.CartList(ID);
             return Ok(cart);
         }
-        [HttpPost("DecreaseProductList/{ID}")]
+        [HttpGet("PurchasedProductList/{ID}")]
+        public async Task<IActionResult> PurchasedProduct(int ID) 
+        {
+            var pcart=_customerBO.PurchasedProduct(ID);
+            return Ok(pcart);
+        }
+       [HttpPost("DecreaseProductList/{ID}")]
         public IActionResult DecreaseProductList(int ID)
         {
             var decCart = _customerBO.DecreaseProductCart(ID);

@@ -1,0 +1,33 @@
+﻿@model List<CustomerCartListModel>
+@{
+    Layout = "_Layout";
+}
+@{
+    <div><h2>Your Purchased Cart </h2></div>
+    if (Model != null && Model.Count > 0)
+    {
+
+
+        <div>
+            <table border="1">
+                <tr>
+                    <td>Product Name</td>
+                    <td>Quantity</td>
+                </tr>
+
+                @foreach (var cart in Model)
+                {
+                    <tr>
+                        <td>@cart.ProductName</td>
+                        <td>@cart.Quantity</td>
+                        
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+    else
+    {
+        <p>Your Purchased Cart is empty</p>
+    }
+}

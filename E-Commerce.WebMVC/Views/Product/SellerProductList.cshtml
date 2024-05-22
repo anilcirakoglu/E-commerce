@@ -1,4 +1,6 @@
-﻿@model List<ProductModel>
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<ProductModel>
 @{
     Layout = "_Layout";
 }@{
@@ -14,9 +16,11 @@
                     <td>ProductPrice</td>
                     <td>DiscountPercentage</td>
                     <td>Stock Quantity</td>
-                    <td>IsProductActive</td>
-                    <td>Categories</td>
                     <td>IsApprovedProduct</td>
+                    <td>Categories</td>
+                    <td>IsProductActive</td>
+                    <td></td>
+                    <td></td>
                     
 
                 </tr>
@@ -30,10 +34,17 @@
                         <td>@product.ProductPrice</td>
                         <td>@product.DiscountPercentage</td>
                         <td>@product.ProductQuantity</td>
-                        <td>@product.IsProductActive</td>
-                        <td>@product.CategoryName</td>
                         <td>@product.IsApprovedProduct</td>
-                      
+                        <td>@product.CategoryName</td>
+                        <td>@product.IsProductActive</td>
+                        <td>
+                            <a asp-action="ActiveProduct" asp-controller="Seller"
+                               asp-route-id="@product.ID" class="btn btn-outline-success ">Active</a>
+                        </td>
+                        <td>
+                            <a asp-action="PassiveProduct" asp-controller="Seller"
+                               asp-route-id="@product.ID" class="btn btn-danger ">Passive</a>
+                        </td>
 
                     </tr>
                 }
@@ -47,3 +58,4 @@
         </div>
     }
 }
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("SellerProductList", "Product", new { page }))

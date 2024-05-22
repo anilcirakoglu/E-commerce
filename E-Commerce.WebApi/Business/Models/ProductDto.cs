@@ -1,8 +1,9 @@
-﻿namespace E_Commerce.WebApi.Business.Models
+﻿using Microsoft.AspNetCore.Http;
+namespace E_Commerce.WebApi.Business.Models
 {
     public class ProductDto
     {
-       
+      public int ID { get; set; }
         public string ProductName { get; set; }
         public string ProductInformation { get; set; }
         public double ProductPrice { get; set; }

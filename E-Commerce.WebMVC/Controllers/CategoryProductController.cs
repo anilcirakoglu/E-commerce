@@ -1,9 +1,11 @@
 ﻿using E_Commerce.WebMVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using System.Text;
 using System.Text.Json;
+using X.PagedList;
 
 namespace E_Commerce.WebMVC.Controllers
 {
@@ -23,7 +25,7 @@ namespace E_Commerce.WebMVC.Controllers
         }
 
 
-        public async Task<IActionResult> Category()
+        public async Task<IActionResult> Category(int page=1)
         {
             List<CategoryProductModel> categoryProducts = new List<CategoryProductModel>();
 
@@ -39,17 +41,16 @@ namespace E_Commerce.WebMVC.Controllers
 
                     var content = await response.Content.ReadAsStringAsync();
                     categoryProducts = JsonConvert.DeserializeObject<List<CategoryProductModel>>(content);
-                }
-                else
-                {
+                    var pageList = categoryProducts.ToPagedList(page, 5);
+                    return View(pageList);
 
-                    // Örneğin, loglama, hata mesajı gösterme veya başka bir işlem
                 }
+               
             }
             return View(categoryProducts);
         }
-       
-        //httppost yazmadan oldu sor
+      
+
         public async Task<IActionResult> Edit(CategoryProductModel categoryProduct)
         {
             if (ModelState.IsValid)

@@ -107,6 +107,20 @@ namespace E_Commerce.WebApi.Business
             }
             return cart;
         }
+        public Cart IncreaseCartProduct(int ProductID) {
+        var cart =_cartReadRepository.GetWhere(x=>x.ProductID== ProductID).FirstOrDefault();
+            if(cart != null)
+            {
+                cart.Quantity += 1;
+                _cartWriteRepository.Update(cart);
+            }
+
+            _cartWriteRepository.SaveAsync();
+            return cart;
+        
+        }
+
+
 
         
 

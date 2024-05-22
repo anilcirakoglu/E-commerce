@@ -83,5 +83,27 @@ namespace E_Commerce.WebMVC.Controllers
                 return View(product);
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Search(string name, int page = 1) //yoksa ürün boþ sayfa geliyor düzelt
+        {
+            List<ProductModel> product = new List<ProductModel>();
+           
+                var client = _httpClientFactory.CreateClient();
+                var response = await client.GetAsync($"http://localhost:5101/api/Product/Search/{name}");
+                if (response.IsSuccessStatusCode)
+                {
+
+                    var content = await response.Content.ReadAsStringAsync();
+                    product = JsonConvert.DeserializeObject<List<ProductModel>>(content);
+
+                    var pageList = product.ToPagedList(page, 9);
+                    return View(pageList);
+                }
+
+            
+            return View(product);
+        }
+
     }
 }

@@ -294,6 +294,26 @@ namespace E_Commerce.WebApi.Business
 
             return list;
         }
+        public List<CartListDto> PurchasedProduct(int ID) {
+            var customer = _customerReadRepository.GetAll();
+            var cart = _cartReadRepository.GetAll();
+            var product = _productReadRepository.GetAll();
+
+
+            var list = (from products in product
+                        join carts in cart on products.ID equals carts.ProductID
+                        join customers in customer on carts.CustomerID equals customers.ID
+                        where customers.ID == ID && carts.Status == CartStatus.Purchased
+                        select new CartListDto
+                        {
+                            ProductID = products.ID,
+                            ProductName = products.ProductName,
+                            Quantity = carts.Quantity
+                        }).Distinct().ToList();
+
+            return list;
+        }
+
         public async Task Purchase(int CustomerID)
         {
             //stoktan düşücez ikinici satın alındı diye işaretlicez

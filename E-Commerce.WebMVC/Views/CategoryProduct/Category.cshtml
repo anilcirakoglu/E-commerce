@@ -1,4 +1,6 @@
-﻿@model List<CategoryProductModel>
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<CategoryProductModel>
 @{
     Layout = "_Layout";
 }@{
@@ -8,18 +10,16 @@
         <table class="table">
             <thead>
                 <tr>
-                    <td>ID </td>
-                    <td>Category</td>
                     
+                    <td>Category</td>
+                    <td></td>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var category in Model)
                 {
                     <tr>
-                        <td>
-                            @category.ID
-                        </td>
+                        
                         <td>@category.CategoryName</td>
                         <td>
                             <a asp-action="Edit" asp-controller="CategoryProduct" asp-route-id="@category.ID" class="btn btn-outline-warning">Edit</a>
@@ -37,3 +37,4 @@
         </div>
     }
 }
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Category", "CategoryProduct", new { page }))

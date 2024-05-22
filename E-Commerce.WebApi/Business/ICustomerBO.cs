@@ -17,7 +17,7 @@ namespace E_Commerce.WebApi.Business
         Task AddProductCart(CartDto cartDto);
         Task DecreaseProductCart(int ID);
         List<CartListDto> CartList(int ID);
-
+        List<CartListDto> PurchasedProduct(int ID);
         Task Purchase(int CustomerID);
     }
 }

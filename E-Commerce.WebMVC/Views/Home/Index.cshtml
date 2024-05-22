@@ -34,7 +34,7 @@
                     @foreach (var item in Model.Skip(3).Take(3))
                     {
                         <td>
-                            <img height="290" width="400" />
+                        <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">    <img height="290" width="400" /></a>
                             <b>@item.ProductName</b>
                             @item.ProductInformation
 
@@ -50,7 +50,7 @@
                     @foreach (var item in Model.Skip(6).Take(3))
                     {
                         <td>
-                            <img height="290" width="400" />
+                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">        <img height="290" width="400" /></a>
                             <b>@item.ProductName</b>
                             @item.ProductInformation
 
@@ -66,6 +66,6 @@
             </table>
         </div>
     }
-    Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }));
+   
 }
-
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", "Home", new { page }))

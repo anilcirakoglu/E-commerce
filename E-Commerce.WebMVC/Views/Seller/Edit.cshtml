@@ -9,9 +9,7 @@
 <div class="container">
     <form class="w-75 m-5 p-2 " asp-action="Edit" asp-controller="Seller" method="post">
         <input type="hidden" asp-for="@Model.ID" />
-        @{
-
-        }
+        
         <div class="mb-3">
             <label for="@Model.FirstName" class="form-label">First Name</label>
             <span asp-validation-for="@Model.FirstName" class="text-black"></span>
