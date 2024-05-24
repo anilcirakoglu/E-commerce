@@ -123,6 +123,7 @@ namespace E_Commerce.WebApi.Business
             var category = _categoryProductReadRepository.GetAll();
             var stock = _stockProductReadRepository.GetAll();
             var seller = _sellerReadRepository.GetAll();
+            
             var list = (from products in product
                         join categories in category on products.CategoryID equals categories.ID
                         join stocks in stock on products.ID equals stocks.ProductID
@@ -141,6 +142,7 @@ namespace E_Commerce.WebApi.Business
                             ProductQuantity = stocks.ProductQuantity,
                             SellerName = sellers.FirstName,
                             IsApprovedProduct = products.IsApprovedProduct,
+                            Image=products.Image,
 
                         }
                         ).ToList();
@@ -172,7 +174,7 @@ namespace E_Commerce.WebApi.Business
                              ProductQuantity = stocks.ProductQuantity,
                              SellerName = sellers.FirstName,
                              IsApprovedProduct = products.IsApprovedProduct,
-                             
+                             Image =products.Image
                              
 
                              

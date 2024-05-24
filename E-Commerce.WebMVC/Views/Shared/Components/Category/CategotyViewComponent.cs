@@ -5,6 +5,10 @@ using System.Net.Http;
 
 namespace E_Commerce.WebMVC.Views.Shared.Components.Category
 {
+
+    /// <summary>
+    /// resource:https://learn.microsoft.com/en-us/aspnet/core/mvc/views/view-components?view=aspnetcore-8.0 
+    /// </summary>
     [ViewComponent(Name = "Category")]
     public class CategotyViewComponent:ViewComponent
     {

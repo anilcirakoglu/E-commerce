@@ -6,7 +6,7 @@
     Layout = "_Layout";
 }
 @{
-    if (Model != null&& Model.Count>0)
+    if (Model != null && Model.Count > 0)
     {
         <div>
             <table class="table" border="1">
@@ -34,7 +34,8 @@
                 <tr>
                     @foreach (var item in Model.Skip(3).Take(3))
                     {
-                        <td><a asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">
+                        <td>
+                            <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">
                                 <img alt="resim" src="data:png;base64,@item.Image" />
                             </a><br />
                             <b>@item.ProductName</b>
@@ -51,9 +52,10 @@
                 <tr>
                     @foreach (var item in Model.Skip(6).Take(3))
                     {
-                        <td><a asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">
+                        <td>
+                            <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">
                                 <img alt="resim" src="data:png;base64,@item.Image" />
-                           </a> <b>@item.ProductName</b>
+                            </a> <b>@item.ProductName</b>
                             @item.ProductInformation
 
                             <p>Price &nbsp; &nbsp;</p>@item.ProductPrice
@@ -76,4 +78,4 @@
 
 }
 
-@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", "Home", new { page }))
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("CategoryIndex", "CategoryProduct", new { page }))

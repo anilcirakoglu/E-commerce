@@ -1,6 +1,6 @@
 ﻿@using X.PagedList
 @using X.PagedList.Mvc.Core
-@model IPagedList<ProductModel>
+@model IPagedList<ProductForCustomerModel>
 
 @{
     Layout = "_Layout";
@@ -17,8 +17,8 @@
                         {
                         
                         <td><a asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">
-                                <img height="290" width="400" />
-                            </a>
+                                <img alt="resim" src="data:png;base64,@item.Image" />
+                            </a><br />
                             <b>@item.ProductName</b>
                             @item.ProductInformation
                              <br />
@@ -34,7 +34,9 @@
                     @foreach (var item in Model.Skip(3).Take(3))
                     {
                         <td>
-                        <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">    <img height="290" width="400" /></a>
+                        <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">
+                                <img alt="resim" src="data:png;base64,@item.Image" />
+                            </a><br />
                             <b>@item.ProductName</b>
                             @item.ProductInformation
 
@@ -50,7 +52,10 @@
                     @foreach (var item in Model.Skip(6).Take(3))
                     {
                         <td>
-                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">        <img height="290" width="400" /></a>
+                           
+                            <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">
+                                <img alt="resim" src="data:png;base64,@item.Image" />
+                            </a><br />
                             <b>@item.ProductName</b>
                             @item.ProductInformation
 

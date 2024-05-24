@@ -10,7 +10,7 @@
         public string ProductInformation { get; set; }
         public double ProductPrice { get; set; }
 
-       
+        public string? Image {  get; set; }
         public double DiscountPercentage { get; set; }
         public bool IsProductActive { get; set; }
         public string CategoryName{ get; set; }

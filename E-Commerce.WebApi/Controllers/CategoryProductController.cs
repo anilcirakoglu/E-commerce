@@ -46,5 +46,11 @@ namespace E_Commerce.WebApi.Controllers
             await _categoryProductBO.UpdateAsync(categoryProduct);
             return Ok(categoryProduct);
         }
+        [HttpGet("CategoryList/{ID}")]
+        public async Task<IActionResult> CategoryList(int ID) 
+        {
+          var category=_categoryProductBO.CategoryList(ID);
+            return Ok(category);
+        }
     }
 }

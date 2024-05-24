@@ -3,11 +3,14 @@
 
 
 @{
-    <ul>
+   
+       
         @foreach (var category in Model)
         {
+        <a class="dropdown-item" asp-controller="CategoryProduct" asp-action="CategoryList" asp-route-id="@category.ID">
             <li>@category.CategoryName</li>
+        </a>
         }
-    </ul>
-
+    
+  
 }

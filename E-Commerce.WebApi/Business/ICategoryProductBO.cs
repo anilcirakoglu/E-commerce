@@ -9,6 +9,8 @@ namespace E_Commerce.WebApi.Business
         Task<CategoryProductModel> Create(CategoryProductModel product);
 
         Task UpdateAsync(CategoryProductModel categoryProduct);
+
+        List<AllProducts> CategoryList(int categoryID);
         Task<int> SaveAsync();
         Task RemoveAsync(int ID);
     }

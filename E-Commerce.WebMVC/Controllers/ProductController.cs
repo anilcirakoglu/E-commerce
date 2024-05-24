@@ -23,12 +23,12 @@ namespace E_Commerce.WebMVC.Controllers
         {
             return View();
         }
-     
+
         public async Task<IActionResult> Create()
         {
             var product = new ProductModel();
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
-           
+
             if (token != null)
             {
                 var client = _httpClientFactory.CreateClient();
@@ -45,7 +45,7 @@ namespace E_Commerce.WebMVC.Controllers
 
                     return View(product);
                 }
-              
+
             }
 
 
@@ -58,13 +58,13 @@ namespace E_Commerce.WebMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ProductModel productModel)
         {
-           
+
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
             var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
             int jwtID = int.Parse(jwtId);
-            
 
-           
+
+
 
             if (token != null)
             {
@@ -80,17 +80,17 @@ namespace E_Commerce.WebMVC.Controllers
 
                 createProductModel.SellerID = jwtID;
 
-                createProductModel.ProductName=productModel.ProductName;
+                createProductModel.ProductName = productModel.ProductName;
                 createProductModel.ProductPrice = productModel.ProductPrice;
                 createProductModel.ProductQuantity = productModel.ProductQuantity;
                 createProductModel.DiscountPercentage = productModel.DiscountPercentage;
                 createProductModel.ProductInformation = productModel.ProductInformation;
                 createProductModel.IsApprovedProduct = productModel.IsApprovedProduct;
-                createProductModel.Image =base64ImageRepresentation;
+                createProductModel.Image = base64ImageRepresentation;
                 createProductModel.CategoryName = productModel.CategoryName;
                 createProductModel.IsProductActive = productModel.IsProductActive;
                 createProductModel.CategoryID = productModel.CategoryID;
-               
+
 
 
 
@@ -115,7 +115,7 @@ namespace E_Commerce.WebMVC.Controllers
 
             return View(productModel);
         }
-        [Authorize(Policy ="AdminPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
         [HttpGet]
         public async Task<IActionResult> ListProduct(int page = 1)//admin ile seller ayrıldı mı kontrol et
         {
@@ -135,7 +135,7 @@ namespace E_Commerce.WebMVC.Controllers
                     return View(pageList);
 
                 }
-               
+
             }
             return View("ListProduct", product);
         }
@@ -175,23 +175,23 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View("SellerProductList", product);
         }
-        
+
 
 
         [HttpGet]
         public async Task<IActionResult> Details(int ID)
         {
-           
+
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
             var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
-            if(jwtId==null)
+            if (jwtId == null)
             {
                 return RedirectToAction("Index", "Login");
             }
             var product = new ProductDetailForCustomerModel();
             if (token != null)
             {
-                
+
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 var response = await client.GetAsync($"http://localhost:5101/api/Product/Details/{ID}");
@@ -201,16 +201,16 @@ namespace E_Commerce.WebMVC.Controllers
                     var content = await response.Content.ReadAsStringAsync();
                     product = JsonConvert.DeserializeObject<ProductDetailForCustomerModel>(content);
                     return View(product);
-                  
+
                 }
 
             }
             return RedirectToAction("Details", "Product");
         }
         [HttpGet]
-        public async Task<IActionResult> Search(string name, int page = 1) 
+        public async Task<IActionResult> Search(string name, int page = 1)
         {
-            List<ProductModel> product = new List<ProductModel>();
+            List<ProductForCustomerModel> product = new List<ProductForCustomerModel>();
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
             var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
             if (jwtId == null)
@@ -226,7 +226,7 @@ namespace E_Commerce.WebMVC.Controllers
                 {
 
                     var content = await response.Content.ReadAsStringAsync();
-                    product = JsonConvert.DeserializeObject<List<ProductModel>>(content);
+                    product = JsonConvert.DeserializeObject<List<ProductForCustomerModel>>(content);
 
                     var pageList = product.ToPagedList(page, 9);
                     return View(pageList);
@@ -235,8 +235,9 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(product);
         }
-
-
-
     }
+       
+
+
+    
 }

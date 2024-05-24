@@ -63,16 +63,17 @@ namespace E_Commerce.WebMVC.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
 
-            List<ProductModel> product = new List<ProductModel>();
+            List<ProductForCustomerModel> product = new List<ProductForCustomerModel>();
 
             {
                 var client = _httpClientFactory.CreateClient();
+
 
                 var response = await client.GetAsync("http://localhost:5101/api/Product/GetAllProducts");
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    product = JsonConvert.DeserializeObject<List<ProductModel>>(content);
+                    product = JsonConvert.DeserializeObject<List<ProductForCustomerModel>>(content);
 
                     var pageList = product.ToPagedList(page, 9);
 
@@ -87,7 +88,7 @@ namespace E_Commerce.WebMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Search(string name, int page = 1) //yoksa ürün boþ sayfa geliyor düzelt
         {
-            List<ProductModel> product = new List<ProductModel>();
+            List<ProductForCustomerModel> product = new List<ProductForCustomerModel>();
            
                 var client = _httpClientFactory.CreateClient();
                 var response = await client.GetAsync($"http://localhost:5101/api/Product/Search/{name}");
@@ -95,7 +96,7 @@ namespace E_Commerce.WebMVC.Controllers
                 {
 
                     var content = await response.Content.ReadAsStringAsync();
-                    product = JsonConvert.DeserializeObject<List<ProductModel>>(content);
+                    product = JsonConvert.DeserializeObject<List<ProductForCustomerModel>>(content);
 
                     var pageList = product.ToPagedList(page, 9);
                     return View(pageList);

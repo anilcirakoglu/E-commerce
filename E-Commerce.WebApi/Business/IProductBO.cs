@@ -14,6 +14,8 @@ namespace E_Commerce.WebApi.Business
 
         List<AllProducts> Search(string name);
 
+       
+
         Task UpdateAsync(ProductModel product);
         Task<int> SaveAsync();
         Task RemoveAsync(int ID);
