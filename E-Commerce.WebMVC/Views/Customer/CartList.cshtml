@@ -3,46 +3,75 @@
     Layout = "_Layout";
 }
 @{
+
+
+
     <div><h4>Your Cart </h4></div>
-    if (Model != null&&Model.Count>0)
+    if (Model != null && Model.Count > 0)
     {
 
 
         <div>
             <table border="1">
-                <tr>
-                    <td>Product Name</td>
-                    <td>Quantity</td>
-                </tr>
-               
-                @foreach(var cart in Model)
-                {
-                   
-
+                <thead>
                     <tr>
-                        <td>@cart.ProductName</td>
-                        <td>@cart.Quantity</td>
-                         <form method="post" asp-action="IncreaseCart" asp-controller="Customer">
-                        <td> <input value="+" class="btn btn-success" type="submit" /></td>
-                        <input type="hidden" name="ProductID" value="@cart.ProductID" />
-                        </form>
-                         <form method="post" asp-action="DecreaseCart" asp-controller="Customer">
-                        <td> <input value="-"  class="btn btn-danger" type="submit"  /></td>
-                        <input type="hidden" name="ProductID" value="@cart.ProductID" />
-                        </form>
+                        <th class="text-center py-3 px-4" style="min-width: 400px;">Product Name &amp; Details</th>
+                        <th class="text-right py-3 px-4" style="width: 100px;">Price</th>
+                        <th class="text-center py-3 px-4" style="width: 150px;">Quantity</th>
+                       <th></th>
+
+
                     </tr>
-                   
-                    } 
-                   
+                </thead>
+                <tbody>
+                    @foreach (var cart in Model)
+                    {
+
+
+                        <tr>
+
+                            <td>@cart.ProductName</td>
+                            <td>@cart.Price</td>
+
+
+                            <td class="tblbox">
+
+                                    <form method="post" asp-action="IncreaseCart" asp-controller="Customer">
+                                        <input value="+" class="btn btn-success" type="submit" />
+                                        <input type="hidden" name="ProductID" value="@cart.ProductID" />
+                                    </form>
+                             
+                              
+                                    &nbsp;&nbsp;
+                                    @cart.Quantity
+                                    &nbsp;&nbsp;
+                               
+                                <form method="post" asp-action="DecreaseCart" asp-controller="Customer">
+                                    <input value="-" class="btn btn-danger" type="submit" />
+                                    <input type="hidden" name="ProductID" value="@cart.ProductID" />
+
+                                </form>
+                               
+                            </td>
+                            <td></td>
+                        </tr>
+
+                    }
+                <td></td>
+                <td></td>
+                <td></td>
+                    <td>total </td>
+                </tbody>
             </table>
 
         </div>
+        <br />
         <div><a class="btn btn-dark" asp-action="CreditCart" asp-controller="Customer">Buy</a></div>
 
 
     }
     else
     {
-       <p>Your Cart is empty</p>    
+        <p>Your Cart is empty</p>
     }
 }

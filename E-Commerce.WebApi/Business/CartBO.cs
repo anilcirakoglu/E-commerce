@@ -45,6 +45,7 @@ namespace E_Commerce.WebApi.Business
                     ID = cart.ID,
                     CustomerID = cart.CustomerID,
                     ProductID = cart.ProductID,
+                   
                 };
                 cartList.Add(crtlist);
             }
@@ -122,9 +123,6 @@ namespace E_Commerce.WebApi.Business
 
 
 
-        
-
-
-
+       
     }
 }

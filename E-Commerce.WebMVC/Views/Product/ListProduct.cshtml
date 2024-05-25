@@ -55,4 +55,5 @@
         </div>
     }
 }
-@Html.PagedListPager((IPagedList)Model, page => Url.Action("ListProduct", "Product", new { page }))
+<div class="pagination">
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("ListProduct", "Product", new { page }))</div>

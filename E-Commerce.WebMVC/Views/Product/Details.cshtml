@@ -3,16 +3,20 @@
     Layout = "_Layout";
 }
 
-
-<h1>Details</h1>
-<div>
-    <table border="1" class="productDeatilsTable">
-        <tr>
-            <td><img alt="resim" src="data:png;base64,@Model.Img" /></td>
-        
-            <td><b>@Model.ProductName</b><br />@Model.ProductInformation<br />Price:@Model.ProductPrice Quantity:@Model.ProductQuantity</td>
-        </tr>
-        <td></td>
-        <td> <a class=" btn btn-outline-success" asp-controller="Customer" asp-action="AddProductCart" asp-route-ProductID="@Model.ID">Add Cart</a></td>
-    </table>
+<div class="card mb-3" style="max-width: 720px;">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img alt="resim" src="data:png;base64,@Model.Img" />
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">@Model.ProductName</h5>
+                <h6 class="card-text">  Price:@Model.ProductPrice$ Quantity: @Model.ProductQuantity</h6> <a class=" btn btn-outline-success" asp-controller="Customer" asp-action="AddProductCart" asp-route-ProductID="@Model.ID">Add Cart</a>
+                <p class="card-text">@Model.ProductInformation</p>
+              
+               
+            </div>
+        </div>
+    </div>
 </div>
+

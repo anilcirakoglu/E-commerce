@@ -128,7 +128,7 @@ namespace E_Commerce.WebApi.Business
                         join categories in category on products.CategoryID equals categories.ID
                         join stocks in stock on products.ID equals stocks.ProductID
                         join sellers in seller on products.SellerID equals sellers.ID
-                        where products.ProductName.ToLower() == name.ToLower() || categories.CategoryName.ToLower() == name.ToLower() && products.IsApprovedProduct== true && products.IsProductActive==true
+                        where products.ProductName.ToLower() == name.ToLower() || categories.CategoryName.ToLower() == name.ToLower() && products.IsApprovedProduct== true && products.IsProductActive==true &&stocks.ProductQuantity >= 1
                         select new AllProducts
                         {
 
@@ -161,7 +161,7 @@ namespace E_Commerce.WebApi.Business
             var list = (from products in product
                          join categories in category on products.CategoryID equals categories.ID
                          join stocks in stock on products.ID equals stocks.ProductID
-                         join sellers in seller on products.SellerID equals sellers.ID where products.IsApprovedProduct== true && products.IsProductActive == true
+                         join sellers in seller on products.SellerID equals sellers.ID where products.IsApprovedProduct== true && products.IsProductActive == true && stocks.ProductQuantity >= 1
                         select new AllProducts
                          {
                              ID=products.ID,
@@ -180,7 +180,7 @@ namespace E_Commerce.WebApi.Business
                              
                          }).ToList();
             return list;
-            //return allProductlist;
+            
         }
         public List<ProductDto> sellerProducts(int ID) 
         {

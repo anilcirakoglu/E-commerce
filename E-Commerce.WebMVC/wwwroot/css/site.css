@@ -96,6 +96,12 @@ text-align:center;
    margin-left:750px;
    width:350px;
 }
+.tblbox {
+    display:flex;
+    margin-left:20px;
+}
+
+
 
 
 body {

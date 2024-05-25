@@ -8,12 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpClient();
-//builder.Services.AddAuthorization(opt =>
-//{
-//    opt.AddPolicy("AdminPolicy", policy => policy.RequireClaim("Role", "Admin"));
-//    opt.AddPolicy("Customer", policy => policy.RequireClaim("role", "Customer"));
-//    opt.AddPolicy("Seller", policy => policy.RequireClaim("role", "Seller"));
-//});
 
 
 

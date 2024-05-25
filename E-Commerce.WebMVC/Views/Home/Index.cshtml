@@ -6,25 +6,36 @@
     Layout = "_Layout";
 }
 @{
+
+
+    
+
+
+   
     if (Model != null)
     {
         <div>
-            <table class="table" border="1">
+            <table class="table" >
 
                
                 <tr>
                         @foreach (var item in Model.Take(3))
                         {
-                        
-                        <td><a asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">
+
+                            <td>
+                        <div class="card" style="width: 18rem;">
                                 <img alt="resim" src="data:png;base64,@item.Image" />
-                            </a><br />
-                            <b>@item.ProductName</b>
-                            @item.ProductInformation
-                             <br />
-                            Price :@item.ProductPrice
-                            <a class=" btn btn-outline-success"  asp-controller="Customer" asp-action="AddProductCart" asp-route-ProductID="@item.ID" >Add Cart</a>
-                            </td>
+                            <div class="card-body">
+                                    <h5 class="card-title">@item.ProductName</h5>
+                                    Price :@item.ProductPrice
+                                    <p class="card-text">@item.ProductInformation</p>
+                                    <a  class="btn btn-primary" asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">Details</a>
+                                    <a class=" btn btn-outline-success" asp-controller="Customer" asp-action="AddProductCart" asp-route-ProductID="@item.ID">Add Cart</a>
+                            </div>
+                        </div>
+                        </td>
+                        
+                       
                        
                         }
                    
@@ -33,17 +44,19 @@
                 <tr>
                     @foreach (var item in Model.Skip(3).Take(3))
                     {
+
                         <td>
-                        <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">
+                            <div class="card" style="width: 18rem;">
                                 <img alt="resim" src="data:png;base64,@item.Image" />
-                            </a><br />
-                            <b>@item.ProductName</b>
-                            @item.ProductInformation
-
-                            <p>Price &nbsp; &nbsp;</p>@item.ProductPrice
-                            <a class=" btn btn-outline-success" asp-controller="Customer" asp-action="AddProductCart" asp-route-ProductID="@item.ID">Add Cart</a>
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.ProductName</h5>
+                                    Price :@item.ProductPrice
+                                    <p class="card-text">@item.ProductInformation</p>
+                                    <a class="btn btn-primary" asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">Details</a>
+                                    <a class=" btn btn-outline-success" asp-controller="Customer" asp-action="AddProductCart" asp-route-ProductID="@item.ID">Add Cart</a>
+                                </div>
+                            </div>
                         </td>
-
                     }
 
 
@@ -51,18 +64,19 @@
                 <tr>
                     @foreach (var item in Model.Skip(6).Take(3))
                     {
+
                         <td>
-                           
-                            <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">
+                            <div class="card" style="width: 18rem;">
                                 <img alt="resim" src="data:png;base64,@item.Image" />
-                            </a><br />
-                            <b>@item.ProductName</b>
-                            @item.ProductInformation
-
-                            <p>Price &nbsp; &nbsp;</p>@item.ProductPrice
-                            <a class=" btn btn-outline-success" asp-controller="Customer" asp-action="AddProductCart" asp-route-ProductID="@item.ID">Add Cart</a>
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.ProductName</h5>
+                                    Price :@item.ProductPrice
+                                    <p class="card-text">@item.ProductInformation</p>
+                                    <a class="btn btn-primary" asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">Details</a>
+                                    <a class=" btn btn-outline-success" asp-controller="Customer" asp-action="AddProductCart" asp-route-ProductID="@item.ID">Add Cart</a>
+                                </div>
+                            </div>
                         </td>
-
                     }
 
 
@@ -73,4 +87,6 @@
     }
    
 }
-@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", "Home", new { page }))
+   <div class="pagination">
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", "Home", new { page }))
+</div>
