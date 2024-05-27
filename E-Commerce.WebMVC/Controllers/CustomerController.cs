@@ -201,47 +201,79 @@ namespace E_Commerce.WebMVC.Controllers
 
         [Authorize(Policy ="CustomerPolicy")]
         [HttpPost]
-        public async Task<IActionResult> DecreaseCart(StockProductModel stockProduct)
+        public async Task<IActionResult> DecreaseCart(CartModel cart)
         {
 
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
             if (token != null)
             {
+                var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+                int jwtID = int.Parse(jwtId);
+
+                cart.CustomerID = jwtID;
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var data = JsonConvert.SerializeObject(stockProduct.ProductID);
+                var data = JsonConvert.SerializeObject(cart);
                 var content = new StringContent(data, Encoding.UTF8, "application/json");
                 var response = await client.PostAsync($"http://localhost:5101/api/Cart/DecreaseCartProduct", content);
                 if (response.IsSuccessStatusCode)
                 {
                     var contents = await response.Content.ReadAsStringAsync();
-                    stockProduct = JsonConvert.DeserializeObject<StockProductModel>(contents);
+                    cart = JsonConvert.DeserializeObject<CartModel>(contents);
                 }
             }
                 return RedirectToAction("CartList", "Customer");
         }
+
         [Authorize(Policy = ("CustomerPolicy"))]
         [HttpPost]
-        public async Task<IActionResult> IncreaseCart(StockProductModel stockProduct) 
+        public async Task<IActionResult> IncreaseCart(CartModel cart)
         {
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
             if (token != null)
             {
+                var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+                int jwtID = int.Parse(jwtId);
+
+                cart.CustomerID = jwtID;
                 var client = _httpClientFactory.CreateClient();
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var data = JsonConvert.SerializeObject(stockProduct.ProductID);
+                var data = JsonConvert.SerializeObject(cart);
                 var content = new StringContent(data, Encoding.UTF8, "application/json");
                 var response = await client.PostAsync($"http://localhost:5101/api/Cart/IncreaseCartProduct", content);
                 if (response.IsSuccessStatusCode)
                 {
                     var contents = await response.Content.ReadAsStringAsync();
-                    stockProduct = JsonConvert.DeserializeObject<StockProductModel>(contents);
+                    cart = JsonConvert.DeserializeObject<CartModel>(contents);
                 }
             }
             return RedirectToAction("CartList", "Customer");
         }
+
+
+        //[Authorize(Policy = ("CustomerPolicy"))]
+        //[HttpPost]
+        //public async Task<IActionResult> IncreaseCart(StockProductModel stockProduct) 
+        //{
+        //    var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+        //    if (token != null)
+        //    {
+        //        var client = _httpClientFactory.CreateClient();
+        //        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        //        var data = JsonConvert.SerializeObject(stockProduct.ProductID);
+        //        var content = new StringContent(data, Encoding.UTF8, "application/json");
+        //        var response = await client.PostAsync($"http://localhost:5101/api/Cart/IncreaseCartProduct", content);
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            var contents = await response.Content.ReadAsStringAsync();
+        //            stockProduct = JsonConvert.DeserializeObject<StockProductModel>(contents);
+        //        }
+        //    }
+        //    return RedirectToAction("CartList", "Customer");
+        //}
 
 
 

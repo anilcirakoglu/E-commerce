@@ -2,6 +2,7 @@
 using E_Commerce.WebApi.Application.Products;
 using E_Commerce.WebApi.Business.Models;
 using E_Commerce.WebApi.Data.Entities;
+using E_Commerce.WebApi.Data.Entities.Enums;
 
 namespace E_Commerce.WebApi.Business
 {
@@ -90,10 +91,10 @@ namespace E_Commerce.WebApi.Business
             throw new NotImplementedException();
         }
 
-        public  Cart DecreaseCartProduct(int ProductID) 
+        public  Cart DecreaseCartProduct(CartModel cartmodel) 
         {
-            var cart =  _cartReadRepository.GetWhere(x=>x.ProductID==ProductID).FirstOrDefault();
-            if(cart != null) 
+            var cart = _cartReadRepository.GetWhere(x => x.ProductID == cartmodel.ProductID && x.CustomerID == cartmodel.CustomerID && x.Status == CartStatus.Active).FirstOrDefault();
+            if (cart != null) 
             {
                 if (cart.Quantity > 1)
                 {
@@ -108,8 +109,8 @@ namespace E_Commerce.WebApi.Business
             }
             return cart;
         }
-        public Cart IncreaseCartProduct(int ProductID) {
-        var cart =_cartReadRepository.GetWhere(x=>x.ProductID== ProductID).FirstOrDefault();
+        public Cart IncreaseCartProduct(CartModel cartmodel) {
+        var cart =_cartReadRepository.GetWhere(x=>x.ProductID== cartmodel.ProductID&&x.CustomerID== cartmodel.CustomerID && x.Status == CartStatus.Active).FirstOrDefault();
             if(cart != null)
             {
                 cart.Quantity += 1;

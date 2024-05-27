@@ -47,15 +47,15 @@ namespace E_Commerce.WebApi.Controllers
             return Ok(cartModel);
         }
         [HttpPost("DecreaseCartProduct")]
-        public async Task<IActionResult> DecreaseCartProduct([FromBody]int ProductID)
+        public async Task<IActionResult> DecreaseCartProduct([FromBody] CartModel cartModel)
         {
-            var cart = _cartBO.DecreaseCartProduct(ProductID);
+            var cart = _cartBO.DecreaseCartProduct(cartModel);
             return Ok(cart);
         }
         [HttpPost("IncreaseCartProduct")]
-        public async Task<IActionResult> IncreaseCartProduct([FromBody] int ProductID)
+        public async Task<IActionResult> IncreaseCartProduct([FromBody] CartModel cartModel)
         {
-            var cart =_cartBO.IncreaseCartProduct(ProductID);
+            var cart =_cartBO.IncreaseCartProduct(cartModel);
             return Ok(cart);
         }
 
