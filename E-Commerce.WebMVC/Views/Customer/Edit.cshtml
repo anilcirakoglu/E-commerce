@@ -7,7 +7,8 @@
 }
 
 <div class="container">
-    <div><a asp-action="PurchasedProductList" asp-controller="Customer" class="btn btn-success">Purchased Products List</a></div>
+    <div><a asp-action="PurchasedProductList" asp-controller="Customer" class="btn btn-success">Purchased Products List</a> &nbsp;&nbsp; </div>
+    <h1 style="text-align:center">Edit Profile</h1>
     <form class="w-75 m-5 p-2 " asp-action="Edit" asp-controller="Customer" method="post">
         <input type="hidden" asp-for="@Model.ID" />
         @{

@@ -20,15 +20,18 @@
                
                 <tr>
                         @foreach (var item in Model.Take(3))
-                        {
-
-                            <td>
+                    {
+                        var info = item.ProductInformation;
+                        if (item.ProductInformation.Length>10){
+                            info = item.ProductInformation.Substring(0, 10) + "...";
+                        }
+                        <td>
                         <div class="card" style="width: 18rem;">
                                 <img alt="resim" src="data:png;base64,@item.Image" />
                             <div class="card-body">
                                     <h5 class="card-title">@item.ProductName</h5>
                                     Price :@item.ProductPrice
-                                    <p class="card-text">@item.ProductInformation</p>
+                                    <p class="card-text">@info</p>
                                     <a  class="btn btn-primary" asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">Details</a>
                                     <a class=" btn btn-outline-success" asp-controller="Customer" asp-action="AddProductCart" asp-route-ProductID="@item.ID">Add Cart</a>
                             </div>
@@ -44,6 +47,11 @@
                 <tr>
                     @foreach (var item in Model.Skip(3).Take(3))
                     {
+                        var info = item.ProductInformation;
+                        if (item.ProductInformation.Length > 10)
+                        {
+                            info = item.ProductInformation.Substring(0, 10) + "...";
+                        }
 
                         <td>
                             <div class="card" style="width: 18rem;">
@@ -51,7 +59,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title">@item.ProductName</h5>
                                     Price :@item.ProductPrice
-                                    <p class="card-text">@item.ProductInformation</p>
+                                    <p class="card-text">@info</p>
                                     <a class="btn btn-primary" asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">Details</a>
                                     <a class=" btn btn-outline-success" asp-controller="Customer" asp-action="AddProductCart" asp-route-ProductID="@item.ID">Add Cart</a>
                                 </div>
@@ -64,14 +72,18 @@
                 <tr>
                     @foreach (var item in Model.Skip(6).Take(3))
                     {
-
+                        var info = item.ProductInformation;
+                        if (item.ProductInformation.Length > 10)
+                        {
+                            info = item.ProductInformation.Substring(0, 10) + "...";
+                        }
                         <td>
                             <div class="card" style="width: 18rem;">
                                 <img alt="resim" src="data:png;base64,@item.Image" />
                                 <div class="card-body">
                                     <h5 class="card-title">@item.ProductName</h5>
                                     Price :@item.ProductPrice
-                                    <p class="card-text">@item.ProductInformation</p>
+                                    <p class="card-text">@info</p>
                                     <a class="btn btn-primary" asp-controller="Product" asp-action="Details" asp-route-id="@item.ID">Details</a>
                                     <a class=" btn btn-outline-success" asp-controller="Customer" asp-action="AddProductCart" asp-route-ProductID="@item.ID">Add Cart</a>
                                 </div>

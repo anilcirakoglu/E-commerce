@@ -1,4 +1,4 @@
-﻿@model List<CustomerCartListModel>
+﻿@model List<List<PurchaseProduct>>
 @{
     Layout = "_Layout";
 }
@@ -9,21 +9,45 @@
 
 
         <div>
-            <table border="1">
-                <tr>
-                    <td>Product Name</td>
-                    <td>Quantity</td>
-                </tr>
+           
 
-                @foreach (var cart in Model)
+                @{
+                    foreach (var cartlist in Model)
                 {
-                    <tr>
-                        <td>@cart.ProductName</td>
-                        <td>@cart.Quantity</td>
+                    double totalprice = 0;
+                    <table border="1">
+                        <tr><td>Date</td>
+                            <td>Product Name</td>
+                            <td>Quantity</td>
+                            <td>Price</td>
+                            
+                        </tr>
                         
-                    </tr>
+                        @foreach (var cart in cartlist)
+                        {
+                            <tr>
+                                <td>@cart.PurcaseDate</td>
+                                <td>@cart.ProductName</td>
+                                <td>@cart.Quantity</td>
+                                <td>@cart.Price</td>
+                                @{
+
+                                     totalprice += cart.Quantity * cart.Price;
+
+
+                                }
+                               
+                               
+                            </tr>
+                        }
+                        <td>Total:@totalprice</td>
+                    </table>
+                        <br />
+                    }
                 }
-            </table>
+                
+                
+            
         </div>
     }
     else

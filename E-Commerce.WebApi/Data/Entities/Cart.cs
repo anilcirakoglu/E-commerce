@@ -10,6 +10,10 @@ namespace E_Commerce.WebApi.Data.Entities
 
         public int Quantity { get; set; }//aynı üründen kaç tane eklenmiş
 
+        public double? Price { get; set; }
+
+        public DateTime? PurchaseDate { get; set; }
+
         public CartStatus Status {  get; set; }
 
 

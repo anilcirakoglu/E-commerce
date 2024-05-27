@@ -31,7 +31,10 @@ namespace E_Commerce.WebMVC.Controllers
         {
             return View(new SellerModel());
         }
-
+        public IActionResult Index()
+        {
+            return View();
+        }
         [HttpPost]
         #region loginANDlogout
         public async Task<IActionResult> Login(LoginModel model)

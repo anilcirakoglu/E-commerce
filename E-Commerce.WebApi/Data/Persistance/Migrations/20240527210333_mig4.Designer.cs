@@ -3,6 +3,7 @@ using System;
 using E_Commerce.WebApi.Data.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace E_Commerce.WebApi.Data.Persistance.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240527210333_mig4")]
+    partial class mig4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,14 +79,14 @@ namespace E_Commerce.WebApi.Data.Persistance.Migrations
                     b.Property<int>("CustomerID")
                         .HasColumnType("integer");
 
-                    b.Property<double?>("Price")
+                    b.Property<double>("Price")
                         .HasColumnType("double precision");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime?>("PurchaseDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<TimeOnly?>("PurchaseDate")
+                        .HasColumnType("time without time zone");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");

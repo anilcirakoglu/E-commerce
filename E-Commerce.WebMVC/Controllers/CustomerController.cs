@@ -253,27 +253,6 @@ namespace E_Commerce.WebMVC.Controllers
         }
 
 
-        //[Authorize(Policy = ("CustomerPolicy"))]
-        //[HttpPost]
-        //public async Task<IActionResult> IncreaseCart(StockProductModel stockProduct) 
-        //{
-        //    var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
-        //    if (token != null)
-        //    {
-        //        var client = _httpClientFactory.CreateClient();
-        //        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-        //        var data = JsonConvert.SerializeObject(stockProduct.ProductID);
-        //        var content = new StringContent(data, Encoding.UTF8, "application/json");
-        //        var response = await client.PostAsync($"http://localhost:5101/api/Cart/IncreaseCartProduct", content);
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            var contents = await response.Content.ReadAsStringAsync();
-        //            stockProduct = JsonConvert.DeserializeObject<StockProductModel>(contents);
-        //        }
-        //    }
-        //    return RedirectToAction("CartList", "Customer");
-        //}
 
 
 
@@ -316,7 +295,7 @@ namespace E_Commerce.WebMVC.Controllers
 
         public async Task<IActionResult> PurchasedProductList(int ID) 
         {
-            List<CustomerCartListModel> cartList = new List<CustomerCartListModel>();
+        
             if (ModelState.IsValid)
             {
 
@@ -339,7 +318,7 @@ namespace E_Commerce.WebMVC.Controllers
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsStringAsync();
-                        cartList = JsonConvert.DeserializeObject<List<CustomerCartListModel>>(content);
+                        var cartList = JsonConvert.DeserializeObject<List<List<PurchaseProduct>>>(content);
                         return View(cartList);
 
                     }

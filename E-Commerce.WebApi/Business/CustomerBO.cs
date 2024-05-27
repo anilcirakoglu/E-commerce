@@ -296,31 +296,44 @@ namespace E_Commerce.WebApi.Business
 
             return list;
         }
-        public List<CartListDto> PurchasedProduct(int ID) {
-            var customer = _customerReadRepository.GetAll();
-            var cart = _cartReadRepository.GetAll();
-            var product = _productReadRepository.GetAll();
+        public List<List<PurchaseProductModel>> PurchasedProduct(int ID) {
+         List<List<PurchaseProductModel>> purcaseProductListModels = new List< List<PurchaseProductModel>>();
 
+          
+            var carts = _cartReadRepository.GetWhere(x=>x.CustomerID== ID && x.Status ==CartStatus.Purchased).GroupBy(x=>x.PurchaseDate).ToList();
+            var product = _productReadRepository.GetAll().ToList() ;
 
-            var list = (from products in product
-                        join carts in cart on products.ID equals carts.ProductID
-                        join customers in customer on carts.CustomerID equals customers.ID
-                        where customers.ID == ID && carts.Status == CartStatus.Purchased
-                        select new CartListDto
-                        {
-                            ProductID = products.ID,
-                            ProductName = products.ProductName,
-                            Quantity = carts.Quantity,
-                            Price = carts.Quantity * products.ProductPrice,
-                          
-                        }).Distinct().ToList();
+            foreach (var cart in carts) {
+            var y=  cart.Select(x=> new PurchaseProductModel {
+                Price = x.Price,
+                ProductID = x.ProductID,
+               PurcaseDate =x.PurchaseDate,
+               Quantity =x.Quantity,
+               ProductName = product.FirstOrDefault(y=>y.ID ==x.ProductID).ProductName,
+            }).ToList();
+                purcaseProductListModels.Add(y);
+            }
+            
 
-            return list;
+            //var list = (from products in product
+            //            join carts in cart on products.ID equals carts.ProductID
+            //            join customers in customer on carts.CustomerID equals customers.ID
+            //            where customers.ID == ID && carts.Status == CartStatus.Purchased
+            //            select new CartListDto
+            //            {
+            //                ProductID = products.ID,
+            //                ProductName = products.ProductName,
+            //                Quantity = carts.Quantity,
+            //                Price = carts.Quantity * products.ProductPrice,
+
+            //            }).ToList();
+
+            return purcaseProductListModels;
         }
 
         public async Task Purchase(int CustomerID)
         {
-            //stoktan düşücez ikinici satın alındı diye işaretlicez
+            DateTime time = DateTime.UtcNow;
             
             var carts = _cartReadRepository.GetWhere(x => x.CustomerID == CustomerID && x.Status == CartStatus.Active).ToList();
             foreach(var cart in carts)
@@ -335,11 +348,14 @@ namespace E_Commerce.WebApi.Business
             {
 
                 var stockproduct = await _stockProductReadRepository.GetWhere(x => x.ProductID == cart.ProductID).FirstOrDefaultAsync();
-               
+                var product = await _productReadRepository.GetByIDAsync(cart.ProductID);
                 stockproduct.ProductQuantity -= cart.Quantity;
                 _stockProductWriteRepository.Update(stockproduct);
                 await _stockProductWriteRepository.SaveAsync();
+
                 cart.Status = CartStatus.Purchased;
+                cart.PurchaseDate = time;
+                cart.Price = product.ProductPrice;
                 _cartWriteRepository.Update(cart);
                await _cartWriteRepository.SaveAsync();
             }

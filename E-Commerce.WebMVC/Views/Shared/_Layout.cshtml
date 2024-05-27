@@ -27,7 +27,7 @@
     @{
         if (User.HasClaim("role", "Customer"))
         {
-            <div class="cartLogo"><a asp-action="Edit" asp-controller="Customer"><img src="~/image/person-circle.svg" /></a>&nbsp;&nbsp;&nbsp;<a asp-action="CartList" asp-controller="Customer"><img src="~/image/cart.svg" /></a></div>
+            <div class="cartLogo"><a asp-action="Index" asp-controller="Customer"><img src="~/image/person-circle.svg" /></a>&nbsp;&nbsp;&nbsp;<a asp-action="CartList" asp-controller="Customer"><img src="~/image/cart.svg" /></a></div>
         }
     }
     @{
@@ -39,7 +39,7 @@
     @{
         if (User.HasClaim("role", "Seller"))
         {
-            <div class="cartLogo"><a asp-action="Edit" asp-controller="Seller"><img src="~/image/person-circle.svg" /></a></div>
+            <div class="cartLogo"><a asp-action="Index" asp-controller="Seller"><img src="~/image/person-circle.svg" /></a></div>
         }
     }
     <header>
