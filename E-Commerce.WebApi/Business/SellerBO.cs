@@ -47,11 +47,12 @@ namespace E_Commerce.WebApi.Business
         {
             var seller = new Seller()
             {
-               
+
                 FirstName = SellerModel.FirstName,
                 LastName = SellerModel.LastName,
                 Address = SellerModel.Address,
                 PhoneNumber = SellerModel.PhoneNumber,
+                username = SellerModel.Username,
                 Email = SellerModel.Email,
                 Password = SellerModel.Password,
                 IsApprove = SellerModel.IsApprove,
@@ -80,6 +81,7 @@ namespace E_Commerce.WebApi.Business
                     PhoneNumber = seller.PhoneNumber,
                     Email = seller.Email,
                     Password = seller.Password,
+                    Username =seller.username,
                     CompanyType = seller.CompanyType,
                     TaxpayerIDNumber = seller.TaxpayerIDNumber,
                     IsApprove = seller.IsApprove,
@@ -101,6 +103,7 @@ namespace E_Commerce.WebApi.Business
                 PhoneNumber = sellers.PhoneNumber,
                 Email = sellers.Email,
                 Password = sellers.Password,
+                Username=sellers.username,
                 CompanyType = sellers.CompanyType,
                 TaxpayerIDNumber = sellers.TaxpayerIDNumber
             };
@@ -119,6 +122,7 @@ namespace E_Commerce.WebApi.Business
                 PhoneNumber = seller.PhoneNumber,
                 Email = seller.Email,
                 Password = seller.Password,
+                Username = seller.username,
                 Role = seller.Role,
                 CompanyType = seller.CompanyType,
                 TaxpayerIDNumber = seller.TaxpayerIDNumber
@@ -141,6 +145,7 @@ namespace E_Commerce.WebApi.Business
             sellers.LastName = seller.LastName;
             sellers.Address = seller.Address;
             sellers.PhoneNumber = seller.PhoneNumber;
+            sellers.username = seller.Username;
             sellers.Email = seller.Email;
             sellers.Password = seller.Password;
            
@@ -168,6 +173,7 @@ namespace E_Commerce.WebApi.Business
                     Address = sellerDto.Address,
                     Email = sellerDto.Email,
                     Password = sellerDto.Password,
+                    username = sellerDto.Username,
                     PhoneNumber = sellerDto.PhoneNumber,
                     CompanyType = sellerDto.CompanyType,
                     IsApprove = sellerDto.IsApprove,

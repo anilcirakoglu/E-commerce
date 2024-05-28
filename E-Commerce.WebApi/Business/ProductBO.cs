@@ -141,6 +141,7 @@ namespace E_Commerce.WebApi.Business
                             DiscountPercentage = products.discountPercentage,
                             ProductQuantity = stocks.ProductQuantity,
                             SellerName = sellers.FirstName,
+                            Username =sellers.username,
                             IsApprovedProduct = products.IsApprovedProduct,
                             Image=products.Image,
 
@@ -173,6 +174,7 @@ namespace E_Commerce.WebApi.Business
                              DiscountPercentage = products.discountPercentage,
                              ProductQuantity = stocks.ProductQuantity,
                              SellerName = sellers.FirstName,
+                             Username =sellers.username,
                              IsApprovedProduct = products.IsApprovedProduct,
                              Image =products.Image
                              
@@ -244,6 +246,7 @@ namespace E_Commerce.WebApi.Business
         public async Task<ProductDetailForCustomer> DetailForCustomer(int ID) {
             var products = await _productReadRepository.GetByIDAsync(ID);
             var stocks = _stockProductReadRepository.GetAll().Where(x => x.ProductID == products.ID);
+            var seller = _sellerReadRepository.GetAll().Where(x=>x.ID==products.SellerID);
             var product = new ProductDetailForCustomer() {
 
                ID = products.ID,
@@ -251,6 +254,7 @@ namespace E_Commerce.WebApi.Business
                 ProductInformation = products.ProductInformation,
                 ProductPrice = products.ProductPrice,
                 ProductQuantity = stocks.FirstOrDefault(x => x.ProductID == products.ID).ProductQuantity,
+                Username = seller.FirstOrDefault(x => x.ID == products.SellerID).username,
                 Img =products.Image
             };
             return product;

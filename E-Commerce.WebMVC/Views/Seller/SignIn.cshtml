@@ -6,7 +6,7 @@
 }
 <div><h4>Seller Register </h4></div>
 <div class="container">
-    <form class="w-75 m-5 p-2 " asp-action="Edit" asp-controller="Seller" method="post">
+    <form class="w-75 m-5 p-2 " asp-action="SignIn" asp-controller="Seller" method="post">
         <div class="mb-3">
             <label for="@Model.FirstName" class="form-label">First Name</label>
             <span asp-validation-for="@Model.FirstName" class="text-black"></span>
@@ -31,6 +31,11 @@
             <label for="@Model.Address" class="form-label">Address</label>
             <span asp-validation-for="@Model.Address" class="text-black"></span>
             <input type="text" class="form-control" asp-for="@Model.Address" />
+        </div>
+        <div class="mb-3">
+            <label for="@Model.Username" class="form-label">Username</label>
+            <span asp-validation-for="@Model.Username" class="text-black"></span>
+            <input type="text" class="form-control" asp-for="@Model.Username" />
         </div>
         <div class="mb-3">
             <label for="@Model.PhoneNumber" class="form-label">Phone Number</label>

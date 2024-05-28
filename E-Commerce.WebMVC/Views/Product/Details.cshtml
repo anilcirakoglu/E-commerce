@@ -12,8 +12,9 @@
             <div class="card-body">
                 <h5 class="card-title">@Model.ProductName</h5>
                 <h6 class="card-text">  Price:@Model.ProductPrice$ Quantity: @Model.ProductQuantity</h6> <a class=" btn btn-outline-success" asp-controller="Customer" asp-action="AddProductCart" asp-route-ProductID="@Model.ID">Add Cart</a>
-                <p class="card-text">@Model.ProductInformation</p>
-              
+                <p class="card-text">@Model.Username</p>
+                <p class="card-text">Information:<br />@Model.ProductInformation</p>
+               
                
             </div>
         </div>

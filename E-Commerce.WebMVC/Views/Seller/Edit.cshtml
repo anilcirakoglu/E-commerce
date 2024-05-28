@@ -41,6 +41,11 @@
             <input type="text" class="form-control" asp-for="@Model.PhoneNumber" />
         </div>
         <div class="mb-3">
+            <label for="@Model.Username" class="form-label">Username</label>
+            <span asp-validation-for="@Model.Username" class="text-black"></span>
+            <input type="text" class="form-control" asp-for="@Model.Username" />
+        </div>
+        <div class="mb-3">
             <label for="@Model.CompanyType" class="form-label">Company Type</label>
             <span asp-validation-for="@Model.CompanyType" class="text-black"></span>
             <input type="text" class="form-control" asp-for="@Model.CompanyType" />

@@ -11,6 +11,7 @@
         public double DiscountPercentage { get; set; }
         public bool IsProductActive { get; set; }
         public int CategoryID { get; set; }
+        public string Username { get; set; }
         public int ProductQuantity { get; set; }
 
         public string CategoryName { get; set; }

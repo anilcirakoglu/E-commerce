@@ -14,6 +14,7 @@
         public double DiscountPercentage { get; set; }
         public bool IsProductActive { get; set; }
         public string CategoryName{ get; set; }
+        public string Username { get; set; }
         public int ProductQuantity { get; set; }
         public bool IsApprovedProduct { get; set; } = false;
 
