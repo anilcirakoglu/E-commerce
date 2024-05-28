@@ -6,8 +6,8 @@
 }@{
     if (Model != null)
     {
-      
-        <table class="table">
+
+        <table class="table table-bordered">
             <thead>
                 <tr>
                   
@@ -16,10 +16,12 @@
                     <td>ProductPrice</td>
                     <td>DiscountPercentage</td>
                     <td>Stock Quantity</td>
-                    <td>IsProductActive</td>
+                    <td>Product Active</td>
                     <td>Categories</td>
                     <td>Seller Name</td>
-                    <td>IsApprovedProduct</td>
+                    <td>Approve Product</td>
+                    <td></td>
+                    <td></td>
                 </tr>
             </thead>
             <tbody>
@@ -43,6 +45,7 @@
                             <a asp-action="RejectProduct" asp-controller="Admin"
                                asp-route-id="@product.ID" class="btn btn-danger ">Reject</a>
                         </td>
+                       
                     </tr>
                 }
             </tbody>

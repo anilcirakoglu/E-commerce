@@ -16,7 +16,7 @@ namespace E_Commerce.WebApi.Business
 
        
 
-        Task UpdateAsync(ProductModel product);
+        Task UpdateAsync(ProductDto product);
         Task<int> SaveAsync();
         Task RemoveAsync(int ID);
     }

@@ -63,10 +63,10 @@ namespace E_Commerce.WebApi.Controllers
             return Ok(ID);
         }
         [HttpPut("Update")]
-        public async Task<IActionResult> UpdateAsync(ProductModel productModel)
+        public async Task<IActionResult> UpdateAsync(ProductDto product)
         {
-            await _productBO.UpdateAsync(productModel);
-            return Ok(productModel);
+            await _productBO.UpdateAsync(product);
+            return Ok(product);
         }
         [HttpGet("Search/{name}")]
         public async Task<IActionResult> Search(string name) 

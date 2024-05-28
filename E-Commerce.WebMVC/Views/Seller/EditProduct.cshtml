@@ -2,7 +2,8 @@
 @{
     Layout = "_Layout";
 }
-<form class="w-75 m-5 p-2 " asp-action="Create" asp-controller="Product" method="post" enctype="multipart/form-data">
+
+<form class="w-75 m-5 p-2 " asp-action="EditProduct" asp-controller="Seller" method="post" enctype="multipart/form-data">
     <div class="mb-3">
         <label for="@Model.ProductName" class="form-label">Product Name</label>
         <span asp-validation-for="@Model.ProductName" class="text-black"></span>
@@ -19,27 +20,27 @@
         <input type="text" class="form-control" asp-for="@Model.ProductPrice" />
     </div>
 
- 
+
     <div class="mb-3">
-        <label  class="form-label">Image</label>
+        <label class="form-label">Image</label>
         <span asp-validation-for="@Model.Image" class="text-black"></span>
-        <input type="file"  class="form-control" asp-for="Image" />
+        <input type="file" class="form-control" asp-for="Image" />
     </div>
     <div class="mb-3">
         <label for="@Model.DiscountPercentage" class="form-label">Discount Percentage</label>
         <span asp-validation-for="@Model.DiscountPercentage" class="text-black"></span>
         <input type="text" class="form-control" asp-for="@Model.DiscountPercentage" />
     </div>
-  
+
     <div class="mb-3">
         <label for="@Model.ProductQuantity" class="form-label">Stock Quantity</label>
         <span asp-validation-for="@Model.ProductQuantity" class="text-black"></span>
         <input type="text" class="form-control" asp-for="@Model.ProductQuantity" />
     </div>
-  
+
     <div class="mb-3">
         <label for="@Model.CategoryID" class="form-label">Product Category</label>
-       <select class="form-select" asp-items="@Model.Categories" asp-for="CategoryID"></select>
+        <select class="form-select" asp-items="@Model.Categories" asp-for="CategoryID"></select>
     </div>
 
 

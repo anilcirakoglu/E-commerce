@@ -6,8 +6,9 @@
 }@{
     if (Model != null)
     {
-        <div><a asp-action="Create" asp-asp-controller="Product">New Product</a></div>
-        <table class="table">
+        <div><a asp-action="Create" asp-asp-controller="Product" class="btn btn-success">New Product</a></div>
+        <br />
+        <table class="table table-bordered">
             <thead>
                 <tr>
 
@@ -16,9 +17,10 @@
                     <td>ProductPrice</td>
                     <td>DiscountPercentage</td>
                     <td>Stock Quantity</td>
-                    <td>IsApprovedProduct</td>
+                    <td>Approve Product</td>
                     <td>Categories</td>
-                    <td>IsProductActive</td>
+                    <td>Product Active</td>
+                    <td></td>
                     <td></td>
                     <td></td>
                     
@@ -45,7 +47,9 @@
                             <a asp-action="PassiveProduct" asp-controller="Seller"
                                asp-route-id="@product.ID" class="btn btn-danger ">Passive</a>
                         </td>
-
+                        <td>
+                            <a asp-action="EditProduct" asp-controller="Seller" asp-route-id="@product.ID" class="btn btn-outline-warning">Edit Product</a>
+                        </td>
                     </tr>
                 }
             </tbody>

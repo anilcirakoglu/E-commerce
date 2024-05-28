@@ -300,21 +300,27 @@ namespace E_Commerce.WebApi.Business
             return product;
         }
 
-        public async Task UpdateAsync(ProductModel product)//cust id ve seller id değişmeyeceği için dto olsuturduğunda modeli değiştir
+        public async Task UpdateAsync(ProductDto product)
         {
             var products = _productReadRepository.GetAll().FirstOrDefault(x => x.ID == product.ID);
-            if (products != null)
+            var stocks = _stockProductReadRepository.GetAll().FirstOrDefault(x=>x.ID == product.ID);
+            if (products != null&&stocks!=null)
             {
+
                 products.ProductName = product.ProductName;
                 products.ProductInformation = product.ProductInformation;
                 products.ProductPrice = product.ProductPrice;
-                products.previousPrice = product.PreviousPrice;
+                products.CategoryID = product.CategoryID;
+                products.Image= product.Image;
                 products.discountPercentage = product.DiscountPercentage;
-                products.IsProductActive = product.IsProductActive;
+                stocks.ProductQuantity = product.ProductQuantity;
             }
 
             _productWriteRepository.Update(products);
             await _productWriteRepository.SaveAsync();
+
+            _stockProductWriteRepository.Update(stocks);
+            await _stockProductWriteRepository.SaveAsync();
         }
     }
 }

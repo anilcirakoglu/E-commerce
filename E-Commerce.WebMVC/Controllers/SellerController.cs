@@ -35,6 +35,8 @@ namespace E_Commerce.WebMVC.Controllers
         {
             return View();
         }
+      
+
         [HttpPost]
         #region loginANDlogout
         public async Task<IActionResult> Login(LoginModel model)
@@ -151,6 +153,92 @@ namespace E_Commerce.WebMVC.Controllers
 
             }
             return View(seller);
+        }
+        public async Task<IActionResult> EditProduct()
+        {
+            var productModel = new ProductModel();
+           
+                var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+
+                if (token != null)
+                {
+
+                    var client = _httpClientFactory.CreateClient();
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    var response = await client.GetAsync("http://localhost:5101/api/CategoryProduct");
+
+
+                    if (response.IsSuccessStatusCode)
+                    {
+
+                        var content = await response.Content.ReadAsStringAsync();
+
+                        var categoryProducts = JsonConvert.DeserializeObject<List<CategoryProductModel>>(content);
+                        productModel.Categories = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(categoryProducts, "ID", "CategoryName");
+
+                        return View(productModel);
+                    }
+
+            }
+            return RedirectToAction("SellerProductList");
+        }
+        [Authorize(Policy = ("SellerPolicy"))]
+        [HttpPost]
+        public async Task<IActionResult> EditProduct(ProductModel productModel)
+        {
+
+            
+                var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+
+                var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+                int jwtID = int.Parse(jwtId);
+
+
+                if (token != null)
+                {
+                    UpdateProductModel updateProductModel = new UpdateProductModel();
+                    byte[] bytes;
+
+                    using (BinaryReader binaryReader = new BinaryReader(productModel.Image.OpenReadStream()))
+                    {
+                        bytes = binaryReader.ReadBytes((int)productModel.Image.OpenReadStream().Length);
+                    }
+
+                    string base64ImageRepresentation = Convert.ToBase64String(bytes);
+
+                    updateProductModel.SellerID = jwtID;
+                    updateProductModel.ID =productModel.ID;
+                    updateProductModel.ProductName = productModel.ProductName;
+                    updateProductModel.ProductPrice = productModel.ProductPrice;
+                    updateProductModel.ProductQuantity = productModel.ProductQuantity;
+                    updateProductModel.DiscountPercentage = productModel.DiscountPercentage;
+                    updateProductModel.ProductInformation = productModel.ProductInformation;
+                    updateProductModel.Image = base64ImageRepresentation;
+                    updateProductModel.CategoryID =productModel.CategoryID;
+                    updateProductModel.CategoryName = productModel.CategoryName;
+
+
+
+
+                    var client = _httpClientFactory.CreateClient();
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+
+                    var data = JsonConvert.SerializeObject(updateProductModel);
+                    var content = new StringContent(data, Encoding.UTF8, "application/json");
+
+                    var response = await client.PutAsync($"http://localhost:5101/api/Product/Update", content);
+                    if (response.IsSuccessStatusCode)
+                    {
+
+                        return RedirectToAction("SellerProductList", "Product");
+                    }
+
+
+                
+
+            }
+            return View(productModel);
         }
         [Authorize(Policy = "SellerPolicy")]
         public async Task<IActionResult> ActiveProduct(int ID)

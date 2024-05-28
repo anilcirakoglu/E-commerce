@@ -150,6 +150,9 @@ namespace E_Commerce.WebApi.Business
             _sellerWriteRepository.Update(sellers);
             await _sellerWriteRepository.SaveAsync();
         }
+       
+
+
         #region RegisAndLogin
         public async Task<SellerDto> Registration(SellerDto sellerDto)
         {
