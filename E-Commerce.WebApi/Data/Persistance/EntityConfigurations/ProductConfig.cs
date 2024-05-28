@@ -13,7 +13,7 @@ namespace E_Commerce.WebApi.Data.Persistance.EntityConfigurations
             builder.ToTable("Product");
             builder.HasKey(p => p.ID);
             builder.Property(p => p.ProductName).IsRequired().HasMaxLength(250);
-            builder.Property(p => p.ProductInformation).IsRequired().HasMaxLength(250);
+            builder.Property(p => p.ProductInformation).IsRequired().HasMaxLength(800);
             builder.Property(p => p.IsProductActive);
             builder.Property(p => p.ProductPrice).IsRequired().HasMaxLength(250);
             builder.Property(p => p.previousPrice);

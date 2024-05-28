@@ -4251,6 +4251,7 @@ textarea.form-control-lg {
     justify-content: space-between;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
+    
 }
 
     .navbar > .container,
@@ -4727,7 +4728,7 @@ textarea.form-control-lg {
     }
 
 .navbar-light .navbar-brand {
-    color: rgba(0, 0, 0, 0.9);
+    background-color: #f7f7f7;
 }
 
     .navbar-light .navbar-brand:hover, .navbar-light .navbar-brand:focus {

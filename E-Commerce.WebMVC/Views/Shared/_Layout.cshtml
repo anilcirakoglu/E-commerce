@@ -5,21 +5,24 @@
 <head class="header">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] Ecommerce</title>
+    <title>@ViewData["Title"] mississippi</title>
      <link rel="stylesheet" href="~/css/PagedList.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/E_Commerce.WebMVC.styles.css" asp-append-version="true" />
 </head>
 <body>
+    <div class="header-left"><a asp-area="" asp-controller="Admin" asp-action="Login">Admin Login</a></div>
+    
     <div class="header-right">
+        <a asp-controller="Seller" asp-action="Login" style="text-decoration:none">Seller Login  </a>&nbsp;&nbsp;&nbsp;
         <a asp-controller="Seller" asp-action="SignIn" style="text-decoration:none"> Become A Seller</a> &nbsp;&nbsp;&nbsp;
         <a asp-controller="Home" asp-action="Privacy" style="text-decoration:none"> Contact Us</a> &nbsp; &nbsp; &nbsp;
         <a asp-controller="Home" asp-action="Privacy" style="text-decoration:none"> Privacy Policy</a>
     </div>
     <br />
     <br />
-    <div class="logo"><a asp-area="" asp-controller="Home" asp-action="Index">E_Commerce</a></div>
+    <div class="logo"><a asp-area="" asp-controller="Home" asp-action="Index">Mississippi</a></div>
 
     <form method="get" asp-action="Search" asp-controller="Product">
         <div><input class="searchbar" type="text" placeholder="Search.." name="name"> </div>
@@ -44,9 +47,9 @@
     }
     <header>
 
-        <div class="nvmbartext">
+        <div class="nvmbartext" > 
 
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3  ">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light  border-bottom box-shadow mb-3  ">
                 <div class="container-fluid">
 
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -125,7 +128,7 @@
 
                             <li class="nav-item">
 
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Login</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Customer" asp-action="Login">Login</a>
                             </li>
 
 
@@ -151,7 +154,7 @@
     </div>
     <footer>
         <div>
-            &copy; 2024 - E_Commerce.WebMVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - mississippi - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

@@ -186,7 +186,7 @@ namespace E_Commerce.WebMVC.Controllers
             var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
             if (jwtId == null)
             {
-                return RedirectToAction("Index", "Login");
+                return RedirectToAction("Login", "Customer");
             }
             var product = new ProductDetailForCustomerModel();
             if (token != null)

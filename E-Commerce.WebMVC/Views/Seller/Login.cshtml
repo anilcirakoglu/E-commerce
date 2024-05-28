@@ -1,26 +1,24 @@
 ﻿@model LoginModel
-
-
 @{
     Layout = "_Layout";
 }
 
-    <div><h4>Seller Login </h4></div>
+<div class="nvmbartext"><h4>Seller Login </h4></div>
     <div class="container">
-        <form class="w-50 m-5 p-3" asp-action="Login" asp-controller="Seller" method="post">
-            <div class="mb-5">
-                <label for="@Model.Email" class="form-label">Email:</label>
+        <form class="w-50 m-3 p-5" asp-action="Login" asp-controller="Seller" method="post">
+            <div class="mb-2">
+            <label class="nvmbartext" for="@Model.Email" class="form-label">Email:</label>
                 <input type="text" class="form-control" asp-for="@Model.Email" />
                 <span asp-validation-for="@Model.Email" class="text-danger"></span>
             </div>
-            <div class="mb-5">
-                <label for="@Model.Password" class="form-label">Password:</label>
+            <div class="mb-2">
+            <label class="nvmbartext" for="@Model.Password" class="form-label">Password:</label>
                 <input type="password" class="form-control" asp-for="@Model.Password" />
                 <span asp-validation-for="@Model.Password" class="text-danger"></span>
             </div>
             <div class="mb-5">
-                <button>Login</button>
-                <button asp-action="SignIn" asp-controller="Seller">Sign Up</button>
+            <button class="btn btn-primary">Login</button>
+            <button class="btn btn-primary" asp-action="SignIn" asp-controller="Seller">Sign Up</button>
             </div>
         </form>
     </div>
