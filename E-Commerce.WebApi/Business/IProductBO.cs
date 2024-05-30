@@ -9,7 +9,7 @@ namespace E_Commerce.WebApi.Business
         List<AllProducts> GetAllProducts();
         List<ProductDto> sellerProducts(int ID);
         Task<ProductDetailForCustomer> DetailForCustomer(int ID);
-        Task<ProductModel> GetByID(int ID,bool tracking =true);
+        Task<ProductDto> GetByID(int ID,bool tracking =true);
         Task<ProductDto> Create(ProductDto product);
 
         List<AllProducts> Search(string name);

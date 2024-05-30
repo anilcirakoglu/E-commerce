@@ -34,10 +34,7 @@ namespace E_Commerce.WebMVC.Controllers
         {
             return View(new CustomerModel());
         }
-        public IActionResult Edit()
-        {
-            return View(new CustomerModel());
-        }
+       
         public IActionResult CreditCart()
         {
             return View();
@@ -90,9 +87,6 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(model);
         }
-      
-
-
 
         #endregion
         [HttpPost]
@@ -123,6 +117,46 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(customer);
         }
+
+        public async Task<IActionResult> Edit()
+        {
+            var customer = new CustomerModel();
+            if (ModelState.IsValid)
+            {
+                var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+
+                var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+                int jwtID = int.Parse(jwtId);
+                int ID = jwtID;
+
+                if (token != null)
+                {
+
+                    var client = _httpClientFactory.CreateClient();
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    var response = await client.GetAsync($"http://localhost:5101/api/Customer/{ID}");
+
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+
+                        var CustomerInfo = JsonConvert.DeserializeObject<CustomerModel>(content);
+
+                        return View(CustomerInfo);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "wrong Model");
+                    }
+                }
+            }
+            return View(customer);
+        }
+
+
+
+        /*-------------------------------------------------------------------------------------*/
         [Authorize(Policy ="CustomerPolicy")]
         [HttpPost]
         public async Task<IActionResult> Edit(CustomerModel customer)
@@ -359,12 +393,8 @@ namespace E_Commerce.WebMVC.Controllers
                     if (response.IsSuccessStatusCode)
                     {
                         return RedirectToAction("Index", "Home");
-                    }
-                   
-
+                    }   
                 }
-
-
             }
             else
             {

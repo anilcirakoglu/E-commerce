@@ -1,4 +1,7 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿<script>
+    var myModal = document.getElementById('exampleModal')
+    var myInput = document.getElementById('myInput')
 
-// Write your JavaScript code.
+    myModal.addEventListener('shown.bs.modal', function () {
+        myInput.focus()
+    })</script>

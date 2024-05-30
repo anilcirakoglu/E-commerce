@@ -6,6 +6,7 @@ using E_Commerce.WebApi.Application.Sellers;
 using E_Commerce.WebApi.Application.StockProducts;
 using E_Commerce.WebApi.Business.Models;
 using E_Commerce.WebApi.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.WebApi.Business
 {
@@ -73,7 +74,7 @@ namespace E_Commerce.WebApi.Business
 
 
             };
-           
+
 
 
 
@@ -96,7 +97,7 @@ namespace E_Commerce.WebApi.Business
                         join categories in category on products.CategoryID equals categories.ID
                         join stocks in stock on products.ID equals stocks.ProductID
                         join sellers in seller on products.SellerID equals sellers.ID
-            
+
                         select new AllProducts
                         {
                             ID = products.ID,
@@ -115,20 +116,23 @@ namespace E_Commerce.WebApi.Business
 
                         }).ToList();
             return list;
-            
+
         }
-        public List<AllProducts> Search(string name) 
+        public List<AllProducts> Search(string name)
         {
+
             var product = _productReadRepository.GetAll();
             var category = _categoryProductReadRepository.GetAll();
             var stock = _stockProductReadRepository.GetAll();
             var seller = _sellerReadRepository.GetAll();
-            
+
             var list = (from products in product
                         join categories in category on products.CategoryID equals categories.ID
                         join stocks in stock on products.ID equals stocks.ProductID
                         join sellers in seller on products.SellerID equals sellers.ID
-                        where products.ProductName.ToLower() == name.ToLower() || categories.CategoryName.ToLower() == name.ToLower() && products.IsApprovedProduct== true && products.IsProductActive==true &&stocks.ProductQuantity >= 1
+
+                        //where products.ProductName.ToLower().StartsWith(name) || categories.CategoryName.StartsWith(name) || categories.CategoryName.ToLower().StartsWith(name) && products.IsApprovedProduct == true && products.IsProductActive == true && stocks.ProductQuantity >= 1
+                        where products.ProductName.ToLower() == name.ToLower() || categories.CategoryName.ToLower() == name.ToLower() && products.IsApprovedProduct == true && products.IsProductActive == true && stocks.ProductQuantity >= 1
                         select new AllProducts
                         {
 
@@ -141,9 +145,9 @@ namespace E_Commerce.WebApi.Business
                             DiscountPercentage = products.discountPercentage,
                             ProductQuantity = stocks.ProductQuantity,
                             SellerName = sellers.FirstName,
-                            Username =sellers.username,
+                            Username = sellers.username,
                             IsApprovedProduct = products.IsApprovedProduct,
-                            Image=products.Image,
+                            Image = products.Image,
 
                         }
                         ).ToList();
@@ -151,52 +155,54 @@ namespace E_Commerce.WebApi.Business
         }
 
 
-        public List<AllProducts> GetAllProducts() 
+        public List<AllProducts> GetAllProducts()
         {
             var product = _productReadRepository.GetAll();
             var category = _categoryProductReadRepository.GetAll();
             var stock = _stockProductReadRepository.GetAll();
             var seller = _sellerReadRepository.GetAll();
-           
+
 
             var list = (from products in product
-                         join categories in category on products.CategoryID equals categories.ID
-                         join stocks in stock on products.ID equals stocks.ProductID
-                         join sellers in seller on products.SellerID equals sellers.ID where products.IsApprovedProduct== true && products.IsProductActive == true && stocks.ProductQuantity >= 1
+                        join categories in category on products.CategoryID equals categories.ID
+                        join stocks in stock on products.ID equals stocks.ProductID
+                        join sellers in seller on products.SellerID equals sellers.ID
+                        where products.IsApprovedProduct == true && products.IsProductActive == true && stocks.ProductQuantity >= 1
                         select new AllProducts
-                         {
-                             ID=products.ID,
-                             ProductName = products.ProductName,
-                             ProductInformation = products.ProductInformation,
-                             ProductPrice = products.ProductPrice,
-                             IsProductActive = products.IsProductActive,
-                             CategoryName = categories.CategoryName,
-                             DiscountPercentage = products.discountPercentage,
-                             ProductQuantity = stocks.ProductQuantity,
-                             SellerName = sellers.FirstName,
-                             Username =sellers.username,
-                             IsApprovedProduct = products.IsApprovedProduct,
-                             Image =products.Image
-                             
+                        {
+                            ID = products.ID,
+                            ProductName = products.ProductName,
+                            ProductInformation = products.ProductInformation,
+                            ProductPrice = products.ProductPrice,
+                            IsProductActive = products.IsProductActive,
+                            CategoryName = categories.CategoryName,
+                            DiscountPercentage = products.discountPercentage,
+                            ProductQuantity = stocks.ProductQuantity,
+                            SellerName = sellers.FirstName,
+                            Username = sellers.username,
+                            IsApprovedProduct = products.IsApprovedProduct,
+                            Image = products.Image
 
-                             
-                         }).ToList();
+
+
+                        }).ToList();
             return list;
-            
+
         }
-        public List<ProductDto> sellerProducts(int ID) 
+        public List<ProductDto> sellerProducts(int ID)
         {
             var product = _productReadRepository.GetAll();
             var category = _categoryProductReadRepository.GetAll();
             var stock = _stockProductReadRepository.GetAll();
             var seller = _sellerReadRepository.GetAll();
 
-         
+
 
             var list2 = (from products in product
                          join categories in category on products.CategoryID equals categories.ID
                          join stocks in stock on products.ID equals stocks.ProductID
-                         join sellers in seller on products.SellerID equals sellers.ID where products.SellerID == ID
+                         join sellers in seller on products.SellerID equals sellers.ID
+                         where products.SellerID == ID
                          select new ProductDto
                          {
                              ID = products.ID,
@@ -208,10 +214,10 @@ namespace E_Commerce.WebApi.Business
                              DiscountPercentage = products.discountPercentage,
                              ProductQuantity = stocks.ProductQuantity,
                              IsApprovedProduct = products.IsApprovedProduct,
-                             
+
                          }).ToList();
             return list2;
-          
+
         }
 
 
@@ -243,39 +249,46 @@ namespace E_Commerce.WebApi.Business
             }
             return productList;
         }
-        public async Task<ProductDetailForCustomer> DetailForCustomer(int ID) {
-            var products = await _productReadRepository.GetByIDAsync(ID);
-            var stocks = _stockProductReadRepository.GetAll().Where(x => x.ProductID == products.ID);
-            var seller = _sellerReadRepository.GetAll().Where(x=>x.ID==products.SellerID);
-            var product = new ProductDetailForCustomer() {
-
-               ID = products.ID,
-                ProductName = products.ProductName,
-                ProductInformation = products.ProductInformation,
-                ProductPrice = products.ProductPrice,
-                ProductQuantity = stocks.FirstOrDefault(x => x.ProductID == products.ID).ProductQuantity,
-                Username = seller.FirstOrDefault(x => x.ID == products.SellerID).username,
-                Img =products.Image
-            };
-            return product;
-        }
-
-        public async Task<ProductModel> GetByID(int ID, bool tracking = true)
+        public async Task<ProductDetailForCustomer> DetailForCustomer(int ID)
         {
-            var products = await _productReadRepository.GetByIDAsync(ID);
-            var product = new ProductModel()
+            var products = _productReadRepository.GetWhere(x => x.ID == ID && x.IsProductActive == true && x.IsProductActive == true).FirstOrDefault();
+            var stocks = _stockProductReadRepository.GetAll().Where(x => x.ProductID == products.ID);
+            var seller = _sellerReadRepository.GetAll().Where(x => x.ID == products.SellerID);
+            if (products == null)
+            { throw new Exception("Product is not Found"); }
+            var product = new ProductDetailForCustomer()
             {
                 ID = products.ID,
                 ProductName = products.ProductName,
                 ProductInformation = products.ProductInformation,
                 ProductPrice = products.ProductPrice,
+                ProductQuantity = stocks.FirstOrDefault(x => x.ProductID == products.ID).ProductQuantity,
+                Username = seller.FirstOrDefault(x => x.ID == products.SellerID).username,
+                Img = products.Image
+            };
+            return product;
+
+
+        }
+
+        public async Task<ProductDto> GetByID(int ID, bool tracking = true)// Product Name | Product Information | Product Price | Image | Discount Percentage | Stock Quantity |Product Category
+        {
+            var products = await _productReadRepository.GetByIDAsync(ID);
+            var stock = await _stockProductReadRepository.GetWhere(x => x.ProductID == ID).FirstOrDefaultAsync();
+            var product = new ProductDto()
+            {
+                ID = products.ID,
+                ProductName = products.ProductName,
+                ProductInformation = products.ProductInformation,
+                ProductPrice = products.ProductPrice,
+                Image = products.Image,
                 DiscountPercentage = products.discountPercentage,
-                PreviousPrice = products.previousPrice,
-                IsProductActive = products.IsProductActive,
+                ProductQuantity = stock.ProductQuantity,
                 CategoryID = products.CategoryID,
 
             };
             return product;
+
         }
 
 
@@ -307,15 +320,15 @@ namespace E_Commerce.WebApi.Business
         public async Task UpdateAsync(ProductDto product)
         {
             var products = _productReadRepository.GetAll().FirstOrDefault(x => x.ID == product.ID);
-            var stocks = _stockProductReadRepository.GetAll().FirstOrDefault(x=>x.ID == product.ID);
-            if (products != null&&stocks!=null)
+            var stocks = _stockProductReadRepository.GetAll().FirstOrDefault(x => x.ID == product.ID);
+            if (products != null && stocks != null)
             {
 
                 products.ProductName = product.ProductName;
                 products.ProductInformation = product.ProductInformation;
                 products.ProductPrice = product.ProductPrice;
                 products.CategoryID = product.CategoryID;
-                products.Image= product.Image;
+                products.Image = product.Image;
                 products.discountPercentage = product.DiscountPercentage;
                 stocks.ProductQuantity = product.ProductQuantity;
             }

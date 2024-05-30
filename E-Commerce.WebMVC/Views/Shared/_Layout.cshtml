@@ -1,5 +1,4 @@
 ﻿
-
 <!DOCTYPE html>
 <html lang="en">
 <head class="header">
@@ -12,13 +11,17 @@
     <link rel="stylesheet" href="~/E_Commerce.WebMVC.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <div class="header-left"><a asp-area="" asp-controller="Admin" asp-action="Login">Admin Login</a></div>
+    
     
     <div class="header-right">
-        <a asp-controller="Seller" asp-action="Login" style="text-decoration:none">Seller Login  </a>&nbsp;&nbsp;&nbsp;
+        
         <a asp-controller="Seller" asp-action="SignIn" style="text-decoration:none"> Become A Seller</a> &nbsp;&nbsp;&nbsp;
         <a asp-controller="Home" asp-action="Privacy" style="text-decoration:none"> Contact Us</a> &nbsp; &nbsp; &nbsp;
-        <a asp-controller="Home" asp-action="Privacy" style="text-decoration:none"> Privacy Policy</a>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a  asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
+
+        }
     </div>
     <br />
     <br />
@@ -132,11 +135,9 @@
                             </li>
 
 
-                            <li class="nav-item">
-
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
-                            </li>
-
+                          
+                           
+                          
 
                         </ul>
 

@@ -90,7 +90,7 @@ namespace E_Commerce.WebApi.Business
             }
             return sellerList;
         }
-
+     
         public async Task<SellerDto> GetByID(int ID, bool tracking = true)
         {
             var sellers = await _sellerReadRepository.GetByIDAsync(ID);
@@ -192,7 +192,7 @@ namespace E_Commerce.WebApi.Business
         public string Login(LoginModel loginModel)
         {
 
-            var seller = _sellerReadRepository.GetWhere(x => x.Email == loginModel.Email && x.Password == loginModel.Password&&  x.IsApprove == true).FirstOrDefault();   
+            var seller = _sellerReadRepository.GetWhere(x => x.Email == loginModel.Email && x.Password == loginModel.Password&&  x.IsApprove == true).FirstOrDefault();
             if (seller == null )
             {
                 return "";
@@ -203,10 +203,10 @@ namespace E_Commerce.WebApi.Business
                new Claim(ClaimTypes.Role,seller.Role,RoleType.Customer.ToString()),
                new Claim(ClaimTypes.Name,seller.Email),
                new Claim(ClaimTypes.Name,seller.Password),
-               new Claim(ClaimTypes.Name,seller.ID.ToString())
+               new Claim(ClaimTypes.Name,seller.ID.ToString())    
            };
-            var token = GenerateTokens(tokenclaims);
-            return token;
+            var token = GenerateTokens(tokenclaims); 
+                return token;
         }
 
         public string GenerateTokens(IEnumerable<Claim> claims)

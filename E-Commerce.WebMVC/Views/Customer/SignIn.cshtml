@@ -5,7 +5,7 @@
     Layout = "_Layout";
 }
     <div class="container">
-        <form class="w-75 m-5 p-2 " asp-action="SignIn" asp-controller="Customer" method="post">
+        <form class="w-50 m-5 p-2 " asp-action="SignIn" asp-controller="Customer" method="post">
             <div class="mb-3">
                 <label for="@Model.FirstName" class="form-label">First Name</label>
                 <span asp-validation-for="@Model.FirstName" class="text-black"></span>
@@ -36,8 +36,9 @@
                 <span asp-validation-for="@Model.PhoneNumber" class="text-black"></span>
                 <input type="text" class="form-control" asp-for="@Model.PhoneNumber" />
             </div>
-            <div class="mb-3">
-                <button type="submit" class=" btn-primary w-100">Sign In</button>
-            </div>
-        </form>
+
+    </form>
+    <div>
+        <button type="submit" class="btn btn-primary">Sign In</button>
+    </div>
     </div>

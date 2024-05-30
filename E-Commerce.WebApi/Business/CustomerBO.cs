@@ -109,7 +109,6 @@ namespace E_Commerce.WebApi.Business
                 Email = customers.Email,
                 Password = customers.Password,
                 PhoneNumber = customers.PhoneNumber,
-                Role = customers.Role,
             };
             return customer;
         }

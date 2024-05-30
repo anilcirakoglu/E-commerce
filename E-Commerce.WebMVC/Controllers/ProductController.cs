@@ -117,7 +117,7 @@ namespace E_Commerce.WebMVC.Controllers
         }
         [Authorize(Policy = "AdminPolicy")]
         [HttpGet]
-        public async Task<IActionResult> ListProduct(int page = 1)//admin ile seller ayrıldı mı kontrol et
+        public async Task<IActionResult> ListProduct(int page = 1)
         {
             List<ProductModel> product = new List<ProductModel>();
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
@@ -181,63 +181,76 @@ namespace E_Commerce.WebMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int ID)
         {
-
-            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
-            var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
-            if (jwtId == null)
-            {
-                return RedirectToAction("Login", "Customer");
-            }
-            var product = new ProductDetailForCustomerModel();
-            if (token != null)
-            {
-
-                var client = _httpClientFactory.CreateClient();
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                var response = await client.GetAsync($"http://localhost:5101/api/Product/Details/{ID}");
-                if (response.IsSuccessStatusCode)
+            
+                var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+                var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+                if (jwtId == null)
+                {
+                    return RedirectToAction("Login", "Customer");
+                }
+                var product = new ProductDetailForCustomerModel();
+                if (token != null)
                 {
 
-                    var content = await response.Content.ReadAsStringAsync();
-                    product = JsonConvert.DeserializeObject<ProductDetailForCustomerModel>(content);
-                    return View(product);
+                    var client = _httpClientFactory.CreateClient();
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    var response = await client.GetAsync($"http://localhost:5101/api/Product/Details/{ID}");
+                    if (response.IsSuccessStatusCode)
+                    {
+
+                        var content = await response.Content.ReadAsStringAsync();
+                        product = JsonConvert.DeserializeObject<ProductDetailForCustomerModel>(content);
+                        return View(product);
+
+                    }else
+                    {
+                        var contents = await response.Content.ReadAsStringAsync();
+                        return View("ProductErrorPage", contents);
+                    }
 
                 }
-
-            }
-            return RedirectToAction("Details", "Product");
+                return RedirectToAction("Details", "Product");
+            
+           
         }
         [HttpGet]
         public async Task<IActionResult> Search(string name, int page = 1)
         {
-            List<ProductForCustomerModel> product = new List<ProductForCustomerModel>();
-            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
-            var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
-            if (jwtId == null)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index", "Login");
-            }
-            if (token != null)
-            {
-                var client = _httpClientFactory.CreateClient();
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                var response = await client.GetAsync($"http://localhost:5101/api/Product/Search/{name}");
-                if (response.IsSuccessStatusCode)
+                List<ProductForCustomerModel> product = new List<ProductForCustomerModel>();
+                var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+                var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+                if (jwtId == null)
                 {
-
-                    var content = await response.Content.ReadAsStringAsync();
-                    product = JsonConvert.DeserializeObject<List<ProductForCustomerModel>>(content);
-
-                    var pageList = product.ToPagedList(page, 9);
-                    return View(pageList);
+                    return RedirectToAction("Index", "Login");
                 }
+                if (token != null)
+                {
+                    var client = _httpClientFactory.CreateClient();
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    var response = await client.GetAsync($"http://localhost:5101/api/Product/Search/{name}");
+                    if (response.IsSuccessStatusCode)
+                    {
 
+                        var content = await response.Content.ReadAsStringAsync();
+                        product = JsonConvert.DeserializeObject<List<ProductForCustomerModel>>(content);
+
+                        var pageList = product.ToPagedList(page, 9);
+                        return View(pageList);
+                    }
+
+                }
+                return View(product);
             }
-            return View(product);
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
     }
-       
 
 
-    
+
+
 }

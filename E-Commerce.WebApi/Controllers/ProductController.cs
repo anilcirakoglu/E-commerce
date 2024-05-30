@@ -34,9 +34,15 @@ namespace E_Commerce.WebApi.Controllers
             return Ok(product);
         }
         [HttpGet("Details/{ID}")]
-        public async Task<ActionResult<ProductDetailForCustomer>> DetailForCustomer(int ID) { 
-        var product =await _productBO.DetailForCustomer(ID);
-            return Ok(product);
+        public async Task<ActionResult<ProductDetailForCustomer>> DetailForCustomer(int ID) {
+            try {
+                var product = await _productBO.DetailForCustomer(ID);
+                return Ok(product);
+            }
+            catch (Exception ex) {
+            return BadRequest(ex.Message);
+            }
+       
         }
         [HttpGet]
         public IActionResult GetAll()
@@ -50,7 +56,7 @@ namespace E_Commerce.WebApi.Controllers
             var products = await _productBO.Create(product);
             return Ok(products);
         }
-        [HttpGet("{ID}")]//hata veriyor olabilir kontrol et data girdikten snra
+        [HttpGet("{ID}")]
         public async Task<IActionResult> GetByID(int ID)
         {
             var product = await _productBO.GetByID(ID);

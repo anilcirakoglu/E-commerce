@@ -24,7 +24,7 @@ namespace E_Commerce.WebApi.Controllers
             {
                 return BadRequest();
             }
-            return Ok(token); ;
+            return Ok(token); 
         }
         [HttpPost("Registration")]
         public async Task<IActionResult> Register(SellerDto sellerDto)
