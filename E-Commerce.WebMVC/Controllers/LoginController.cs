@@ -57,7 +57,7 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(model);
         }
-        [HttpPost]//Düzenleme gerekli admin onayı için if şartını unutma
+        [HttpPost]
         
         public async Task<IActionResult> LoginSeller(LoginModel model)
         {

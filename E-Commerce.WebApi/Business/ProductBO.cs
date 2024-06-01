@@ -131,8 +131,9 @@ namespace E_Commerce.WebApi.Business
                         join stocks in stock on products.ID equals stocks.ProductID
                         join sellers in seller on products.SellerID equals sellers.ID
 
-                        //where products.ProductName.ToLower().StartsWith(name) || categories.CategoryName.StartsWith(name) || categories.CategoryName.ToLower().StartsWith(name) && products.IsApprovedProduct == true && products.IsProductActive == true && stocks.ProductQuantity >= 1
-                        where products.ProductName.ToLower() == name.ToLower() || categories.CategoryName.ToLower() == name.ToLower() && products.IsApprovedProduct == true && products.IsProductActive == true && stocks.ProductQuantity >= 1
+                        where ((products.ProductName.ToLower().StartsWith(name) ||products.ProductName.ToLower()==name.ToLower()|| products.ProductName.StartsWith(name))
+                        || (categories.CategoryName.ToLower().StartsWith(name) || categories.CategoryName.ToLower() == name.ToLower()||categories.CategoryName.StartsWith(name))) && products.IsApprovedProduct == true && products.IsProductActive == true && stocks.ProductQuantity >= 1
+                    
                         select new AllProducts
                         {
 
@@ -328,7 +329,9 @@ namespace E_Commerce.WebApi.Business
                 products.ProductInformation = product.ProductInformation;
                 products.ProductPrice = product.ProductPrice;
                 products.CategoryID = product.CategoryID;
+                if (product.Image != null && product.Image != "") { 
                 products.Image = product.Image;
+                }
                 products.discountPercentage = product.DiscountPercentage;
                 stocks.ProductQuantity = product.ProductQuantity;
             }

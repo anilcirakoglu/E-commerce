@@ -26,10 +26,7 @@ namespace E_Commerce.WebMVC.Controllers
         {
             return View(new LoginModel());
         }
-        public IActionResult Edit()
-        {
-            return View(new AdminModel());
-        }
+       
         public IActionResult SignIn()
         {
             return View(new AdminModel());
@@ -77,6 +74,40 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(model);
         }
+
+        public async Task<IActionResult> Edit()
+        {
+            var admin = new AdminModel();
+            if (ModelState.IsValid)
+            {
+                var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+
+                var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+                int jwtID = int.Parse(jwtId);
+                int ID = jwtID;
+                admin.ID = jwtID;
+
+                if (token != null)
+                {
+
+                    var client = _httpClientFactory.CreateClient();
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    var response = await client.GetAsync($"http://localhost:5101/api/Admin/{ID}");
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+
+                        var adminInfo = JsonConvert.DeserializeObject<AdminModel>(content);
+
+                        return View(adminInfo);
+                    }
+                    ModelState.AddModelError("", "wrong Model");
+                }
+            }
+            return View(admin);
+        }
+
         [Authorize(Policy = "AdminPolicy")]
         [HttpPost]
         public async Task<IActionResult> Edit(AdminModel adminModel)

@@ -15,18 +15,17 @@ html {
 html {
     position: relative;
     min-width: 980px;
-    background-color: #f7f7f7;
+    
 }
 header {
-    min-width: 200px;
-    height: 150px;
+    background-color:darkorange;
     text-decoration: none;
 }
 .header-left {
     float: left;
-    font-family: 'Times New Roman', Times, serif;
-    padding-left:20px;
-    padding-top:5px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    padding-left: 20px;
+    padding-top: 5px;
 }
 .header-left a {
     text-decoration: none;
@@ -41,43 +40,39 @@ header {
     float: right;
     padding-right: 200px;
     padding-top: 15px;
-    font-family: 'Times New Roman', Times, serif;
-    color:black;
-    
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: aliceblue;
 }
     .header-right a {
         text-decoration: none;
-        color: black;
+        color: aliceblue;
     }
-    .header-right a:hover {
-       
-        color: black;
-    }
+        .header-right a:hover {
+            color: aliceblue;
+        }
 
 .logo {
-    margin-left: 500px;
+    margin-left: 420px;
     font-size: 30px;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     text-decoration: none;
-  
-   
 }
 .logo a {
         text-decoration: none;
-        color:black;
+        color:aliceblue;
     }
     .logo a:hover {
-    color:black;
+        color: aliceblue;
     }
 
 .nvmbartext {
-    font-family: 'Times New Roman', Times, serif;
-   
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: aliceblue;
+  
 }
 
 .productDeatilsTable {
-       margin-left:350px;
-
+    margin-left: 350px;
 }
 .productDeatilsTable td {
    padding:50px;
@@ -85,14 +80,14 @@ header {
 
 .cartLogo {
     margin-left: 1280px;
-    
+    color:#fff;
    
 }
 .pympg {
 text-align:center;
 }
 .form-group {
-     font-family:'Times New Roman', Times, serif;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     margin-bottom: 10px;
 }
 
@@ -111,11 +106,17 @@ text-align:center;
     }
 .searchbar {
    margin-left:750px;
-   width:350px;
+   width:380px;
+   border:hidden;
+   border-radius:2px;
 }
 .tblbox {
     display:flex;
     margin-left:20px;
+}
+.logintext {
+    font-family: Verdana;
+    color:black
 }
 
 

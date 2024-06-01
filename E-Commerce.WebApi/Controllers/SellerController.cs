@@ -24,6 +24,9 @@ namespace E_Commerce.WebApi.Controllers
             {
                 return BadRequest();
             }
+            else if (token == null) { 
+            return StatusCode(403);
+            }
             return Ok(token); 
         }
         [HttpPost("Registration")]

@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
@@ -35,10 +36,7 @@ namespace E_Commerce.WebMVC.Controllers
             return View(new CustomerModel());
         }
        
-        public IActionResult CreditCart()
-        {
-            return View();
-        }
+     
         public IActionResult Index() 
         {
             return View();
@@ -76,8 +74,9 @@ namespace E_Commerce.WebMVC.Controllers
                     }
                     return RedirectToAction("Index", "Home");//index gönderince hata veriyordu düzeldi ama bir daha kontrol et
                 }
-
-                else { 
+               
+                else
+                {
                     ModelState.AddModelError("Password", "Your password is incorrect, Please enter again");
                     ModelState.AddModelError("Email", "Your Email is incorrect, Please enter again");
                 }
@@ -118,6 +117,43 @@ namespace E_Commerce.WebMVC.Controllers
             return View(customer);
         }
 
+
+        public async Task<IActionResult> CreditCart() {
+    
+
+            var customer = new CustomerModel();
+            if (ModelState.IsValid)
+            {
+                var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+
+                var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+                int jwtID = int.Parse(jwtId);
+                int ID = jwtID;
+
+                if (token != null)
+                {
+
+                    var client = _httpClientFactory.CreateClient();
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    var response = await client.GetAsync($"http://localhost:5101/api/Customer/{ID}");
+
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+
+                        var CustomerInfo = JsonConvert.DeserializeObject<CustomerModel>(content);
+
+                        return View(CustomerInfo);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "wrong Model");
+                    }
+                }
+            }
+            return View(customer);
+        }
         public async Task<IActionResult> Edit()
         {
             var customer = new CustomerModel();
@@ -326,7 +362,7 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return RedirectToAction("CartList", "Customer");
         }
-
+        [Authorize(Policy = ("CustomerPolicy"))]
         public async Task<IActionResult> PurchasedProductList(int ID) 
         {
         
@@ -363,29 +399,28 @@ namespace E_Commerce.WebMVC.Controllers
         }
 
 
-
-        [Authorize(Policy ="CustomerPolicy")]
+        [Authorize(Policy = ("CustomerPolicy"))]
         public async Task<IActionResult> AddProductCart(CartModel cart)
         {
-            if (ModelState.IsValid)
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+            if (jwtId == null)
             {
-                var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
-                var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+                return RedirectToAction("Login", "Customer");
+            }
 
+            int jwtID = int.Parse(jwtId); 
+          
+            cart.CustomerID = jwtID;
+           
                
-                int jwtID = int.Parse(jwtId);
-                cart.CustomerID = jwtID;
-
                 if (token != null)
                 {
-
                     var client = _httpClientFactory.CreateClient();
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
 
                     var data = JsonConvert.SerializeObject(cart);
-
-
 
                     var content = new StringContent(data, Encoding.UTF8, "application/json");
 
@@ -395,11 +430,7 @@ namespace E_Commerce.WebMVC.Controllers
                         return RedirectToAction("Index", "Home");
                     }   
                 }
-            }
-            else
-            {
-                return RedirectToAction("Login", "Customer");
-            }
+   
             return View(cart);
         }
 

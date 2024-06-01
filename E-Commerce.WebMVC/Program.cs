@@ -14,7 +14,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddCookie
      (JwtBearerDefaults.AuthenticationScheme, opt =>
      {
-         opt.LoginPath = "/Login/Index";
+         opt.LoginPath = "/Customer/Login";
          opt.AccessDeniedPath = "/CategoryProduct/AccessDenied";//bak yerini deðiþtir
          opt.Cookie.SameSite = SameSiteMode.Strict;//cookie ilgili domain çalýsýr
          opt.Cookie.HttpOnly = true;
@@ -47,7 +47,7 @@ builder.Services.AddAuthorization(options =>
         policy.RequireClaim("role", "Customer");
     });
 
-    //ortak alanlar için policy eklemeyi unutma!
+    
 }
 );
 

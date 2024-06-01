@@ -289,7 +289,7 @@ namespace E_Commerce.WebApi.Business
                             ProductName = products.ProductName,
                             Quantity = carts.Quantity,
                             Price = carts.Quantity * products.ProductPrice,
-                            TotalPrice= carts.Quantity*products.ProductPrice,
+                      //      TotalPrice= carts.Quantity*products.ProductPrice,
                         }).Distinct().ToList();
 
 

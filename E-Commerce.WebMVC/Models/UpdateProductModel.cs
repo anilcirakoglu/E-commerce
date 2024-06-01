@@ -1,4 +1,6 @@
-﻿namespace E_Commerce.WebMVC.Models
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace E_Commerce.WebMVC.Models
 {
     public class UpdateProductModel
     {
@@ -11,6 +13,7 @@
         public double DiscountPercentage { get; set; }
         public int CategoryID { get; set; }
         public int ProductQuantity { get; set; }
+        public SelectList Categories { get; set; }
 
         public string CategoryName { get; set; }
         public int SellerID { get; set; }

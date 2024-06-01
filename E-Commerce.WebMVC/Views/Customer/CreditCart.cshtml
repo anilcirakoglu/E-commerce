@@ -1,4 +1,4 @@
-﻿
+﻿@model CustomerModel
 @{
     Layout = "_Layout";
 }
@@ -8,6 +8,16 @@
 <div>
     <h1 class="pympg">Payment Page</h1>
     <form method="post" ><div class="form-group">
+            <div>
+                <label>Address</label>
+                <select>
+                    @{                
+                        
+                            <option>@Model.Address </option>
+                    }
+                </select>
+            </div>
+
         <label for="cardName" >Credit Cartholder Name</label>
         <input type="text" name="cardholderName" />
             <br />

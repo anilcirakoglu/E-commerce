@@ -192,10 +192,12 @@ namespace E_Commerce.WebApi.Business
         public string Login(LoginModel loginModel)
         {
 
-            var seller = _sellerReadRepository.GetWhere(x => x.Email == loginModel.Email && x.Password == loginModel.Password&&  x.IsApprove == true).FirstOrDefault();
-            if (seller == null )
+            var seller = _sellerReadRepository.GetWhere(x => x.Email == loginModel.Email && x.Password == loginModel.Password).FirstOrDefault();
+            if (seller == null)
             {
                 return "";
+            } else if (seller.IsApprove==false) {
+                return null;
             }
             var tokenclaims = new List<Claim>
             {

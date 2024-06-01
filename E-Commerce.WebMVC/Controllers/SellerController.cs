@@ -9,6 +9,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Http;
+using System.Net;
 
 namespace E_Commerce.WebMVC.Controllers
 {
@@ -67,12 +68,17 @@ namespace E_Commerce.WebMVC.Controllers
                     }
                     return RedirectToAction("Index", "Home");
                 }
-               
+                else if (response.StatusCode == HttpStatusCode.Forbidden)
+                {
+
+                    ModelState.AddModelError("Password", "Your Account not approve");
+
+                }
                 else
                 {
                     ModelState.AddModelError("Password", "Your password is incorrect, Please enter again");
                     ModelState.AddModelError("Email", "Your Email is incorrect, Please enter again");
-                    
+
                 }
 
 
@@ -123,7 +129,7 @@ namespace E_Commerce.WebMVC.Controllers
 
                 var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
                 int jwtID = int.Parse(jwtId);
-                
+
                 int ID = jwtID;//seller.ID = jwtID;
 
                 if (token != null)
@@ -200,17 +206,18 @@ namespace E_Commerce.WebMVC.Controllers
 
         public async Task<IActionResult> EditProduct(int ID)
         {
-            
 
-            var productModel = new ProductModel();
+
+            var productmodel = new UpdateProductModel();
+
 
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
             var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
             int jwtID = int.Parse(jwtId);
 
-            productModel.ID = ID;
+            productmodel.ID = ID;
 
-         
+
             if (token != null)
             {
                 var client = _httpClientFactory.CreateClient();
@@ -225,41 +232,33 @@ namespace E_Commerce.WebMVC.Controllers
                     var content2 = await response2.Content.ReadAsStringAsync();
 
 
-                    
+
 
 
 
                     var categoryProducts = JsonConvert.DeserializeObject<List<CategoryProductModel>>(content2);
-                    var productInfo = JsonConvert.DeserializeObject<UpdateProductModel>(content);
-                    byte[] bytesImage = Convert.FromBase64String(productInfo.Image);
-
-                    
-
-               //     using (var stream = new MemoryStream(bytesImage))
-               //{
-
-                    //    var formFile = new FormFile(stream, 0, stream.Length, null, "image")
-                    //    {
-                    //        Headers = new HeaderDictionary(),
-
-                    //    };
+                    productmodel = JsonConvert.DeserializeObject<UpdateProductModel>(content);
 
 
-                    //}
+                    byte[] bytes = Convert.FromBase64String(productmodel.Image);
+                    MemoryStream stream = new MemoryStream(bytes);
 
 
-                    //productModel.ProductName = productInfo.ProductName;
-                    //productModel.ProductPrice = productInfo.ProductPrice;
-                    //productModel.ProductQuantity= productInfo.ProductQuantity;
-                    //productModel.DiscountPercentage = productInfo.DiscountPercentage;
-                    //productModel.ProductInformation = productInfo.ProductInformation;
-                    //productModel.Image = 
+                    IFormFile file = new FormFile(stream, 0, bytes.Length, productmodel.Image, "image");
+                    var updateproduct = new ProductModel();
 
+                    updateproduct.ID = productmodel.ID;
+                    updateproduct.ProductName = productmodel.ProductName;
+                    updateproduct.ProductPrice = productmodel.ProductPrice;
+                    updateproduct.ProductQuantity = productmodel.ProductQuantity;
+                    updateproduct.ProductInformation = productmodel.ProductInformation;
+                    updateproduct.DiscountPercentage = productmodel.DiscountPercentage;
+                    updateproduct.Image = file;
+                    updateproduct.CategoryID = productmodel.CategoryID;
+                    updateproduct.CategoryName = productmodel.CategoryName;
+                    updateproduct.Categories = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(categoryProducts, "ID", "CategoryName");
 
-
-                    //productInfo.Categories = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(categoryProducts, "CategoryID", "CategoryName");
-
-                    return View(productInfo);
+                    return View(updateproduct);
                 }
 
             }
@@ -281,14 +280,20 @@ namespace E_Commerce.WebMVC.Controllers
             {
                 UpdateProductModel updateProductModel = new UpdateProductModel();
                 byte[] bytes;
-
-                using (BinaryReader binaryReader = new BinaryReader(productModel.Image.OpenReadStream()))
+                if (productModel.Image != null)
                 {
-                    bytes = binaryReader.ReadBytes((int)productModel.Image.OpenReadStream().Length);
+                    using (BinaryReader binaryReader = new BinaryReader(productModel.Image.OpenReadStream()))
+                    {
+                        bytes = binaryReader.ReadBytes((int)productModel.Image.OpenReadStream().Length);
+                    }
+
+                    string base64ImageRepresentation = Convert.ToBase64String(bytes);
+                    updateProductModel.Image = base64ImageRepresentation;
                 }
-
-                string base64ImageRepresentation = Convert.ToBase64String(bytes);
-
+                else
+                {
+                    updateProductModel.Image = "";
+                }
                 updateProductModel.SellerID = jwtID;
                 updateProductModel.ID = productModel.ID;
                 updateProductModel.ProductName = productModel.ProductName;
@@ -296,7 +301,7 @@ namespace E_Commerce.WebMVC.Controllers
                 updateProductModel.ProductQuantity = productModel.ProductQuantity;
                 updateProductModel.DiscountPercentage = productModel.DiscountPercentage;
                 updateProductModel.ProductInformation = productModel.ProductInformation;
-                updateProductModel.Image = base64ImageRepresentation;
+
                 updateProductModel.CategoryID = productModel.CategoryID;
                 updateProductModel.CategoryName = productModel.CategoryName;
 

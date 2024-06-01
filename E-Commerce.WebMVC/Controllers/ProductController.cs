@@ -216,15 +216,16 @@ namespace E_Commerce.WebMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Search(string name, int page = 1)
         {
+            List<ProductForCustomerModel> product = new List<ProductForCustomerModel>();
+            var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
+            var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
+            if (jwtId == null)
+            {
+                return RedirectToAction("Login", "Customer");
+            }
             if (ModelState.IsValid)
             {
-                List<ProductForCustomerModel> product = new List<ProductForCustomerModel>();
-                var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
-                var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
-                if (jwtId == null)
-                {
-                    return RedirectToAction("Index", "Login");
-                }
+            
                 if (token != null)
                 {
                     var client = _httpClientFactory.CreateClient();

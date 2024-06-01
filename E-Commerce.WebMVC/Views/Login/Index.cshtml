@@ -2,3 +2,22 @@
 @{
     Layout = "_Layout";
 }
+<div class="logintext"><h4>Customer Login </h4></div>
+<div class="container">
+    <form class="w-50 m-3 p-5" asp-action="Login" asp-controller="Customer" method="post">
+        <div class="mb-2">
+            <label class="nvmbartext" for="@Model.Email" class="form-label">Email:</label>
+            <input type="text" class="form-control" asp-for="@Model.Email" />
+            <span asp-validation-for="@Model.Email" class="text-danger"></span>
+        </div>
+        <div class="mb-2">
+            <label class="nvmbartext" for="@Model.Password" class="form-label">Password:</label>
+            <input type="password" class="form-control" asp-for="@Model.Password" />
+            <span asp-validation-for="@Model.Password" class="text-danger"></span>
+        </div>
+        <div class="mb-5">
+            <button class="btn btn-primary">Login</button>
+            <button class="btn btn-primary" asp-action="SignIn" asp-controller="Customer">Sign Up</button>
+
+        </div>
+    </form>

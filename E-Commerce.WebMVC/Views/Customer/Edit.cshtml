@@ -42,7 +42,7 @@
         <div class="mb-3">
             <label for="@Model.PhoneNumber" class="form-label">Phone Number</label>
             <span asp-validation-for="@Model.PhoneNumber" class="text-black"></span>
-            <input type="text" class="form-control" asp-for="@Model.PhoneNumber" />
+            <input type="text" class="form-control" asp-for="@Model.PhoneNumber" maxlength="10" />
         </div>
         <div class="mb-3">
             <button asp-route="@Model.ID" class=" btn-primary w-100">Save</button>
