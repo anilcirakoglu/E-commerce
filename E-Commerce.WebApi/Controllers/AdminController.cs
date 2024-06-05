@@ -25,12 +25,7 @@ namespace E_Commerce.WebApi.Controllers
             var customer = _adminBO.GetAll();
             return Ok(customer);
         }
-        //[HttpPost("Create")]
-        //public async Task<ActionResult<AdminModel>> Create(AdminModel adminModel)
-        //{
-        //    var customer = await _adminBO.Create(adminModel);
-        //    return Ok(customer);
-        //}
+     
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginModel loginModel)
         {

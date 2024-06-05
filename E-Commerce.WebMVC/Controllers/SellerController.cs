@@ -26,7 +26,7 @@ namespace E_Commerce.WebMVC.Controllers
         {
             return View(new LoginModel());
         }
-        public IActionResult SignIn()
+        public IActionResult SignUp()
         {
             return View(new SellerModel());
         }
@@ -93,7 +93,7 @@ namespace E_Commerce.WebMVC.Controllers
 
         #endregion
         [HttpPost]
-        public async Task<IActionResult> SignIn(SellerModel seller)
+        public async Task<IActionResult> SignUp(SellerModel seller)
         {
 
             var token = User.Claims.FirstOrDefault(x => x.Type == "accesToken")?.Value;
@@ -130,7 +130,7 @@ namespace E_Commerce.WebMVC.Controllers
                 var jwtId = User.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
                 int jwtID = int.Parse(jwtId);
 
-                int ID = jwtID;//seller.ID = jwtID;
+                int ID = jwtID;
 
                 if (token != null)
                 {
@@ -203,7 +203,10 @@ namespace E_Commerce.WebMVC.Controllers
             }
             return View(seller);
         }
-
+        /// <summary>
+        /// https://stackoverflow.com/questions/65920854/trying-to-convert-a-base64string-into-a-iformfile-throws-systeminvalidoperation (convertstringtofile operation)
+        /// </summary>
+  
         public async Task<IActionResult> EditProduct(int ID)
         {
 

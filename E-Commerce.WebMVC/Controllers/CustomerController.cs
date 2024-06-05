@@ -31,7 +31,7 @@ namespace E_Commerce.WebMVC.Controllers
         {
             return View(new LoginModel());
         }
-        public IActionResult SignIn()
+        public IActionResult SignUp()
         {
             return View(new CustomerModel());
         }
@@ -89,7 +89,7 @@ namespace E_Commerce.WebMVC.Controllers
 
         #endregion
         [HttpPost]
-        public async Task<IActionResult> SignIn(CustomerModel customer)
+        public async Task<IActionResult> SignUp(CustomerModel customer)
         {
             if (ModelState.IsValid)
             {

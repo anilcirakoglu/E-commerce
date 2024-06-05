@@ -168,7 +168,7 @@ namespace E_Commerce.WebApi.Business
                         join categories in category on products.CategoryID equals categories.ID
                         join stocks in stock on products.ID equals stocks.ProductID
                         join sellers in seller on products.SellerID equals sellers.ID
-                        where products.IsApprovedProduct == true && products.IsProductActive == true && stocks.ProductQuantity >= 1
+                        where products.IsApprovedProduct == true && products.IsProductActive == true && stocks.ProductQuantity >= 1 &&sellers.IsApprove == true
                         select new AllProducts
                         {
                             ID = products.ID,
@@ -243,8 +243,7 @@ namespace E_Commerce.WebApi.Business
                     IsProductActive = product.IsProductActive,
                     CategoryID = product.CategoryID,
                     SellerID = product.SellerID,
-                    ProductQuantity = Quantity.FirstOrDefault(x => x.ProductID == product.ID).ProductQuantity// kontrol et
-
+                    ProductQuantity = Quantity.FirstOrDefault(x => x.ProductID == product.ID).ProductQuantity
                 };
                 productList.Add(prlist);
             }
@@ -255,6 +254,7 @@ namespace E_Commerce.WebApi.Business
             var products = _productReadRepository.GetWhere(x => x.ID == ID && x.IsProductActive == true && x.IsProductActive == true).FirstOrDefault();
             var stocks = _stockProductReadRepository.GetAll().Where(x => x.ProductID == products.ID);
             var seller = _sellerReadRepository.GetAll().Where(x => x.ID == products.SellerID);
+          
             if (products == null)
             { throw new Exception("Product is not Found"); }
             var product = new ProductDetailForCustomer()
@@ -268,6 +268,8 @@ namespace E_Commerce.WebApi.Business
                 Img = products.Image
             };
             return product;
+
+
 
 
         }

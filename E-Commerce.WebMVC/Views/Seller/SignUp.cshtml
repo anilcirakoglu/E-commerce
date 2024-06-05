@@ -6,7 +6,7 @@
 }
 <div><h4>Seller Register </h4></div>
 <div class="container">
-    <form class="w-50 m-5 p-2 " asp-action="SignIn" asp-controller="Seller" method="post">
+    <form class="w-50 m-5 p-2 " asp-action="SignUp" asp-controller="Seller" method="post">
         <div class="mb-3">
             <label for="@Model.FirstName" class="form-label">First Name</label>
             <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
@@ -40,7 +40,7 @@
         <div class="mb-3">
             <label for="@Model.PhoneNumber" class="form-label">Phone Number</label>
             <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
-            <input type="text" class="form-control" asp-for="@Model.PhoneNumber" />
+            <input type="text" class="form-control" asp-for="@Model.PhoneNumber" maxlength="10" />
         </div>
         <div class="mb-3">
             <label for="@Model.CompanyType" class="form-label">Company Name</label>
@@ -50,7 +50,7 @@
         <div class="mb-3">
             <label for="@Model.TaxpayerIDNumber" class="form-label">TaxpayerIDNumber</label>
             <span asp-validation-for="@Model.TaxpayerIDNumber" class="text-danger"></span>
-            <input type="text" class="form-control" asp-for="@Model.TaxpayerIDNumber" />
+            <input type="text" class="form-control" asp-for="@Model.TaxpayerIDNumber" maxlength="10" />
         </div>
        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Sign Up

@@ -11,7 +11,7 @@
     <div class="mb-3">
         <label for="@Model.ProductInformation" class="form-label">Product Information</label>
         <span asp-validation-for="@Model.ProductInformation" class="text-black"></span>
-        <input type="text" class="form-control" asp-for="@Model.ProductInformation" />
+        <input type="text" class="form-control" asp-for="@Model.ProductInformation" maxlength="800" />
     </div>
     <div class="mb-3">
         <label for="@Model.ProductPrice" class="form-label">Product Price</label>

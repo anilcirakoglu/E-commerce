@@ -5,40 +5,40 @@
     Layout = "_Layout";
 }
     <div class="container">
-        <form class="w-50 m-5 p-2 " asp-action="SignIn" asp-controller="Customer" method="post">
+        <form class="w-50 m-5 p-2 " asp-action="SignUp" asp-controller="Customer" method="post">
             <div class="mb-3">
                 <label for="@Model.FirstName" class="form-label">First Name</label>
-                <span asp-validation-for="@Model.FirstName" class="text-black"></span>
                 <input type="text" class="form-control" asp-for="@Model.FirstName" />
+            <span asp-validation-for="@Model.FirstName" class="text-black"></span>
             </div>
             <div class="mb-3">
                 <label for="@Model.LastName" class="form-label">LastName</label>
-                <span asp-validation-for="@Model.LastName" class="text-black"></span>
                 <input type="text" class="form-control" asp-for="@Model.LastName" />
+            <span asp-validation-for="@Model.LastName" class="text-black"></span>
             </div>
             <div class="mb-3">
                 <label for="@Model.Email" class="form-label">Email</label>
-                <span asp-validation-for="@Model.Email" class="text-black"></span>
                 <input type="text" class="form-control" asp-for="@Model.Email" />
+            <span asp-validation-for="@Model.Email" class="text-black"></span>
             </div>
             <div class="mb-3">
                 <label for="@Model.Password" class="form-label">Password</label>
-                <span asp-validation-for="@Model.Password" class="text-black"></span>
                 <input type="password" class="form-control" asp-for="@Model.Password" />
+            <span asp-validation-for="@Model.Password" class="text-black"></span>
             </div>
             <div class="mb-3">
                 <label for="@Model.Address" class="form-label">Address</label>
-                <span asp-validation-for="@Model.Address" class="text-black"></span>
                 <input type="text" class="form-control" asp-for="@Model.Address" />
+            <span asp-validation-for="@Model.Address" class="text-black"></span>
             </div>
             <div class="mb-3">
                 <label for="@Model.PhoneNumber" class="form-label">Phone Number</label>
-                <span asp-validation-for="@Model.PhoneNumber" class="text-black"></span>
-                <input type="text" class="form-control" asp-for="@Model.PhoneNumber" />
+            <input type="text" class="form-control" asp-for="@Model.PhoneNumber" maxlength="10" />
+            <span asp-validation-for="@Model.PhoneNumber" class="text-black"></span>
             </div>
-
+        <button type="submit" class="btn btn-primary">Sign Up</button>
     </form>
     <div>
-        <button type="submit" class="btn btn-primary">Sign In</button>
+       
     </div>
     </div>

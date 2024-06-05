@@ -314,19 +314,6 @@ namespace E_Commerce.WebApi.Business
             }
             
 
-            //var list = (from products in product
-            //            join carts in cart on products.ID equals carts.ProductID
-            //            join customers in customer on carts.CustomerID equals customers.ID
-            //            where customers.ID == ID && carts.Status == CartStatus.Purchased
-            //            select new CartListDto
-            //            {
-            //                ProductID = products.ID,
-            //                ProductName = products.ProductName,
-            //                Quantity = carts.Quantity,
-            //                Price = carts.Quantity * products.ProductPrice,
-
-            //            }).ToList();
-
             return purcaseProductListModels;
         }
 
