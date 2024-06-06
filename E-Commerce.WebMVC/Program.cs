@@ -10,12 +10,11 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
 
-
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddCookie
      (JwtBearerDefaults.AuthenticationScheme, opt =>
      {
          opt.LoginPath = "/Customer/Login";
-         opt.AccessDeniedPath = "/CategoryProduct/AccessDenied";//bak yerini deðiþtir
+         opt.AccessDeniedPath = "/CategoryProduct/AccessDenied";
          opt.Cookie.SameSite = SameSiteMode.Strict;//cookie ilgili domain çalýsýr
          opt.Cookie.HttpOnly = true;
          opt.Cookie.Name = "Cookie";

@@ -13,6 +13,9 @@ using System.Net;
 
 namespace E_Commerce.WebMVC.Controllers
 {
+    /// <summary>
+    /// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-8.0 (IHttpClientFactory use)
+    /// </summary>
     public class SellerController : Controller
     {
         readonly private IHttpClientFactory _httpClientFactory;

@@ -210,7 +210,10 @@ namespace E_Commerce.WebApi.Business
             var token = GenerateTokens(tokenclaims); 
                 return token;
         }
-
+        /// <summary>
+        /// https://medium.com/@vndpal/how-to-implement-jwt-token-authentication-in-net-core-6-ab7f48470f5c
+        /// </summary>
+       
         public string GenerateTokens(IEnumerable<Claim> claims)
         {
             var autSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:KEY"]));
